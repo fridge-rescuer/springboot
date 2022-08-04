@@ -1,0 +1,38 @@
+package com.fridgerescuer.springboot.data.entity;
+
+import lombok.Getter;
+import lombok.Setter;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.Document;
+
+import javax.persistence.GeneratedValue;
+import java.util.Arrays;
+import java.util.List;
+
+@Document(collection = "recipe")
+@Setter
+@Getter
+public class Recipe {
+    @Id
+    @GeneratedValue
+    private String id;
+
+    private String name;
+    private String type;
+
+
+    private List<String> ingredientNames;
+
+    public Recipe() {}
+
+    public Recipe(String name, String type) {
+        this.name = name;
+        this.type = type;
+    }
+
+    public void setIngredientNames(String...names){
+        this.ingredientNames = Arrays.asList(names);
+    }
+
+
+}
