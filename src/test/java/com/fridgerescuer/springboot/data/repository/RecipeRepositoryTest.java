@@ -1,7 +1,11 @@
 package com.fridgerescuer.springboot.data.repository;
 
+import com.fridgerescuer.springboot.data.dto.IngredientDTO;
+import com.fridgerescuer.springboot.data.dto.RecipeDTO;
 import com.fridgerescuer.springboot.data.entity.Ingredient;
 import com.fridgerescuer.springboot.data.entity.Recipe;
+import com.fridgerescuer.springboot.service.IngredientService;
+import com.fridgerescuer.springboot.service.RecipeService;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -9,6 +13,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.data.mongo.DataMongoTest;
+import org.springframework.context.annotation.ComponentScan;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.data.mongodb.core.query.Update;
@@ -16,6 +21,7 @@ import org.springframework.data.mongodb.core.query.Update;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.springframework.data.mongodb.core.query.Criteria.where;
 
+@ComponentScan(basePackages = "com.fridgerescuer.springboot")
 @DataMongoTest
 class RecipeRepositoryTest {
     @Autowired
@@ -26,65 +32,41 @@ class RecipeRepositoryTest {
     @Autowired
     private MongoTemplate template;
 
+    @Autowired
+    private RecipeService recipeService;
+    @Autowired
+    private IngredientService ingredientService;
+
+
     @BeforeEach
     void beforeEach() {  //모두 롤백
         recipeRepository.deleteAll();
         ingredientRepository.deleteAll();
     }
 
+    //given
+    //when
+    //then
+
     @Test
-    @DisplayName("연관 관계 적용 확인")
-    void relationWithRecipeAndIngredient(){
+    @DisplayName("레시피 저장, 재료와 연관")
+    void saveRecipeWithIngredient(){
         //given
-        Recipe pastaRecipe = new Recipe("pasta", "파스타");
-        Ingredient ingredient1 = new Ingredient("마늘", "채소");
-        Ingredient ingredient2 = new Ingredient("스파게티", "면");
+        IngredientDTO ingredient1 = new IngredientDTO("마늘", "채소");
+        IngredientDTO ingredient2 = new IngredientDTO("올리브유", "식용유");
+        IngredientDTO ingredient3 = new IngredientDTO("고추", "채소");
 
+        RecipeDTO recipe = new RecipeDTO("알리오 올리오", "파스타", new String[]{"마늘","올리브유","고추"});
 
         //when
-        String id1 = template.insert(ingredient1).getId();
-        String id2 = template.insert(ingredient2).getId();
+        ingredientService.saveIngredient(ingredient1);
+        ingredientService.saveIngredient(ingredient2);
+        ingredientService.saveIngredient(ingredient3);
 
-        pastaRecipe.setIngredientNames(id1, id2);
-        Recipe insertRecipe = template.insert(pastaRecipe);
-
-        template.update(Ingredient.class)
-                .matching(where("id").is(ingredient1.getId()))
-                .apply(new Update().push("recipes", insertRecipe))
-                .first();
-
-        template.update(Ingredient.class)
-                .matching(where("id").is(ingredient2.getId()))
-                .apply(new Update().push("recipes", insertRecipe))
-                .first();
-
-        Recipe findRecipe = template.findOne(Query.query(where("name").is("pasta")), Recipe.class);
-        Ingredient findIngredient = template.findOne(Query.query(where("name").is("마늘")), Ingredient.class);
-
+        recipeService.saveRecipe(recipe);
         //then
-        Assertions.assertThat(findIngredient.getRecipes().get(0).getName()).isEqualTo(findRecipe.getName());
+        Assertions.assertThat(ingredientRepository.findByName("고추").getRecipes().get(0).getName()).isEqualTo(recipe.getName());
+
     }
 
-
-    @Test
-    @DisplayName("DB가 반환하는 인스턴스가 동일한지 확인")
-    void instanceCheck(){
-        Ingredient ingredient = new Ingredient("마늘", "채소");
-
-        //when
-        /*
-        template.insert(ingredient);
-
-        Ingredient ingredient1 = template.findOne(Query.query(where("name").is("마늘")), Ingredient.class);
-        Ingredient ingredient2 = template.findOne(Query.query(where("name").is("마늘")), Ingredient.class);
-        */
-
-        ingredientRepository.save(ingredient);
-
-        Ingredient ingredient1 = ingredientRepository.findByName("마늘");
-        Ingredient ingredient2 = ingredientRepository.findByName("마늘");
-
-        //트랜잭션 적용해 통과될듯
-        Assertions.assertThat(ingredient1).isEqualTo(ingredient2);
-    }
 }
