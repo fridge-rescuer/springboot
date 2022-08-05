@@ -12,7 +12,7 @@ import org.springframework.context.annotation.Import;
 
 @Slf4j
 @Import(Config.class)
-@SpringBootApplication
+@SpringBootApplication()
 public class SpringbootApplication implements CommandLineRunner {
 
 	@Autowired
@@ -34,6 +34,7 @@ public class SpringbootApplication implements CommandLineRunner {
 		for (Ingredient ingredient: ingredientRepository.findAll()){
 			log.info("found : {}", ingredient.toString());
 		}
+
 		log.info("==서버 동작 테스트 끝~==");
 	}
 }
