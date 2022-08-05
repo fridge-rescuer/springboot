@@ -20,7 +20,7 @@ public class IngredientServiceImpl implements IngredientService {
     public IngredientResponseDTO saveIngredient(IngredientDTO ingredientDTO){
         Ingredient ingredient = new Ingredient(ingredientDTO.getName(), ingredientDTO.getType());
 
-        Ingredient insertedIngredient = ingredientDAO.insert(ingredient);
+        Ingredient insertedIngredient = ingredientDAO.save(ingredient);
 
         return new IngredientResponseDTO(insertedIngredient.getId(), insertedIngredient.getName(), insertedIngredient.getType());
     }

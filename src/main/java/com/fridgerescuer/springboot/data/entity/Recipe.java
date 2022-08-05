@@ -20,19 +20,13 @@ public class Recipe {
     private String name;
     private String type;
 
-
-    private List<String> ingredientNames;
+    private String[] ingredientNames;
 
     public Recipe() {}
 
-    public Recipe(String name, String type) {
+    public Recipe(String name, String type, String[] ingredientNames) {
         this.name = name;
         this.type = type;
+        this.ingredientNames = ingredientNames;
     }
-
-    public void setIngredientNames(String...names){
-        this.ingredientNames = Arrays.asList(names);
-    }
-
-
 }

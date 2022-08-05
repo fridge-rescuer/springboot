@@ -15,7 +15,7 @@ public class IngredientDAOImpl implements IngredientDAO {
     private final IngredientRepository repository;
 
     @Override
-    public Ingredient insert(Ingredient ingredient) {
+    public Ingredient save(Ingredient ingredient) {
         return repository.save(ingredient);
     }
 }

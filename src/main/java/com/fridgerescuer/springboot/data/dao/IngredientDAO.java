@@ -4,5 +4,5 @@ import com.fridgerescuer.springboot.data.entity.Ingredient;
 
 public interface IngredientDAO {
 
-    Ingredient insert(Ingredient ingredient);
+    Ingredient save(Ingredient ingredient);
 }
