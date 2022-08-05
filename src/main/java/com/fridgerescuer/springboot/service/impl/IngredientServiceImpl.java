@@ -4,6 +4,7 @@ import com.fridgerescuer.springboot.data.dao.IngredientDAO;
 import com.fridgerescuer.springboot.data.dto.IngredientDTO;
 import com.fridgerescuer.springboot.data.dto.IngredientResponseDTO;
 import com.fridgerescuer.springboot.data.entity.Ingredient;
+import com.fridgerescuer.springboot.data.mapper.IngredientMapper;
 import com.fridgerescuer.springboot.service.IngredientService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,10 +19,9 @@ public class IngredientServiceImpl implements IngredientService {
 
     @Override
     public IngredientResponseDTO saveIngredient(IngredientDTO ingredientDTO){
-        Ingredient ingredient = new Ingredient(ingredientDTO.getName(), ingredientDTO.getType());
 
-        Ingredient insertedIngredient = ingredientDAO.save(ingredient);
+        Ingredient savedIngredient = ingredientDAO.save(IngredientMapper.INSTANCE.ingredientDTOToIngredient(ingredientDTO));
 
-        return new IngredientResponseDTO(insertedIngredient.getId(), insertedIngredient.getName(), insertedIngredient.getType());
+        return IngredientMapper.INSTANCE.ingredientToIngredientResponseDTO(savedIngredient);
     }
 }

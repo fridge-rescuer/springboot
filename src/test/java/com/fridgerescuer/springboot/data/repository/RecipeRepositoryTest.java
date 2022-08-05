@@ -2,6 +2,7 @@ package com.fridgerescuer.springboot.data.repository;
 
 import com.fridgerescuer.springboot.data.dto.IngredientDTO;
 import com.fridgerescuer.springboot.data.dto.RecipeDTO;
+import com.fridgerescuer.springboot.data.dto.RecipeResponseDTO;
 import com.fridgerescuer.springboot.data.entity.Ingredient;
 import com.fridgerescuer.springboot.data.entity.Recipe;
 import com.fridgerescuer.springboot.service.IngredientService;
@@ -18,6 +19,9 @@ import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.data.mongodb.core.query.Update;
 
+import java.util.List;
+
+import static org.assertj.core.api.Assertions.*;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.springframework.data.mongodb.core.query.Criteria.where;
 
@@ -65,8 +69,30 @@ class RecipeRepositoryTest {
 
         recipeService.saveRecipe(recipe);
         //then
-        Assertions.assertThat(ingredientRepository.findByName("고추").getRecipes().get(0).getName()).isEqualTo(recipe.getName());
+        assertThat(ingredientRepository.findByName("고추").getRecipes().get(0).getName()).isEqualTo(recipe.getName());
 
+    }
+
+    @Test
+    @DisplayName("재료로 레시피 검색하기")
+    void findRecipesByIngredient(){
+        //given
+        IngredientDTO ingredient = new IngredientDTO("마늘", "채소");
+        RecipeDTO recipe1 = new RecipeDTO("알리오 올리오", "파스타", new String[]{"마늘"});
+        RecipeDTO recipe2 = new RecipeDTO("마늘 장아찌", "발효 식품", new String[]{"마늘"});
+
+        //when
+        ingredientService.saveIngredient(ingredient);
+        recipeService.saveRecipe(recipe1);
+        recipeService.saveRecipe(recipe2);
+
+        List<RecipeResponseDTO> findRecipes = recipeService.findRecipeWithIngredient(ingredient);
+
+        //then
+        for (RecipeResponseDTO recipeResponseDTO: findRecipes) {
+            System.out.println(recipeResponseDTO.toString());
+        }
+        assertThat(findRecipes.size()).isEqualTo(2);
     }
 
 }

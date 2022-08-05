@@ -1,6 +1,7 @@
 package com.fridgerescuer.springboot.data.mapper;
 
 import com.fridgerescuer.springboot.data.dto.IngredientDTO;
+import com.fridgerescuer.springboot.data.dto.IngredientResponseDTO;
 import com.fridgerescuer.springboot.data.entity.Ingredient;
 import org.mapstruct.Mapper;
 import org.mapstruct.factory.Mappers;
@@ -12,4 +13,5 @@ public interface IngredientMapper {
 
     IngredientDTO ingredientToIngredientDTO(Ingredient ingredient);
     Ingredient ingredientDTOToIngredient(IngredientDTO ingredientDTO);
+    IngredientResponseDTO ingredientToIngredientResponseDTO(Ingredient ingredient);
 }

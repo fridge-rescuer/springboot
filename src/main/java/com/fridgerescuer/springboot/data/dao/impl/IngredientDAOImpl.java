@@ -18,4 +18,9 @@ public class IngredientDAOImpl implements IngredientDAO {
     public Ingredient save(Ingredient ingredient) {
         return repository.save(ingredient);
     }
+
+    @Override
+    public Ingredient find(Ingredient ingredient) { //이름으로 찾기
+        return repository.findByName(ingredient.getName());
+    }
 }

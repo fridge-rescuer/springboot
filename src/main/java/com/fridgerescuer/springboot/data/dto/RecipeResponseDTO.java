@@ -4,7 +4,9 @@ package com.fridgerescuer.springboot.data.dto;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
+import lombok.ToString;
 
+@ToString
 @Getter
 @Setter
 @RequiredArgsConstructor
