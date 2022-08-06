@@ -8,11 +8,13 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.data.mongo.DataMongoTest;
+import org.springframework.context.annotation.ComponentScan;
 
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+@ComponentScan(basePackages = "com.fridgerescuer.springboot")
 @DataMongoTest
 class IngredientRepositoryTest {
     @Autowired
@@ -26,7 +28,7 @@ class IngredientRepositoryTest {
     @Test
     @DisplayName("이름으로 재료 id 찾기")
     void findIngredientIdByName(){
-        Ingredient ingredient = new Ingredient("마늘", "채소");
+        Ingredient ingredient = Ingredient.builder().name("마늘").type("채소").build();
 
         Ingredient savedIngredient = ingredientRepository.save(ingredient);
         String name = savedIngredient.getName();

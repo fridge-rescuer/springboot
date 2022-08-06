@@ -8,9 +8,11 @@ import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 
 class MapperTest {
+
     @Test
-    void mapperTest(){
-        RecipeDTO recipeDTO = new RecipeDTO("pizza", "type", new String[]{"ingredient"});
+    void builderWithMapperTest(){
+        RecipeDTO recipeDTO = RecipeDTO.builder().name("pizza").type("instance")
+                .ingredientNames(new String[]{"ingredient"}).build();
         Recipe recipe = RecipeMapper.INSTANCE.recipeDTOToRecipe(recipeDTO);
 
         Assertions.assertThat(recipe.getName()).isEqualTo("pizza");

@@ -34,9 +34,6 @@ class RecipeRepositoryTest {
     private IngredientRepository ingredientRepository;
 
     @Autowired
-    private MongoTemplate template;
-
-    @Autowired
     private RecipeService recipeService;
     @Autowired
     private IngredientService ingredientService;
@@ -56,11 +53,11 @@ class RecipeRepositoryTest {
     @DisplayName("레시피 저장, 재료와 연관")
     void saveRecipeWithIngredient(){
         //given
-        IngredientDTO ingredient1 = new IngredientDTO("마늘", "채소");
-        IngredientDTO ingredient2 = new IngredientDTO("올리브유", "식용유");
-        IngredientDTO ingredient3 = new IngredientDTO("고추", "채소");
+        IngredientDTO ingredient1 = IngredientDTO.builder().name("마늘").type("채소").build();
+        IngredientDTO ingredient2 = IngredientDTO.builder().name("올리브유").type("식용유").build();
+        IngredientDTO ingredient3 = IngredientDTO.builder().name("고추").type("채소").build();
 
-        RecipeDTO recipe = new RecipeDTO("알리오 올리오", "파스타", new String[]{"마늘","올리브유","고추"});
+        RecipeDTO recipe = RecipeDTO.builder().name("알리오 올리오").type("파스타").ingredientNames(new String[]{"마늘","올리브유","고추"}).build();
 
         //when
         ingredientService.saveIngredient(ingredient1);
@@ -77,9 +74,9 @@ class RecipeRepositoryTest {
     @DisplayName("재료로 레시피 검색하기")
     void findRecipesByIngredient(){
         //given
-        IngredientDTO ingredient = new IngredientDTO("마늘", "채소");
-        RecipeDTO recipe1 = new RecipeDTO("알리오 올리오", "파스타", new String[]{"마늘"});
-        RecipeDTO recipe2 = new RecipeDTO("마늘 장아찌", "발효 식품", new String[]{"마늘"});
+        IngredientDTO ingredient = IngredientDTO.builder().name("마늘").type("채소").build();
+        RecipeDTO recipe1 = RecipeDTO.builder().name("알리오 올리오").type("파스타").ingredientNames(new String[]{"마늘"}).build();
+        RecipeDTO recipe2 = RecipeDTO.builder().name("마늘 장아찌").type("발효 식품").ingredientNames(new String[]{"마늘"}).build();
 
         //when
         ingredientService.saveIngredient(ingredient);

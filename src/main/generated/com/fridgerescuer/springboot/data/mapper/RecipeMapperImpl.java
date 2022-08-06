@@ -8,7 +8,7 @@ import javax.annotation.processing.Generated;
 
 @Generated(
     value = "org.mapstruct.ap.MappingProcessor",
-    date = "2022-08-05T22:10:50+0900",
+    date = "2022-08-06T13:36:43+0900",
     comments = "version: 1.5.2.Final, compiler: javac, environment: Java 11.0.1 (Oracle Corporation)"
 )
 public class RecipeMapperImpl implements RecipeMapper {
@@ -19,16 +19,16 @@ public class RecipeMapperImpl implements RecipeMapper {
             return null;
         }
 
-        RecipeDTO recipeDTO = new RecipeDTO();
+        RecipeDTO.RecipeDTOBuilder recipeDTO = RecipeDTO.builder();
 
-        recipeDTO.setName( recipe.getName() );
-        recipeDTO.setType( recipe.getType() );
+        recipeDTO.name( recipe.getName() );
+        recipeDTO.type( recipe.getType() );
         String[] ingredientNames = recipe.getIngredientNames();
         if ( ingredientNames != null ) {
-            recipeDTO.setIngredientNames( Arrays.copyOf( ingredientNames, ingredientNames.length ) );
+            recipeDTO.ingredientNames( Arrays.copyOf( ingredientNames, ingredientNames.length ) );
         }
 
-        return recipeDTO;
+        return recipeDTO.build();
     }
 
     @Override
@@ -37,16 +37,16 @@ public class RecipeMapperImpl implements RecipeMapper {
             return null;
         }
 
-        Recipe recipe1 = new Recipe();
+        Recipe.RecipeBuilder recipe1 = Recipe.builder();
 
-        recipe1.setName( recipe.getName() );
-        recipe1.setType( recipe.getType() );
+        recipe1.name( recipe.getName() );
+        recipe1.type( recipe.getType() );
         String[] ingredientNames = recipe.getIngredientNames();
         if ( ingredientNames != null ) {
-            recipe1.setIngredientNames( Arrays.copyOf( ingredientNames, ingredientNames.length ) );
+            recipe1.ingredientNames( Arrays.copyOf( ingredientNames, ingredientNames.length ) );
         }
 
-        return recipe1;
+        return recipe1.build();
     }
 
     @Override
@@ -55,16 +55,16 @@ public class RecipeMapperImpl implements RecipeMapper {
             return null;
         }
 
-        RecipeResponseDTO recipeResponseDTO = new RecipeResponseDTO();
+        RecipeResponseDTO.RecipeResponseDTOBuilder recipeResponseDTO = RecipeResponseDTO.builder();
 
-        recipeResponseDTO.setId( recipe.getId() );
-        recipeResponseDTO.setName( recipe.getName() );
-        recipeResponseDTO.setType( recipe.getType() );
+        recipeResponseDTO.id( recipe.getId() );
+        recipeResponseDTO.name( recipe.getName() );
+        recipeResponseDTO.type( recipe.getType() );
         String[] ingredientNames = recipe.getIngredientNames();
         if ( ingredientNames != null ) {
-            recipeResponseDTO.setIngredientNames( Arrays.copyOf( ingredientNames, ingredientNames.length ) );
+            recipeResponseDTO.ingredientNames( Arrays.copyOf( ingredientNames, ingredientNames.length ) );
         }
 
-        return recipeResponseDTO;
+        return recipeResponseDTO.build();
     }
 }

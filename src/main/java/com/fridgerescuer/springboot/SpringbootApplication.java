@@ -26,14 +26,14 @@ public class SpringbootApplication implements CommandLineRunner {
 
 		log.info("==서버 동작 테스트 시작==");
 		ingredientRepository.deleteAll();
-
+		/*
 		ingredientRepository.save(new Ingredient("마늘", "채소"));
 		ingredientRepository.save(new Ingredient("삼겹살", "돼지 고기"));
 
 
 		for (Ingredient ingredient: ingredientRepository.findAll()){
 			log.info("found : {}", ingredient.toString());
-		}
+		}*/
 
 		log.info("==서버 동작 테스트 끝~==");
 	}

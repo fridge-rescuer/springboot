@@ -1,18 +1,13 @@
 package com.fridgerescuer.springboot.data.dto;
 
+import lombok.Builder;
 import lombok.Getter;
-import lombok.RequiredArgsConstructor;
-import lombok.Setter;
-import org.springframework.stereotype.Component;
 
-@RequiredArgsConstructor
-@Getter @Setter
+
+@Builder
+@Getter
 public class IngredientDTO {
     private String name;
     private String type;
 
-    public IngredientDTO(String name, String type) {
-        this.name = name;
-        this.type = type;
-    }
 }

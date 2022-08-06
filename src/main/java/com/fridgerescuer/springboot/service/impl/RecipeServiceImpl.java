@@ -31,7 +31,10 @@ public class RecipeServiceImpl implements RecipeService {
 
     @Override
     public List<RecipeResponseDTO> findRecipeWithIngredient(IngredientDTO ingredientDTO) {
-        Ingredient findIngredient = ingredientDAO.find(new Ingredient(ingredientDTO.getName(), ingredientDTO.getType()));
+        Ingredient findIngredient = ingredientDAO.find(Ingredient.builder()
+                .name(ingredientDTO.getName())
+                .type(ingredientDTO.getType()).build());
+
         List<RecipeResponseDTO> results = new ArrayList<>();
 
         for(Recipe recipe :findIngredient.getRecipes()){
