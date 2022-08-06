@@ -13,8 +13,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -40,6 +40,37 @@ public class RecipeServiceImpl implements RecipeService {
         for(Recipe recipe :findIngredient.getRecipes()){
             results.add(RecipeMapper.INSTANCE.recipeToRecipeResponseDTO(recipe));
         }
+
+        return results;
+    }
+
+    @Override
+    public List<RecipeResponseDTO> findRecipesWithMultipleIngredients(List<IngredientDTO> ingredientDTOList) {
+        final int FIRST_IDX = 0;
+
+        if(ingredientDTOList.size() ==1)   //여러 재료가 아니라면 바로 반환
+            return findRecipeWithIngredient(ingredientDTOList.get(FIRST_IDX));
+
+        Map<String,RecipeResponseDTO> intersectionRecipeResponses = new HashMap<>();    //교집합 레시피
+        for (RecipeResponseDTO recipeResponseDTO: findRecipeWithIngredient(ingredientDTOList.get(FIRST_IDX)) ) {
+            intersectionRecipeResponses.put(recipeResponseDTO.getId(), recipeResponseDTO);
+        }
+        
+        for(int i=1; i<ingredientDTOList.size() ; ++i){
+            List<RecipeResponseDTO> recipes = findRecipeWithIngredient(ingredientDTOList.get(i));
+
+            Map<String,RecipeResponseDTO> aliveRecipes = new HashMap<>();
+            for (RecipeResponseDTO recipeResponseDTO : recipes){
+                if(intersectionRecipeResponses.containsKey(recipeResponseDTO.getId())){
+                    aliveRecipes.put(recipeResponseDTO.getId(), recipeResponseDTO);
+                }
+            }
+
+            intersectionRecipeResponses = aliveRecipes; // 교집합이 남은 레시피만 남기고 소거
+        }
+
+        List<RecipeResponseDTO> results = intersectionRecipeResponses.values().stream()
+                .collect(Collectors.toCollection(ArrayList::new));
 
         return results;
     }

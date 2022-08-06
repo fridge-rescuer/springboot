@@ -19,6 +19,8 @@ import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.data.mongodb.core.query.Update;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.*;
@@ -48,6 +50,41 @@ class RecipeRepositoryTest {
     //given
     //when
     //then
+
+    @Test
+    @DisplayName("여러 재료로 여러 레시피 검색")
+    void findRecipesByMultipleIngredients(){
+        //given
+        IngredientDTO ingredient1 = IngredientDTO.builder().name("마늘").type("채소").build();
+        IngredientDTO ingredient2 = IngredientDTO.builder().name("올리브유").type("식용유").build();
+        IngredientDTO ingredient3 = IngredientDTO.builder().name("계란").type("유제품").build();
+        IngredientDTO ingredient4 = IngredientDTO.builder().name("고추").type("채소").build();
+
+        RecipeDTO recipe1 = RecipeDTO.builder().name("알리오 올리오").type("파스타").ingredientNames(new String[]{"마늘","올리브유","고추"}).build();
+        RecipeDTO recipe2 = RecipeDTO.builder().name("계란 프라이").type("전").ingredientNames(new String[]{"계란","올리브유","고추"}).build();
+
+        //when
+        ingredientService.saveIngredient(ingredient1);
+        ingredientService.saveIngredient(ingredient2);
+        ingredientService.saveIngredient(ingredient3);
+        ingredientService.saveIngredient(ingredient4);
+
+        recipeService.saveRecipe(recipe1);
+        recipeService.saveRecipe(recipe2);
+
+        //then
+        // 교집합 레시피가 없는 경우
+        List<RecipeResponseDTO> recipesWithMultipleIngredients = recipeService.findRecipesWithMultipleIngredients(Arrays.asList(ingredient1, ingredient3));
+        Assertions.assertThat(recipesWithMultipleIngredients.size()).isEqualTo(0);
+
+        //교집합 레시피가 있는 경우
+        recipesWithMultipleIngredients = recipeService.findRecipesWithMultipleIngredients(Arrays.asList(ingredient2, ingredient4));
+        Assertions.assertThat(recipesWithMultipleIngredients.size()).isEqualTo(2);
+
+        for (RecipeResponseDTO recipe: recipesWithMultipleIngredients ) {
+            System.out.println("recipe = " + recipe);
+        }
+    }
 
     @Test
     @DisplayName("레시피 저장, 재료와 연관")
