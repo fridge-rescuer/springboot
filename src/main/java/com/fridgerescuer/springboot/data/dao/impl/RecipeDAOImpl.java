@@ -7,8 +7,12 @@ import com.fridgerescuer.springboot.data.repository.RecipeRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.MongoTemplate;
+import org.springframework.data.mongodb.core.query.Criteria;
+import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.stereotype.Component;
+
+import java.util.List;
 
 import static org.springframework.data.mongodb.core.query.Criteria.where;
 
@@ -35,5 +39,18 @@ public class RecipeDAOImpl implements RecipeDAO{
         }
 
         return savedRecipe;
+    }
+
+    @Override
+    public Recipe findByName(String name) {
+        return repository.findByName(name);
+    }
+
+    @Override
+    public List<Recipe> findAllByContainName(String name) {
+        Query query = new Query();
+        query.addCriteria(Criteria.where("name").regex(".*" + name + ".*"));    //name이 포함된 모든 이름에 대해 검색
+
+        return template.find(query, Recipe.class);
     }
 }

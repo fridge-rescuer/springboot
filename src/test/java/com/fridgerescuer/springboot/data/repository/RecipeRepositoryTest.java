@@ -3,29 +3,19 @@ package com.fridgerescuer.springboot.data.repository;
 import com.fridgerescuer.springboot.data.dto.IngredientDTO;
 import com.fridgerescuer.springboot.data.dto.RecipeDTO;
 import com.fridgerescuer.springboot.data.dto.RecipeResponseDTO;
-import com.fridgerescuer.springboot.data.entity.Ingredient;
-import com.fridgerescuer.springboot.data.entity.Recipe;
 import com.fridgerescuer.springboot.service.IngredientService;
 import com.fridgerescuer.springboot.service.RecipeService;
-import org.assertj.core.api.Assertions;
-import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.data.mongo.DataMongoTest;
 import org.springframework.context.annotation.ComponentScan;
-import org.springframework.data.mongodb.core.MongoTemplate;
-import org.springframework.data.mongodb.core.query.Query;
-import org.springframework.data.mongodb.core.query.Update;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.*;
-import static org.junit.jupiter.api.Assertions.*;
-import static org.springframework.data.mongodb.core.query.Criteria.where;
 
 @ComponentScan(basePackages = "com.fridgerescuer.springboot")
 @DataMongoTest
@@ -52,6 +42,31 @@ class RecipeRepositoryTest {
     //then
 
     @Test
+    @DisplayName("해당 이름을 포함하는 모든 레시피 찾기")
+    void findAllRecipesByContainName(){
+        //given
+        RecipeDTO recipe1 = RecipeDTO.builder().name("감자 튀김").type("튀김").ingredientNames(new String[]{}).build();
+        RecipeDTO recipe2 = RecipeDTO.builder().name("새우튀김").type("튀김").ingredientNames(new String[]{}).build();
+        RecipeDTO recipe3 = RecipeDTO.builder().name("병아리 튀김").type("튀김").ingredientNames(new String[]{}).build();
+
+        //when
+        recipeService.saveRecipe(recipe1);
+        recipeService.saveRecipe(recipe2);
+        recipeService.saveRecipe(recipe3);
+
+        //then
+        List<RecipeResponseDTO> fryRecipes = recipeService.findAllRecipesByContainName("튀김");
+        assertThat(fryRecipes.size()).isEqualTo(3);
+
+        for (RecipeResponseDTO recipe: fryRecipes ) {
+            System.out.println("recipe = " + recipe);
+        }
+
+        List<RecipeResponseDTO> shrimpRecipes = recipeService.findAllRecipesByContainName("새우");
+        assertThat(shrimpRecipes.get(0).getName()).contains("새우");
+    }
+
+    @Test
     @DisplayName("여러 재료로 여러 레시피 검색")
     void findRecipesByMultipleIngredients(){
         //given
@@ -74,12 +89,12 @@ class RecipeRepositoryTest {
 
         //then
         // 교집합 레시피가 없는 경우
-        List<RecipeResponseDTO> recipesWithMultipleIngredients = recipeService.findRecipesWithMultipleIngredients(Arrays.asList(ingredient1, ingredient3));
-        Assertions.assertThat(recipesWithMultipleIngredients.size()).isEqualTo(0);
+        List<RecipeResponseDTO> recipesWithMultipleIngredients = recipeService.findRecipesByMultipleIngredients(Arrays.asList(ingredient1, ingredient3));
+        assertThat(recipesWithMultipleIngredients.size()).isEqualTo(0);
 
         //교집합 레시피가 있는 경우
-        recipesWithMultipleIngredients = recipeService.findRecipesWithMultipleIngredients(Arrays.asList(ingredient2, ingredient4));
-        Assertions.assertThat(recipesWithMultipleIngredients.size()).isEqualTo(2);
+        recipesWithMultipleIngredients = recipeService.findRecipesByMultipleIngredients(Arrays.asList(ingredient2, ingredient4));
+        assertThat(recipesWithMultipleIngredients.size()).isEqualTo(2);
 
         for (RecipeResponseDTO recipe: recipesWithMultipleIngredients ) {
             System.out.println("recipe = " + recipe);
@@ -120,7 +135,7 @@ class RecipeRepositoryTest {
         recipeService.saveRecipe(recipe1);
         recipeService.saveRecipe(recipe2);
 
-        List<RecipeResponseDTO> findRecipes = recipeService.findRecipeWithIngredient(ingredient);
+        List<RecipeResponseDTO> findRecipes = recipeService.findRecipesByIngredient(ingredient);
 
         //then
         for (RecipeResponseDTO recipeResponseDTO: findRecipes) {

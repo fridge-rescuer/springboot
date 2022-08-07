@@ -19,6 +19,7 @@ import java.util.stream.Collectors;
 @Service
 @RequiredArgsConstructor
 public class RecipeServiceImpl implements RecipeService {
+
     @Autowired private final RecipeDAO recipeDAO;
     @Autowired private final IngredientDAO ingredientDAO;
 
@@ -30,7 +31,19 @@ public class RecipeServiceImpl implements RecipeService {
     }
 
     @Override
-    public List<RecipeResponseDTO> findRecipeWithIngredient(IngredientDTO ingredientDTO) {
+    public List<RecipeResponseDTO> findAllRecipesByContainName(String name) {
+        List<Recipe> recipes = recipeDAO.findAllByContainName(name);
+
+        List<RecipeResponseDTO> results = new ArrayList<>();
+        for (Recipe recipe: recipes ) {
+            results.add(RecipeMapper.INSTANCE.recipeToRecipeResponseDTO(recipe));
+        }
+
+        return results;
+    }
+
+    @Override
+    public List<RecipeResponseDTO> findRecipesByIngredient(IngredientDTO ingredientDTO) {
         Ingredient findIngredient = ingredientDAO.find(Ingredient.builder()
                 .name(ingredientDTO.getName())
                 .type(ingredientDTO.getType()).build());
@@ -45,19 +58,19 @@ public class RecipeServiceImpl implements RecipeService {
     }
 
     @Override
-    public List<RecipeResponseDTO> findRecipesWithMultipleIngredients(List<IngredientDTO> ingredientDTOList) {
+    public List<RecipeResponseDTO> findRecipesByMultipleIngredients(List<IngredientDTO> ingredientDTOList) {
         final int FIRST_IDX = 0;
 
         if(ingredientDTOList.size() ==1)   //여러 재료가 아니라면 바로 반환
-            return findRecipeWithIngredient(ingredientDTOList.get(FIRST_IDX));
+            return findRecipesByIngredient(ingredientDTOList.get(FIRST_IDX));
 
         Map<String,RecipeResponseDTO> intersectionRecipeResponses = new HashMap<>();    //교집합 레시피
-        for (RecipeResponseDTO recipeResponseDTO: findRecipeWithIngredient(ingredientDTOList.get(FIRST_IDX)) ) {
+        for (RecipeResponseDTO recipeResponseDTO: findRecipesByIngredient(ingredientDTOList.get(FIRST_IDX)) ) {
             intersectionRecipeResponses.put(recipeResponseDTO.getId(), recipeResponseDTO);
         }
         
         for(int i=1; i<ingredientDTOList.size() ; ++i){
-            List<RecipeResponseDTO> recipes = findRecipeWithIngredient(ingredientDTOList.get(i));
+            List<RecipeResponseDTO> recipes = findRecipesByIngredient(ingredientDTOList.get(i));
 
             Map<String,RecipeResponseDTO> aliveRecipes = new HashMap<>();
             for (RecipeResponseDTO recipeResponseDTO : recipes){
@@ -74,5 +87,7 @@ public class RecipeServiceImpl implements RecipeService {
 
         return results;
     }
+
+
 
 }

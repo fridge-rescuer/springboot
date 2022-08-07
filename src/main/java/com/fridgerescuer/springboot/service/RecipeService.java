@@ -8,6 +8,7 @@ import java.util.List;
 
 public interface RecipeService {
     RecipeResponseDTO saveRecipe(RecipeDTO recipeDTO);
-    List<RecipeResponseDTO> findRecipeWithIngredient(IngredientDTO ingredientDTO);
-    List<RecipeResponseDTO> findRecipesWithMultipleIngredients(List<IngredientDTO> ingredientDTOs);
+    List<RecipeResponseDTO> findAllRecipesByContainName(String name);
+    List<RecipeResponseDTO> findRecipesByIngredient(IngredientDTO ingredientDTO);
+    List<RecipeResponseDTO> findRecipesByMultipleIngredients(List<IngredientDTO> ingredientDTOs);
 }
