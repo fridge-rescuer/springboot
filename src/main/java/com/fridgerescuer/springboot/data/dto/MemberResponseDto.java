@@ -13,4 +13,8 @@ public class MemberResponseDto {
     private String id;
     private String name;
     private List<IngredientDTO> ingredientDTOs;
+
+    public void setIngredientDTOs(List<IngredientDTO> ingredientDTOs) {
+        this.ingredientDTOs = ingredientDTOs;
+    }
 }
