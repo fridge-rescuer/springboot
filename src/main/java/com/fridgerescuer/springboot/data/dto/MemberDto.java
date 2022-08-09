@@ -11,4 +11,5 @@ import java.util.List;
 public class MemberDto {
     private String name;
     private List<IngredientDTO> ingredientDTOs;
+    private List<RecipeDTO> ingredientDTO;
 }

@@ -7,6 +7,7 @@ import com.fridgerescuer.springboot.data.dto.MemberResponseDto;
 import com.fridgerescuer.springboot.data.entity.Member;
 import com.fridgerescuer.springboot.data.mapper.IngredientMapper;
 import com.fridgerescuer.springboot.data.mapper.MemberMapper;
+import com.fridgerescuer.springboot.data.mapper.RecipeMapper;
 import com.fridgerescuer.springboot.service.MemberService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,7 +33,7 @@ public class MemberServiceImpl implements MemberService {
 
         MemberResponseDto memberResponseDto = MemberMapper.INSTANCE.memberToMemberResponseDto(findMember);  //재료 리스트는 타입을 변환해 주입해줘
         memberResponseDto.setIngredientDTOs(IngredientMapper.INSTANCE.ingredientListToDtoList(findMember.getIngredients()));
-
+        memberResponseDto.setRecipeDTOs(RecipeMapper.INSTANCE.recipeListToDtoList(findMember.getRecipes()));
         return memberResponseDto;
     }
 

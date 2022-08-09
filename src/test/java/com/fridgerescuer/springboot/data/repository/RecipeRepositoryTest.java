@@ -1,10 +1,10 @@
 package com.fridgerescuer.springboot.data.repository;
 
-import com.fridgerescuer.springboot.data.dto.IngredientDTO;
-import com.fridgerescuer.springboot.data.dto.RecipeDTO;
-import com.fridgerescuer.springboot.data.dto.RecipeResponseDTO;
+import com.fridgerescuer.springboot.data.dto.*;
 import com.fridgerescuer.springboot.service.IngredientService;
+import com.fridgerescuer.springboot.service.MemberService;
 import com.fridgerescuer.springboot.service.RecipeService;
+import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -29,6 +29,8 @@ class RecipeRepositoryTest {
     private RecipeService recipeService;
     @Autowired
     private IngredientService ingredientService;
+    @Autowired
+    private MemberService memberService;
 
 
     @BeforeEach
@@ -40,6 +42,22 @@ class RecipeRepositoryTest {
     //given
     //when
     //then
+
+    @Test
+    @DisplayName("멤버가 레시피 등록")
+    void saveRecipeByMember(){
+        //given
+        MemberDto member = MemberDto.builder().name("우왁굳").build();
+        RecipeDTO recipe = RecipeDTO.builder().name("감자 튀김").type("튀김").ingredientNames(new String[]{}).build();
+
+        //when
+        MemberResponseDto memberResponseDto = memberService.saveMember(member);
+        recipeService.saveRecipeByMember(memberResponseDto.getId(), recipe);
+
+        //then
+        List<RecipeDTO> recipeDTOs = memberService.findMemberById(memberResponseDto.getId()).getRecipeDTOs();
+        Assertions.assertThat(recipeDTOs.get(0).getName()).isEqualTo("감자 튀김");
+    }
 
     @Test
     @DisplayName("해당 이름을 포함하는 모든 레시피 찾기")

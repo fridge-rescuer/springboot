@@ -1,6 +1,7 @@
 package com.fridgerescuer.springboot.service.impl;
 
 import com.fridgerescuer.springboot.data.dao.IngredientDAO;
+import com.fridgerescuer.springboot.data.dao.MemberDao;
 import com.fridgerescuer.springboot.data.dao.RecipeDAO;
 import com.fridgerescuer.springboot.data.dto.IngredientDTO;
 import com.fridgerescuer.springboot.data.dto.RecipeDTO;
@@ -22,12 +23,21 @@ public class RecipeServiceImpl implements RecipeService {
 
     @Autowired private final RecipeDAO recipeDAO;
     @Autowired private final IngredientDAO ingredientDAO;
+    @Autowired private final MemberDao memberDao;
 
     @Override
     public RecipeResponseDTO saveRecipe(RecipeDTO recipeDTO) {
         Recipe savedRecipe = recipeDAO.save(RecipeMapper.INSTANCE.recipeDTOToRecipe(recipeDTO));
 
         return RecipeMapper.INSTANCE.recipeToRecipeResponseDTO(savedRecipe);
+    }
+
+    @Override
+    public RecipeResponseDTO saveRecipeByMember(String memberId, RecipeDTO recipeDTO) {
+        RecipeResponseDTO recipeResponseDTO = this.saveRecipe(recipeDTO);
+
+        memberDao.addRecipeToMember(memberId, RecipeMapper.INSTANCE.responseDTOToRecipe(recipeResponseDTO));
+        return recipeResponseDTO;
     }
 
     @Override

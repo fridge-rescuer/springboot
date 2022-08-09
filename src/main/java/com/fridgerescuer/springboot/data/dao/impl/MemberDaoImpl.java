@@ -3,6 +3,7 @@ package com.fridgerescuer.springboot.data.dao.impl;
 import com.fridgerescuer.springboot.data.dao.MemberDao;
 import com.fridgerescuer.springboot.data.entity.Ingredient;
 import com.fridgerescuer.springboot.data.entity.Member;
+import com.fridgerescuer.springboot.data.entity.Recipe;
 import com.fridgerescuer.springboot.data.repository.MemberRepository;
 import com.mongodb.client.result.UpdateResult;
 import lombok.RequiredArgsConstructor;
@@ -67,4 +68,13 @@ public class MemberDaoImpl implements MemberDao {
                 .apply(new Update().set("ingredients",ingredients))
                 .first();
     }
+
+    @Override
+    public void addRecipeToMember(String memberId, Recipe recipe) { //예외 처리 필요해..
+        template.update(Member.class)
+                .matching(where("id").is(memberId))
+                .apply(new Update().push("recipes",recipe))
+                .first();
+    }
+
 }

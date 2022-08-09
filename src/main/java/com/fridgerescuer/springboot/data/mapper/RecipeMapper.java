@@ -6,6 +6,8 @@ import com.fridgerescuer.springboot.data.entity.Recipe;
 import org.mapstruct.Mapper;
 import org.mapstruct.factory.Mappers;
 
+import java.util.List;
+
 @Mapper
 public interface RecipeMapper {
 
@@ -13,5 +15,7 @@ public interface RecipeMapper {
 
     RecipeDTO recipeToRecipeDTO(Recipe recipe);
     Recipe recipeDTOToRecipe(RecipeDTO recipe);
+    Recipe responseDTOToRecipe(RecipeResponseDTO recipe);
     RecipeResponseDTO recipeToRecipeResponseDTO(Recipe recipe);
+    List<RecipeDTO> recipeListToDtoList(List<Recipe> recipes);
 }
