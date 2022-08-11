@@ -20,14 +20,14 @@ public class IngredientServiceImpl implements IngredientService {
     @Override
     public IngredientResponseDTO saveIngredient(IngredientDTO ingredientDTO){
 
-        Ingredient savedIngredient = ingredientDao.save(IngredientMapper.INSTANCE.ingredientDTOToIngredient(ingredientDTO));
+        Ingredient savedIngredient = ingredientDao.save(IngredientMapper.INSTANCE.DTOtoIngredient(ingredientDTO));
 
-        return IngredientMapper.INSTANCE.ingredientToIngredientResponseDTO(savedIngredient);
+        return IngredientMapper.INSTANCE.ingredientToResponseDTO(savedIngredient);
     }
 
     @Override
     public IngredientResponseDTO findIngredientByName(String name) {
         Ingredient findIngredient = ingredientDao.findByName(name);
-        return IngredientMapper.INSTANCE.ingredientToIngredientResponseDTO(findIngredient);
+        return IngredientMapper.INSTANCE.ingredientToResponseDTO(findIngredient);
     }
 }

@@ -16,7 +16,7 @@ import javax.annotation.processing.Generated;
 public class RecipeMapperImpl implements RecipeMapper {
 
     @Override
-    public RecipeDTO recipeToRecipeDTO(Recipe recipe) {
+    public RecipeDTO recipeToDTO(Recipe recipe) {
         if ( recipe == null ) {
             return null;
         }
@@ -34,7 +34,7 @@ public class RecipeMapperImpl implements RecipeMapper {
     }
 
     @Override
-    public Recipe recipeDTOToRecipe(RecipeDTO recipe) {
+    public Recipe DTOtoRecipe(RecipeDTO recipe) {
         if ( recipe == null ) {
             return null;
         }
@@ -52,7 +52,7 @@ public class RecipeMapperImpl implements RecipeMapper {
     }
 
     @Override
-    public Recipe responseDTOToRecipe(RecipeResponseDTO recipe) {
+    public Recipe responseDTOtoRecipe(RecipeResponseDTO recipe) {
         if ( recipe == null ) {
             return null;
         }
@@ -71,7 +71,7 @@ public class RecipeMapperImpl implements RecipeMapper {
     }
 
     @Override
-    public RecipeResponseDTO recipeToRecipeResponseDTO(Recipe recipe) {
+    public RecipeResponseDTO recipeToResponseDTO(Recipe recipe) {
         if ( recipe == null ) {
             return null;
         }
@@ -97,7 +97,7 @@ public class RecipeMapperImpl implements RecipeMapper {
 
         List<RecipeDTO> list = new ArrayList<RecipeDTO>( recipes.size() );
         for ( Recipe recipe : recipes ) {
-            list.add( recipeToRecipeDTO( recipe ) );
+            list.add( recipeToDTO( recipe ) );
         }
 
         return list;

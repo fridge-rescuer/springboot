@@ -8,7 +8,7 @@ import java.util.List;
 
 @Builder
 @Getter
-public class MemberDto {
+public class MemberDTO {
     private String name;
     private List<IngredientDTO> ingredientDTOs;
     private List<RecipeDTO> ingredientDTO;

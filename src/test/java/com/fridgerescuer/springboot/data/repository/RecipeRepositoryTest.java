@@ -47,11 +47,11 @@ class RecipeRepositoryTest {
     @DisplayName("멤버가 레시피 등록")
     void saveRecipeByMember(){
         //given
-        MemberDto member = MemberDto.builder().name("우왁굳").build();
+        MemberDTO member = MemberDTO.builder().name("우왁굳").build();
         RecipeDTO recipe = RecipeDTO.builder().name("감자 튀김").type("튀김").ingredientNames(new String[]{}).build();
 
         //when
-        MemberResponseDto memberResponseDto = memberService.saveMember(member);
+        MemberResponseDTO memberResponseDto = memberService.saveMember(member);
         recipeService.saveRecipeByMember(memberResponseDto.getId(), recipe);
 
         //then

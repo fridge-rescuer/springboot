@@ -2,15 +2,13 @@ package com.fridgerescuer.springboot.data.repository;
 
 import com.fridgerescuer.springboot.data.dto.IngredientDTO;
 import com.fridgerescuer.springboot.data.dto.IngredientResponseDTO;
-import com.fridgerescuer.springboot.data.dto.MemberDto;
-import com.fridgerescuer.springboot.data.dto.MemberResponseDto;
-import com.fridgerescuer.springboot.data.entity.Member;
+import com.fridgerescuer.springboot.data.dto.MemberDTO;
+import com.fridgerescuer.springboot.data.dto.MemberResponseDTO;
 import com.fridgerescuer.springboot.data.mapper.IngredientMapper;
 import com.fridgerescuer.springboot.service.IngredientService;
 import com.fridgerescuer.springboot.service.MemberService;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.data.mongo.DataMongoTest;
@@ -18,8 +16,6 @@ import org.springframework.context.annotation.ComponentScan;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import static org.junit.jupiter.api.Assertions.*;
 
 @ComponentScan(basePackages = "com.fridgerescuer.springboot")
 @DataMongoTest
@@ -49,10 +45,10 @@ class MemberRepositoryTest {
     @Test
     void memberSave(){
         //given
-        MemberDto member = MemberDto.builder().name("종원").build();
+        MemberDTO member = MemberDTO.builder().name("종원").build();
 
         //when
-        MemberResponseDto memberResponseDto = memberService.saveMember(member);
+        MemberResponseDTO memberResponseDto = memberService.saveMember(member);
 
         //then
         Assertions.assertThat(memberResponseDto.getName()).isEqualTo("종원");
@@ -62,8 +58,8 @@ class MemberRepositoryTest {
     @Test
     void addIngredientsToMember(){
         //given
-        MemberDto member = MemberDto.builder().name("종원").build();
-        MemberResponseDto memberResponseDto = memberService.saveMember(member);
+        MemberDTO member = MemberDTO.builder().name("종원").build();
+        MemberResponseDTO memberResponseDto = memberService.saveMember(member);
 
         IngredientDTO ingredient1 = IngredientDTO.builder().name("마늘").type("채소").build();
         IngredientDTO ingredient2 = IngredientDTO.builder().name("올리브유").type("식용유").build();
@@ -79,10 +75,10 @@ class MemberRepositoryTest {
         responseDTOList.add(ingredientService.saveIngredient(ingredient3));
         responseDTOList.add(ingredientService.saveIngredient(ingredient4));
 
-        memberService.addIngredientsToMember(memberResponseDto.getId(), IngredientMapper.INSTANCE.ingredientResponseDTOListToIngredientDTOList(responseDTOList));
+        memberService.addIngredientsToMember(memberResponseDto.getId(), IngredientMapper.INSTANCE.responseDTOListToDTOList(responseDTOList));
 
         //then
-        MemberResponseDto findMember = memberService.findMemberById(memberResponseDto.getId());
+        MemberResponseDTO findMember = memberService.findMemberById(memberResponseDto.getId());
         System.out.println("findMember = " + findMember);
 
         Assertions.assertThat(findMember.getIngredientDTOs().size()).isEqualTo(responseDTOList.size());

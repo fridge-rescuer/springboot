@@ -5,15 +5,13 @@ import com.fridgerescuer.springboot.data.entity.Recipe;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.*;
-
 class MapperTest {
 
     @Test
     void builderWithMapperTest(){
         RecipeDTO recipeDTO = RecipeDTO.builder().name("pizza").type("instance")
                 .ingredientNames(new String[]{"ingredient"}).build();
-        Recipe recipe = RecipeMapper.INSTANCE.recipeDTOToRecipe(recipeDTO);
+        Recipe recipe = RecipeMapper.INSTANCE.DTOtoRecipe(recipeDTO);
 
         Assertions.assertThat(recipe.getName()).isEqualTo("pizza");
     }

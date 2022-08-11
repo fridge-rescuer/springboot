@@ -1,32 +1,32 @@
 package com.fridgerescuer.springboot.data.mapper;
 
-import com.fridgerescuer.springboot.data.dto.MemberDto;
-import com.fridgerescuer.springboot.data.dto.MemberResponseDto;
+import com.fridgerescuer.springboot.data.dto.MemberDTO;
+import com.fridgerescuer.springboot.data.dto.MemberResponseDTO;
 import com.fridgerescuer.springboot.data.entity.Member;
 import javax.annotation.processing.Generated;
 
 @Generated(
     value = "org.mapstruct.ap.MappingProcessor",
-    date = "2022-08-08T14:14:35+0900",
+    date = "2022-08-11T17:41:01+0900",
     comments = "version: 1.5.2.Final, compiler: javac, environment: Java 11.0.1 (Oracle Corporation)"
 )
 public class MemberMapperImpl implements MemberMapper {
 
     @Override
-    public MemberDto memberToMemberDto(Member member) {
+    public MemberDTO memberToMemberDto(Member member) {
         if ( member == null ) {
             return null;
         }
 
-        MemberDto.MemberDtoBuilder memberDto = MemberDto.builder();
+        MemberDTO.MemberDTOBuilder memberDTO = MemberDTO.builder();
 
-        memberDto.name( member.getName() );
+        memberDTO.name( member.getName() );
 
-        return memberDto.build();
+        return memberDTO.build();
     }
 
     @Override
-    public Member memberDtoToMember(MemberDto memberDto) {
+    public Member memberDtoToMember(MemberDTO memberDto) {
         if ( memberDto == null ) {
             return null;
         }
@@ -39,16 +39,16 @@ public class MemberMapperImpl implements MemberMapper {
     }
 
     @Override
-    public MemberResponseDto memberToMemberResponseDto(Member member) {
+    public MemberResponseDTO memberToMemberResponseDto(Member member) {
         if ( member == null ) {
             return null;
         }
 
-        MemberResponseDto.MemberResponseDtoBuilder memberResponseDto = MemberResponseDto.builder();
+        MemberResponseDTO.MemberResponseDTOBuilder memberResponseDTO = MemberResponseDTO.builder();
 
-        memberResponseDto.id( member.getId() );
-        memberResponseDto.name( member.getName() );
+        memberResponseDTO.id( member.getId() );
+        memberResponseDTO.name( member.getName() );
 
-        return memberResponseDto.build();
+        return memberResponseDTO.build();
     }
 }

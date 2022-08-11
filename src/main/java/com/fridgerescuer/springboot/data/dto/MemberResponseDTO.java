@@ -9,7 +9,7 @@ import java.util.List;
 @ToString
 @Builder
 @Getter
-public class MemberResponseDto {
+public class MemberResponseDTO {
     private String id;
     private String name;
     private List<IngredientDTO> ingredientDTOs;

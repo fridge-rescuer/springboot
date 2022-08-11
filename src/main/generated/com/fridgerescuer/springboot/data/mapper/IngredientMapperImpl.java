@@ -9,13 +9,13 @@ import javax.annotation.processing.Generated;
 
 @Generated(
     value = "org.mapstruct.ap.MappingProcessor",
-    date = "2022-08-08T13:44:59+0900",
+    date = "2022-08-11T17:41:01+0900",
     comments = "version: 1.5.2.Final, compiler: javac, environment: Java 11.0.1 (Oracle Corporation)"
 )
 public class IngredientMapperImpl implements IngredientMapper {
 
     @Override
-    public IngredientDTO ingredientToIngredientDTO(Ingredient ingredient) {
+    public IngredientDTO ingredientToDTO(Ingredient ingredient) {
         if ( ingredient == null ) {
             return null;
         }
@@ -30,7 +30,7 @@ public class IngredientMapperImpl implements IngredientMapper {
     }
 
     @Override
-    public Ingredient ingredientDTOToIngredient(IngredientDTO ingredientDTO) {
+    public Ingredient DTOtoIngredient(IngredientDTO ingredientDTO) {
         if ( ingredientDTO == null ) {
             return null;
         }
@@ -45,7 +45,7 @@ public class IngredientMapperImpl implements IngredientMapper {
     }
 
     @Override
-    public IngredientResponseDTO ingredientToIngredientResponseDTO(Ingredient ingredient) {
+    public IngredientResponseDTO ingredientToResponseDTO(Ingredient ingredient) {
         if ( ingredient == null ) {
             return null;
         }
@@ -60,14 +60,14 @@ public class IngredientMapperImpl implements IngredientMapper {
     }
 
     @Override
-    public List<Ingredient> ingredientListToIngredientDTOList(List<IngredientDTO> ingredientDTOs) {
+    public List<Ingredient> ingredientListToDTOList(List<IngredientDTO> ingredientDTOs) {
         if ( ingredientDTOs == null ) {
             return null;
         }
 
         List<Ingredient> list = new ArrayList<Ingredient>( ingredientDTOs.size() );
         for ( IngredientDTO ingredientDTO : ingredientDTOs ) {
-            list.add( ingredientDTOToIngredient( ingredientDTO ) );
+            list.add( DTOtoIngredient( ingredientDTO ) );
         }
 
         return list;
@@ -81,14 +81,14 @@ public class IngredientMapperImpl implements IngredientMapper {
 
         List<IngredientDTO> list = new ArrayList<IngredientDTO>( ingredients.size() );
         for ( Ingredient ingredient : ingredients ) {
-            list.add( ingredientToIngredientDTO( ingredient ) );
+            list.add( ingredientToDTO( ingredient ) );
         }
 
         return list;
     }
 
     @Override
-    public List<IngredientDTO> ingredientResponseDTOListToIngredientDTOList(List<IngredientResponseDTO> ingredientResponseDTOs) {
+    public List<IngredientDTO> responseDTOListToDTOList(List<IngredientResponseDTO> ingredientResponseDTOs) {
         if ( ingredientResponseDTOs == null ) {
             return null;
         }
@@ -109,7 +109,7 @@ public class IngredientMapperImpl implements IngredientMapper {
 
         List<IngredientResponseDTO> list = new ArrayList<IngredientResponseDTO>( ingredients.size() );
         for ( Ingredient ingredient : ingredients ) {
-            list.add( ingredientToIngredientResponseDTO( ingredient ) );
+            list.add( ingredientToResponseDTO( ingredient ) );
         }
 
         return list;

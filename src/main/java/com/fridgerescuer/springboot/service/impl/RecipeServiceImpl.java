@@ -27,16 +27,16 @@ public class RecipeServiceImpl implements RecipeService {
 
     @Override
     public RecipeResponseDTO saveRecipe(RecipeDTO recipeDTO) {
-        Recipe savedRecipe = recipeDao.save(RecipeMapper.INSTANCE.recipeDTOToRecipe(recipeDTO));
+        Recipe savedRecipe = recipeDao.save(RecipeMapper.INSTANCE.DTOtoRecipe(recipeDTO));
 
-        return RecipeMapper.INSTANCE.recipeToRecipeResponseDTO(savedRecipe);
+        return RecipeMapper.INSTANCE.recipeToResponseDTO(savedRecipe);
     }
 
     @Override
     public RecipeResponseDTO saveRecipeByMember(String memberId, RecipeDTO recipeDTO) {
         RecipeResponseDTO recipeResponseDTO = this.saveRecipe(recipeDTO);
 
-        memberDao.addRecipeToMember(memberId, RecipeMapper.INSTANCE.responseDTOToRecipe(recipeResponseDTO));
+        memberDao.addRecipeToMember(memberId, RecipeMapper.INSTANCE.responseDTOtoRecipe(recipeResponseDTO));
         return recipeResponseDTO;
     }
 
@@ -46,7 +46,7 @@ public class RecipeServiceImpl implements RecipeService {
 
         List<RecipeResponseDTO> results = new ArrayList<>();
         for (Recipe recipe: recipes ) {
-            results.add(RecipeMapper.INSTANCE.recipeToRecipeResponseDTO(recipe));
+            results.add(RecipeMapper.INSTANCE.recipeToResponseDTO(recipe));
         }
 
         return results;
@@ -61,7 +61,7 @@ public class RecipeServiceImpl implements RecipeService {
         List<RecipeResponseDTO> results = new ArrayList<>();
 
         for(Recipe recipe :findIngredient.getRecipes()){
-            results.add(RecipeMapper.INSTANCE.recipeToRecipeResponseDTO(recipe));
+            results.add(RecipeMapper.INSTANCE.recipeToResponseDTO(recipe));
         }
 
         return results;
