@@ -1,6 +1,6 @@
 package com.fridgerescuer.springboot.data.dao.impl;
 
-import com.fridgerescuer.springboot.data.dao.RecipeDAO;
+import com.fridgerescuer.springboot.data.dao.RecipeDao;
 import com.fridgerescuer.springboot.data.entity.Ingredient;
 import com.fridgerescuer.springboot.data.entity.Recipe;
 import com.fridgerescuer.springboot.data.repository.RecipeRepository;
@@ -18,7 +18,7 @@ import static org.springframework.data.mongodb.core.query.Criteria.where;
 
 @Component  //빈으로 등록되어 다른 클래스가 인터페이스로 의존성 주입 받을 때 자동 등록됨
 @RequiredArgsConstructor
-public class RecipeDAOImpl implements RecipeDAO{
+public class RecipeDaoImpl implements RecipeDao {
 
     @Autowired
     private final RecipeRepository repository;

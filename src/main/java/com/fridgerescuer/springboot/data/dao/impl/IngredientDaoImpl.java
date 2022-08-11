@@ -1,6 +1,6 @@
 package com.fridgerescuer.springboot.data.dao.impl;
 
-import com.fridgerescuer.springboot.data.dao.IngredientDAO;
+import com.fridgerescuer.springboot.data.dao.IngredientDao;
 import com.fridgerescuer.springboot.data.entity.Ingredient;
 import com.fridgerescuer.springboot.data.repository.IngredientRepository;
 import com.fridgerescuer.springboot.exception.data.repository.NoSuchIngredientException;
@@ -10,7 +10,7 @@ import org.springframework.stereotype.Component;
 
 @Component  //빈으로 등록되어 다른 클래스가 인터페이스로 의존성 주입 받을 때 자동 등록됨
 @RequiredArgsConstructor
-public class IngredientDAOImpl implements IngredientDAO {
+public class IngredientDaoImpl implements IngredientDao {
 
     @Autowired
     private final IngredientRepository repository;

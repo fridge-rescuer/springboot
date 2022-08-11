@@ -4,7 +4,7 @@ import com.fridgerescuer.springboot.data.entity.Recipe;
 
 import java.util.List;
 
-public interface RecipeDAO {
+public interface RecipeDao {
 
     Recipe save(Recipe recipe);
     Recipe findByName(String name);

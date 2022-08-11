@@ -1,8 +1,8 @@
 package com.fridgerescuer.springboot.service.impl;
 
-import com.fridgerescuer.springboot.data.dao.IngredientDAO;
+import com.fridgerescuer.springboot.data.dao.IngredientDao;
 import com.fridgerescuer.springboot.data.dao.MemberDao;
-import com.fridgerescuer.springboot.data.dao.RecipeDAO;
+import com.fridgerescuer.springboot.data.dao.RecipeDao;
 import com.fridgerescuer.springboot.data.dto.IngredientDTO;
 import com.fridgerescuer.springboot.data.dto.RecipeDTO;
 import com.fridgerescuer.springboot.data.dto.RecipeResponseDTO;
@@ -21,13 +21,13 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class RecipeServiceImpl implements RecipeService {
 
-    @Autowired private final RecipeDAO recipeDAO;
-    @Autowired private final IngredientDAO ingredientDAO;
+    @Autowired private final RecipeDao recipeDao;
+    @Autowired private final IngredientDao ingredientDao;
     @Autowired private final MemberDao memberDao;
 
     @Override
     public RecipeResponseDTO saveRecipe(RecipeDTO recipeDTO) {
-        Recipe savedRecipe = recipeDAO.save(RecipeMapper.INSTANCE.recipeDTOToRecipe(recipeDTO));
+        Recipe savedRecipe = recipeDao.save(RecipeMapper.INSTANCE.recipeDTOToRecipe(recipeDTO));
 
         return RecipeMapper.INSTANCE.recipeToRecipeResponseDTO(savedRecipe);
     }
@@ -42,7 +42,7 @@ public class RecipeServiceImpl implements RecipeService {
 
     @Override
     public List<RecipeResponseDTO> findAllRecipesByContainName(String name) {
-        List<Recipe> recipes = recipeDAO.findAllByContainName(name);
+        List<Recipe> recipes = recipeDao.findAllByContainName(name);
 
         List<RecipeResponseDTO> results = new ArrayList<>();
         for (Recipe recipe: recipes ) {
@@ -54,7 +54,7 @@ public class RecipeServiceImpl implements RecipeService {
 
     @Override
     public List<RecipeResponseDTO> findRecipesByIngredient(IngredientDTO ingredientDTO) {
-        Ingredient findIngredient = ingredientDAO.find(Ingredient.builder()
+        Ingredient findIngredient = ingredientDao.find(Ingredient.builder()
                 .name(ingredientDTO.getName())
                 .type(ingredientDTO.getType()).build());
 
