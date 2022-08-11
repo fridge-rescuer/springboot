@@ -3,6 +3,7 @@ package com.fridgerescuer.springboot.data.dao.impl;
 import com.fridgerescuer.springboot.data.dao.IngredientDAO;
 import com.fridgerescuer.springboot.data.entity.Ingredient;
 import com.fridgerescuer.springboot.data.repository.IngredientRepository;
+import com.fridgerescuer.springboot.exception.data.repository.NoSuchIngredientException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -28,7 +29,7 @@ public class IngredientDAOImpl implements IngredientDAO {
     public Ingredient findByName(String name) {
         Ingredient findIngredient = repository.findByName(name);
         if(findIngredient ==null){
-            throw new RuntimeException("no ingredient");
+            throw new NoSuchIngredientException( new NullPointerException("no such ingredient name in IngredientRepository, name=" + name));
         }
 
         return repository.findByName(name);

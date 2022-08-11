@@ -3,6 +3,7 @@ package com.fridgerescuer.springboot.data.repository;
 import com.fridgerescuer.springboot.data.dto.IngredientDTO;
 import com.fridgerescuer.springboot.data.dto.IngredientResponseDTO;
 import com.fridgerescuer.springboot.data.entity.Ingredient;
+import com.fridgerescuer.springboot.exception.data.repository.NoSuchIngredientException;
 import com.fridgerescuer.springboot.service.IngredientService;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.AfterEach;
@@ -44,14 +45,12 @@ class IngredientRepositoryTest {
 
 
     @Test
-    @DisplayName("없는 재료명으로 인한 런타임 예외 처리 확인")
+    @DisplayName("없는 재료명으로 인한 런타임 예외 처리 확인, NoSuchIngredientException")
     void occurExceptionByNoSameName(){
         IngredientDTO ingredientDTO = IngredientDTO.builder().name("마늘").type("채소").build();
 
         ingredientService.saveIngredient(ingredientDTO);
         Assertions.assertThatThrownBy(() ->ingredientService.findIngredientByName("양파"))
-                .isInstanceOf(RuntimeException.class);
-
-
+                .isInstanceOf(NoSuchIngredientException.class);
     }
 }
