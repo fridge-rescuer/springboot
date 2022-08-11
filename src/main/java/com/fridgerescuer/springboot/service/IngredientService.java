@@ -9,4 +9,5 @@ public interface IngredientService {
     IngredientResponseDTO findIngredientByName(String name);
     IngredientResponseDTO findIngredientById(String id);
     void updateIngredient(String id, IngredientDTO ingredientDTO);
+    void deleteIngredient(String id);
 }

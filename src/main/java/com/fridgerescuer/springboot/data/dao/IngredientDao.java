@@ -13,4 +13,5 @@ public interface IngredientDao {
     Ingredient findById(String id);
 
     void update(String targetId, Ingredient ingredient);
+    void delete(String targetId);
 }

@@ -17,6 +17,7 @@ import org.springframework.context.annotation.ComponentScan;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.*;
 
 @ComponentScan(basePackages = "com.fridgerescuer.springboot")
@@ -31,6 +32,29 @@ class IngredientRepositoryTest {
     @BeforeEach
     void beforeEach() {  //모두 롤백
         ingredientRepository.deleteAll();
+    }
+
+    //given
+    //when
+    //then
+
+    @Test
+    void deleteIngredient(){
+        //given
+        IngredientDTO ingredientDTO = IngredientDTO.builder().name("마늘").type("채소").build();
+
+        //when
+        IngredientResponseDTO savedIngredient = ingredientService.saveIngredient(ingredientDTO);
+
+        //then
+        ingredientService.deleteIngredient(savedIngredient.getId());
+        assertThatThrownBy(() -> ingredientService.findIngredientById(savedIngredient.getId()))
+                .isInstanceOf(NoSuchIngredientException.class);
+
+        //존재하지 않는 id를 삭제하는 경우
+        assertThatThrownBy(() -> ingredientService.deleteIngredient("1234560"))
+                .isInstanceOf(NoSuchIngredientException.class);
+
     }
 
     @Test

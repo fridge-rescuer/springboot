@@ -13,6 +13,7 @@ import java.util.List;
 @NoArgsConstructor
 @Builder
 @Getter
+@ToString
 public class Member {
     @Id @GeneratedValue
     private String id;

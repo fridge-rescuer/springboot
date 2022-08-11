@@ -40,7 +40,11 @@ public class IngredientServiceImpl implements IngredientService {
 
     @Override
     public void updateIngredient(String id,IngredientDTO ingredientDTO) {
-        //IngredientResponseDTO ingredientById = this.findIngredientById(id);
         ingredientDao.update(id, IngredientMapper.INSTANCE.DTOtoIngredient(ingredientDTO));
+    }
+
+    @Override
+    public void deleteIngredient(String id) {
+        ingredientDao.delete(id);
     }
 }
