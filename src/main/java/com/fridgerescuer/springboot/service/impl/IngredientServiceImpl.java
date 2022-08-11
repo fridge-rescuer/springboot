@@ -24,4 +24,10 @@ public class IngredientServiceImpl implements IngredientService {
 
         return IngredientMapper.INSTANCE.ingredientToIngredientResponseDTO(savedIngredient);
     }
+
+    @Override
+    public IngredientResponseDTO findIngredientByName(String name) {
+        Ingredient findIngredient = ingredientDAO.findByName(name);
+        return IngredientMapper.INSTANCE.ingredientToIngredientResponseDTO(findIngredient);
+    }
 }

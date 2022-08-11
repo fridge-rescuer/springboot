@@ -7,4 +7,6 @@ public interface IngredientDAO {
     Ingredient save(Ingredient ingredient);
 
     Ingredient find(Ingredient ingredient);
+
+    Ingredient findByName(String name);
 }

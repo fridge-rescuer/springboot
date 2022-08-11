@@ -23,4 +23,14 @@ public class IngredientDAOImpl implements IngredientDAO {
     public Ingredient find(Ingredient ingredient) { //이름으로 찾기
         return repository.findByName(ingredient.getName());
     }
+
+    @Override
+    public Ingredient findByName(String name) {
+        Ingredient findIngredient = repository.findByName(name);
+        if(findIngredient ==null){
+            throw new RuntimeException("no ingredient");
+        }
+
+        return repository.findByName(name);
+    }
 }
