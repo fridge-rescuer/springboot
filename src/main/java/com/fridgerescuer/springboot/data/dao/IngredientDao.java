@@ -9,4 +9,8 @@ public interface IngredientDao {
     Ingredient find(Ingredient ingredient);
 
     Ingredient findByName(String name);
+
+    Ingredient findById(String id);
+
+    void update(String targetId, Ingredient ingredient);
 }

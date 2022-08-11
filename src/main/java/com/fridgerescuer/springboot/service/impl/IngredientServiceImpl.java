@@ -27,7 +27,20 @@ public class IngredientServiceImpl implements IngredientService {
 
     @Override
     public IngredientResponseDTO findIngredientByName(String name) {
-        Ingredient findIngredient = ingredientDao.findByName(name);
-        return IngredientMapper.INSTANCE.ingredientToResponseDTO(findIngredient);
+        Ingredient foundIngredient = ingredientDao.findByName(name);
+        return IngredientMapper.INSTANCE.ingredientToResponseDTO(foundIngredient);
+    }
+
+    @Override
+    public IngredientResponseDTO findIngredientById(String id) {
+        Ingredient foundIngredient = ingredientDao.findById(id);
+
+        return IngredientMapper.INSTANCE.ingredientToResponseDTO(foundIngredient);
+    }
+
+    @Override
+    public void updateIngredient(String id,IngredientDTO ingredientDTO) {
+        //IngredientResponseDTO ingredientById = this.findIngredientById(id);
+        ingredientDao.update(id, IngredientMapper.INSTANCE.DTOtoIngredient(ingredientDTO));
     }
 }

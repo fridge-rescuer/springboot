@@ -16,6 +16,7 @@ import org.springframework.context.annotation.ComponentScan;
 
 import java.util.List;
 
+import static org.assertj.core.api.Assertions.*;
 import static org.junit.jupiter.api.Assertions.*;
 
 @ComponentScan(basePackages = "com.fridgerescuer.springboot")
@@ -33,6 +34,23 @@ class IngredientRepositoryTest {
     }
 
     @Test
+    @DisplayName("재료의 id를 통해 재료 update")
+    void updateIngredientById(){
+        IngredientDTO ingredientDTO = IngredientDTO.builder().name("마늘").type("채소").build();
+        IngredientDTO updateIngredientDTO = IngredientDTO.builder().name("삼겹살").type("돼지고기").build();
+
+        IngredientResponseDTO savedIngredient = ingredientService.saveIngredient(ingredientDTO);
+        ingredientService.updateIngredient(savedIngredient.getId(), updateIngredientDTO);
+
+        IngredientResponseDTO updatedResponseDTO = ingredientService.findIngredientById(savedIngredient.getId());
+
+        assertThat(savedIngredient.getId()).isEqualTo(updatedResponseDTO.getId());  //update된 document가 여전히 같은 id인지 확인
+        assertThat(updatedResponseDTO.getName()).isEqualTo(updateIngredientDTO.getName());
+
+        System.out.println("updatedResponseDTO = " + updatedResponseDTO);
+    }
+
+    @Test
     @DisplayName("이름으로 재료 id 찾기")
     void findIngredientIdByName(){
         IngredientDTO ingredientDTO = IngredientDTO.builder().name("마늘").type("채소").build();
@@ -40,7 +58,7 @@ class IngredientRepositoryTest {
         IngredientResponseDTO savedIngredient = ingredientService.saveIngredient(ingredientDTO);
         IngredientResponseDTO findIngredient = ingredientService.findIngredientByName(ingredientDTO.getName());
 
-        Assertions.assertThat(findIngredient.getId()).isEqualTo(savedIngredient.getId());
+        assertThat(findIngredient.getId()).isEqualTo(savedIngredient.getId());
     }
 
 
@@ -50,7 +68,7 @@ class IngredientRepositoryTest {
         IngredientDTO ingredientDTO = IngredientDTO.builder().name("마늘").type("채소").build();
 
         ingredientService.saveIngredient(ingredientDTO);
-        Assertions.assertThatThrownBy(() ->ingredientService.findIngredientByName("양파"))
+        assertThatThrownBy(() ->ingredientService.findIngredientByName("양파"))
                 .isInstanceOf(NoSuchIngredientException.class);
     }
 }
