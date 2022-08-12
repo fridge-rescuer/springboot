@@ -3,6 +3,7 @@ package com.fridgerescuer.springboot.data.repository;
 import com.fridgerescuer.springboot.data.dao.RecipeDao;
 import com.fridgerescuer.springboot.data.dto.*;
 import com.fridgerescuer.springboot.data.mapper.RecipeMapper;
+import com.fridgerescuer.springboot.exception.data.repository.NoSuchRecipeException;
 import com.fridgerescuer.springboot.service.IngredientService;
 import com.fridgerescuer.springboot.service.MemberService;
 import com.fridgerescuer.springboot.service.RecipeService;
@@ -45,8 +46,32 @@ class RecipeRepositoryTest {
     //when
     //then
 
-    @Autowired
-    private RecipeDao recipeDao;
+    @Test
+    void deleteRecipeById(){
+        //given
+        IngredientDTO ingredient1 = IngredientDTO.builder().name("마늘").type("채소").build();
+        IngredientDTO ingredient2 = IngredientDTO.builder().name("올리브유").type("식용유").build();
+        IngredientDTO ingredient3 = IngredientDTO.builder().name("고추").type("채소").build();
+
+        RecipeDTO recipe = RecipeDTO.builder().name("알리오 올리오").type("파스타").ingredientNames(new String[]{"마늘","올리브유","고추"}).build();
+
+        //when
+        ingredientService.saveIngredient(ingredient1);
+        ingredientService.saveIngredient(ingredient2);
+        ingredientService.saveIngredient(ingredient3);
+
+        RecipeResponseDTO recipeResponseDTO = recipeService.saveRecipe(recipe);
+        assertThat(ingredientRepository.findByName("마늘").getRecipes().size()).isEqualTo(1);
+
+        //then
+        recipeService.deleteRecipeById(recipeResponseDTO.getId());
+        assertThatThrownBy(() -> recipeService.findById(recipeResponseDTO.getId()))
+                .isInstanceOf(NoSuchRecipeException.class);
+
+        //연관 관계 제거도 확인
+        assertThat(ingredientRepository.findByName("마늘").getRecipes().size()).isEqualTo(0);
+
+    }
 
     @Test
     void recipeUpdateAndDelete(){

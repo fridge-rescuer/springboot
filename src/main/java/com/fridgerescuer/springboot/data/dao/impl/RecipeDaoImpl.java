@@ -93,6 +93,11 @@ public class RecipeDaoImpl implements RecipeDao {
         log.info("update id={} to recipe data ={}", targetId, updateData);
     }
 
+    @Override
+    public void deleteById(String targetId) {
+        repository.deleteById(targetId);
+    }
+
     private void setReferenceWithIngredientsByName(String[] ingredientNames, Recipe recipe){
         for (String name:ingredientNames) {
             template.update(Ingredient.class)

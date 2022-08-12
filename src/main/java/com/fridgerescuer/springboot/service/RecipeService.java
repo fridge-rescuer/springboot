@@ -16,4 +16,5 @@ public interface RecipeService {
     List<RecipeResponseDTO> findRecipesByMultipleIngredients(List<IngredientDTO> ingredientDTOs);
 
     void updateRecipeById(String recipeId,RecipeDTO updateRecipeDTO);
+    void deleteRecipeById(String recipeId);
 }

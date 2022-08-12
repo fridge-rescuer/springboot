@@ -24,6 +24,7 @@ public class RecipeServiceImpl implements RecipeService {
 
     @Autowired private final RecipeDao recipeDao;
     @Autowired private final MemberDao memberDao;
+    @Autowired private final IngredientDao ingredientDao;
 
     @Override
     public RecipeResponseDTO saveRecipe(RecipeDTO recipeDTO) {
@@ -54,9 +55,21 @@ public class RecipeServiceImpl implements RecipeService {
 
     @Override
     public List<RecipeResponseDTO> findRecipesByIngredient(IngredientDTO ingredientDTO) {
+        /*
         Ingredient findIngredient = IngredientMapper.INSTANCE.DTOtoIngredient(ingredientDTO);
 
-        return RecipeMapper.INSTANCE.recipeListToResponseDTOList(findIngredient.getRecipes());
+        return RecipeMapper.INSTANCE.recipeListToResponseDTOList(findIngredient.getRecipes());*/
+        Ingredient findIngredient = ingredientDao.find(Ingredient.builder()
+                .name(ingredientDTO.getName())
+                .type(ingredientDTO.getType()).build());
+
+        List<RecipeResponseDTO> results = new ArrayList<>();
+
+        for(Recipe recipe :findIngredient.getRecipes()){
+            results.add(RecipeMapper.INSTANCE.recipeToResponseDTO(recipe));
+        }
+
+        return results;
     }
 
     @Override
@@ -93,6 +106,11 @@ public class RecipeServiceImpl implements RecipeService {
     @Override
     public void updateRecipeById(String recipeId, RecipeDTO updateRecipeDTO) {
         recipeDao.updateRecipeById(recipeId, RecipeMapper.INSTANCE.DTOtoRecipe(updateRecipeDTO));
+    }
+
+    @Override
+    public void deleteRecipeById(String recipeId) {
+        recipeDao.deleteById(recipeId);
     }
 
 

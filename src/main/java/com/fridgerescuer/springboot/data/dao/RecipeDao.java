@@ -13,4 +13,5 @@ public interface RecipeDao {
     List<Recipe> findAllByContainName(String name);
 
     void updateRecipeById(String targetId, Recipe updateData);
+    void deleteById(String targetId);
 }
