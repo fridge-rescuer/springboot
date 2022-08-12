@@ -30,4 +30,13 @@ public class Ingredient {
     public Ingredient() {
     }
 
+    public void deleteReferenceRecipeById(String targetId){
+        for (Recipe recipe:recipes ) {
+            if(recipe.getId().equals(targetId)){
+                recipes.remove(recipe);
+                return;
+            }
+        }
+    }
+
 }

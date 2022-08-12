@@ -8,6 +8,7 @@ import com.fridgerescuer.springboot.data.dto.RecipeDTO;
 import com.fridgerescuer.springboot.data.dto.RecipeResponseDTO;
 import com.fridgerescuer.springboot.data.entity.Ingredient;
 import com.fridgerescuer.springboot.data.entity.Recipe;
+import com.fridgerescuer.springboot.data.mapper.IngredientMapper;
 import com.fridgerescuer.springboot.data.mapper.RecipeMapper;
 import com.fridgerescuer.springboot.service.RecipeService;
 import lombok.RequiredArgsConstructor;
@@ -22,7 +23,6 @@ import java.util.stream.Collectors;
 public class RecipeServiceImpl implements RecipeService {
 
     @Autowired private final RecipeDao recipeDao;
-    @Autowired private final IngredientDao ingredientDao;
     @Autowired private final MemberDao memberDao;
 
     @Override
@@ -41,30 +41,22 @@ public class RecipeServiceImpl implements RecipeService {
     }
 
     @Override
+    public RecipeResponseDTO findById(String id) {
+        return RecipeMapper.INSTANCE.recipeToResponseDTO(recipeDao.findById(id));
+    }
+
+    @Override
     public List<RecipeResponseDTO> findAllRecipesByContainName(String name) {
         List<Recipe> recipes = recipeDao.findAllByContainName(name);
 
-        List<RecipeResponseDTO> results = new ArrayList<>();
-        for (Recipe recipe: recipes ) {
-            results.add(RecipeMapper.INSTANCE.recipeToResponseDTO(recipe));
-        }
-
-        return results;
+        return RecipeMapper.INSTANCE.recipeListToResponseDTOList(recipes);
     }
 
     @Override
     public List<RecipeResponseDTO> findRecipesByIngredient(IngredientDTO ingredientDTO) {
-        Ingredient findIngredient = ingredientDao.find(Ingredient.builder()
-                .name(ingredientDTO.getName())
-                .type(ingredientDTO.getType()).build());
+        Ingredient findIngredient = IngredientMapper.INSTANCE.DTOtoIngredient(ingredientDTO);
 
-        List<RecipeResponseDTO> results = new ArrayList<>();
-
-        for(Recipe recipe :findIngredient.getRecipes()){
-            results.add(RecipeMapper.INSTANCE.recipeToResponseDTO(recipe));
-        }
-
-        return results;
+        return RecipeMapper.INSTANCE.recipeListToResponseDTOList(findIngredient.getRecipes());
     }
 
     @Override
@@ -98,6 +90,10 @@ public class RecipeServiceImpl implements RecipeService {
         return results;
     }
 
+    @Override
+    public void updateRecipeById(String recipeId, RecipeDTO updateRecipeDTO) {
+        recipeDao.updateRecipeById(recipeId, RecipeMapper.INSTANCE.DTOtoRecipe(updateRecipeDTO));
+    }
 
 
 }

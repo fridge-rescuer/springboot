@@ -17,5 +17,7 @@ public interface RecipeMapper {
     Recipe DTOtoRecipe(RecipeDTO recipe);
     Recipe responseDTOtoRecipe(RecipeResponseDTO recipe);
     RecipeResponseDTO recipeToResponseDTO(Recipe recipe);
-    List<RecipeDTO> recipeListToDtoList(List<Recipe> recipes);
+
+    List<RecipeDTO> recipeListToDTOList(List<Recipe> recipes);
+    List<RecipeResponseDTO> recipeListToResponseDTOList(List<Recipe> recipes);
 }

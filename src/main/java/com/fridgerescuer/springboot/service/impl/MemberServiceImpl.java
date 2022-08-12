@@ -33,7 +33,7 @@ public class MemberServiceImpl implements MemberService {
 
         MemberResponseDTO memberResponseDto = MemberMapper.INSTANCE.memberToMemberResponseDto(findMember);  //재료 리스트는 타입을 변환해 주입해줘
         memberResponseDto.setIngredientDTOs(IngredientMapper.INSTANCE.ingredientListToDtoList(findMember.getIngredients()));
-        memberResponseDto.setRecipeDTOs(RecipeMapper.INSTANCE.recipeListToDtoList(findMember.getRecipes()));
+        memberResponseDto.setRecipeDTOs(RecipeMapper.INSTANCE.recipeListToDTOList(findMember.getRecipes()));
         return memberResponseDto;
     }
 

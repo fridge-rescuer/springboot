@@ -10,7 +10,7 @@ import javax.annotation.processing.Generated;
 
 @Generated(
     value = "org.mapstruct.ap.MappingProcessor",
-    date = "2022-08-11T19:08:55+0900",
+    date = "2022-08-11T22:31:18+0900",
     comments = "version: 1.5.2.Final, compiler: javac, environment: Java 11.0.1 (Oracle Corporation)"
 )
 public class RecipeMapperImpl implements RecipeMapper {
@@ -90,7 +90,7 @@ public class RecipeMapperImpl implements RecipeMapper {
     }
 
     @Override
-    public List<RecipeDTO> recipeListToDtoList(List<Recipe> recipes) {
+    public List<RecipeDTO> recipeListToDTOList(List<Recipe> recipes) {
         if ( recipes == null ) {
             return null;
         }
@@ -98,6 +98,20 @@ public class RecipeMapperImpl implements RecipeMapper {
         List<RecipeDTO> list = new ArrayList<RecipeDTO>( recipes.size() );
         for ( Recipe recipe : recipes ) {
             list.add( recipeToDTO( recipe ) );
+        }
+
+        return list;
+    }
+
+    @Override
+    public List<RecipeResponseDTO> recipeListToResponseDTOList(List<Recipe> recipes) {
+        if ( recipes == null ) {
+            return null;
+        }
+
+        List<RecipeResponseDTO> list = new ArrayList<RecipeResponseDTO>( recipes.size() );
+        for ( Recipe recipe : recipes ) {
+            list.add( recipeToResponseDTO( recipe ) );
         }
 
         return list;

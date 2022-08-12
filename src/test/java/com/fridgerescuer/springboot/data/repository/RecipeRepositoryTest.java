@@ -1,6 +1,8 @@
 package com.fridgerescuer.springboot.data.repository;
 
+import com.fridgerescuer.springboot.data.dao.RecipeDao;
 import com.fridgerescuer.springboot.data.dto.*;
+import com.fridgerescuer.springboot.data.mapper.RecipeMapper;
 import com.fridgerescuer.springboot.service.IngredientService;
 import com.fridgerescuer.springboot.service.MemberService;
 import com.fridgerescuer.springboot.service.RecipeService;
@@ -42,6 +44,38 @@ class RecipeRepositoryTest {
     //given
     //when
     //then
+
+    @Autowired
+    private RecipeDao recipeDao;
+
+    @Test
+    void recipeUpdateAndDelete(){
+        //given
+        IngredientDTO ingredient1 = IngredientDTO.builder().name("마늘").type("채소").build();
+        IngredientDTO ingredient2 = IngredientDTO.builder().name("올리브유").type("식용유").build();
+        IngredientDTO ingredient3 = IngredientDTO.builder().name("고추").type("채소").build();
+        IngredientDTO ingredient4 = IngredientDTO.builder().name("감자").type("채소").build();
+
+        RecipeDTO recipe = RecipeDTO.builder().name("알리오 올리오").type("파스타").ingredientNames(new String[]{"마늘","올리브유","고추"}).build();
+        RecipeDTO updateDateRecipe = RecipeDTO.builder().name("감자 튀김").type("튀김").ingredientNames(new String[]{"감자"}).build();
+
+        //when
+        ingredientService.saveIngredient(ingredient1);
+        ingredientService.saveIngredient(ingredient2);
+        ingredientService.saveIngredient(ingredient3);
+        ingredientService.saveIngredient(ingredient4);
+
+        RecipeResponseDTO recipeResponseDTO = recipeService.saveRecipe(recipe);
+        recipeService.updateRecipeById(recipeResponseDTO.getId(), updateDateRecipe);
+
+        //then
+        RecipeResponseDTO updatedRecipe = recipeService.findById(recipeResponseDTO.getId());
+        assertThat(updatedRecipe.getName()).isEqualTo("감자 튀김");     // 내용 update 확인
+        assertThat(ingredientRepository.findByName("마늘").getRecipes().size()).isEqualTo(0); //연관관계 제거 확인
+        assertThat(ingredientRepository.findByName("감자").getRecipes().size()).isEqualTo(1); // 연관관계 재 생성 확인
+
+        System.out.println("updatedRecipe = " + updatedRecipe);
+    }
 
     @Test
     @DisplayName("멤버가 레시피 등록")
