@@ -1,16 +1,15 @@
 package com.fridgerescuer.springboot.data.entity;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.ToString;
+import lombok.*;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
+import org.springframework.data.mongodb.core.mapping.DocumentReference;
 
 import javax.persistence.GeneratedValue;
 
 @Document(collection = "recipe")
 @AllArgsConstructor
+@NoArgsConstructor
 @Builder
 @Getter
 @ToString
@@ -23,6 +22,6 @@ public class Recipe {
     private String type;
     private String[] ingredientNames;
 
-    public Recipe() {}
-
+    @DocumentReference
+    private Member producerMember;
 }

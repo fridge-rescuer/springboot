@@ -2,6 +2,7 @@ package com.fridgerescuer.springboot.data.dao.impl;
 
 import com.fridgerescuer.springboot.data.dao.RecipeDao;
 import com.fridgerescuer.springboot.data.entity.Ingredient;
+import com.fridgerescuer.springboot.data.entity.Member;
 import com.fridgerescuer.springboot.data.entity.Recipe;
 import com.fridgerescuer.springboot.data.repository.RecipeRepository;
 import com.fridgerescuer.springboot.exception.data.repository.NoSuchIngredientException;
@@ -96,6 +97,14 @@ public class RecipeDaoImpl implements RecipeDao {
     @Override
     public void deleteById(String targetId) {
         repository.deleteById(targetId);
+    }
+
+    @Override
+    public void setProducerMemberOfRecipeById(String recipeId, Member producerMember){
+        template.update(Recipe.class)
+                .matching(where("id").is(recipeId))
+                .apply(new Update().set("producerMember", producerMember))
+                .first();
     }
 
     private void setReferenceWithIngredientsByName(String[] ingredientNames, Recipe recipe){

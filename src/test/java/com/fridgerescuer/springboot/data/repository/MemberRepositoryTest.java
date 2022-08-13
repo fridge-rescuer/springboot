@@ -109,7 +109,6 @@ class MemberRepositoryTest {
 
 
         //when
-
         List<IngredientResponseDTO> responseDTOList = new ArrayList<>();
         responseDTOList.add(ingredientService.saveIngredient(ingredient1));
         responseDTOList.add(ingredientService.saveIngredient(ingredient2));
@@ -130,19 +129,26 @@ class MemberRepositoryTest {
     }
 
     @Test
-    @DisplayName("멤버가 레시피 등록")
+    @DisplayName("멤버가 만든 레시피 등록, 레시피에는 만든 멤버를 등록")
     void saveRecipeByMember(){
         //given
         MemberDTO member = MemberDTO.builder().name("우왁굳").build();
-        RecipeDTO recipe = RecipeDTO.builder().name("감자 튀김").type("튀김").ingredientNames(new String[]{}).build();
+        IngredientDTO ingredient = IngredientDTO.builder().name("감자").type("채소").build();
+        RecipeDTO recipe = RecipeDTO.builder().name("감자 튀김").type("튀김").ingredientNames(new String[]{"감자"}).build();
 
         //when
         MemberResponseDTO memberResponseDto = memberService.saveMember(member);
-        recipeService.saveRecipeByMember(memberResponseDto.getId(), recipe);
+        ingredientService.saveIngredient(ingredient);
+        RecipeResponseDTO recipeResponseDTO = recipeService.saveRecipeByMember(memberResponseDto.getId(), recipe);
 
         //then
         List<RecipeDTO> recipeDTOs = memberService.findMemberById(memberResponseDto.getId()).getRecipeDTOs();
-        assertThat(recipeDTOs.get(0).getName()).isEqualTo("감자 튀김");
+        RecipeDTO referenceRecipe = recipeDTOs.get(0);
+
+        System.out.println("referenceRecipe = " + referenceRecipe);
+
+        assertThat(referenceRecipe.getName()).isEqualTo("감자 튀김");
+        assertThat(referenceRecipe.getProducerMember().getId()).isEqualTo(memberResponseDto.getId());
 
         //존재하지 않는 id로 접근시
         assertThatThrownBy(() -> recipeService.saveRecipeByMember("123456", recipe))

@@ -11,6 +11,7 @@ import java.util.List;
 @Getter
 @ToString
 public class MemberDTO {
+    private String id;
     private String name;
     private List<IngredientDTO> ingredientDTOs;
     private List<RecipeDTO> ingredientDTO;

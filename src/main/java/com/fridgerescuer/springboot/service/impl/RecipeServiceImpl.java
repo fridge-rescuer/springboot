@@ -38,7 +38,9 @@ public class RecipeServiceImpl implements RecipeService {
         RecipeResponseDTO recipeResponseDTO = this.saveRecipe(recipeDTO);
 
         memberDao.addRecipeToMember(memberId, RecipeMapper.INSTANCE.responseDTOtoRecipe(recipeResponseDTO));
-        return recipeResponseDTO;
+
+        recipeDao.setProducerMemberOfRecipeById(recipeResponseDTO.getId(),memberDao.findById(memberId));
+        return this.findById(recipeResponseDTO.getId());
     }
 
     @Override

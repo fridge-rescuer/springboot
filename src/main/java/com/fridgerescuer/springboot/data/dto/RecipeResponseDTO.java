@@ -1,6 +1,7 @@
 package com.fridgerescuer.springboot.data.dto;
 
 
+import com.fridgerescuer.springboot.data.entity.Member;
 import lombok.*;
 
 @ToString
@@ -12,4 +13,5 @@ public class RecipeResponseDTO {
     private String type;
     private String[] ingredientNames;
 
+    private MemberDTO producerMember;
 }
