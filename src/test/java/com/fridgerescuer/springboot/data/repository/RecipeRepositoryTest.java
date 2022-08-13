@@ -3,6 +3,7 @@ package com.fridgerescuer.springboot.data.repository;
 import com.fridgerescuer.springboot.data.dao.RecipeDao;
 import com.fridgerescuer.springboot.data.dto.*;
 import com.fridgerescuer.springboot.data.mapper.RecipeMapper;
+import com.fridgerescuer.springboot.exception.data.repository.NoSuchMemberException;
 import com.fridgerescuer.springboot.exception.data.repository.NoSuchRecipeException;
 import com.fridgerescuer.springboot.service.IngredientService;
 import com.fridgerescuer.springboot.service.MemberService;
@@ -100,22 +101,6 @@ class RecipeRepositoryTest {
         assertThat(ingredientRepository.findByName("감자").getRecipes().size()).isEqualTo(1); // 연관관계 재 생성 확인
 
         System.out.println("updatedRecipe = " + updatedRecipe);
-    }
-
-    @Test
-    @DisplayName("멤버가 레시피 등록")
-    void saveRecipeByMember(){
-        //given
-        MemberDTO member = MemberDTO.builder().name("우왁굳").build();
-        RecipeDTO recipe = RecipeDTO.builder().name("감자 튀김").type("튀김").ingredientNames(new String[]{}).build();
-
-        //when
-        MemberResponseDTO memberResponseDto = memberService.saveMember(member);
-        recipeService.saveRecipeByMember(memberResponseDto.getId(), recipe);
-
-        //then
-        List<RecipeDTO> recipeDTOs = memberService.findMemberById(memberResponseDto.getId()).getRecipeDTOs();
-        Assertions.assertThat(recipeDTOs.get(0).getName()).isEqualTo("감자 튀김");
     }
 
     @Test

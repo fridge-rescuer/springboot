@@ -55,21 +55,11 @@ public class RecipeServiceImpl implements RecipeService {
 
     @Override
     public List<RecipeResponseDTO> findRecipesByIngredient(IngredientDTO ingredientDTO) {
-        /*
-        Ingredient findIngredient = IngredientMapper.INSTANCE.DTOtoIngredient(ingredientDTO);
+        Ingredient findIngredient = ingredientDao.find(
+                IngredientMapper.INSTANCE.DTOtoIngredient(ingredientDTO)
+        );
 
-        return RecipeMapper.INSTANCE.recipeListToResponseDTOList(findIngredient.getRecipes());*/
-        Ingredient findIngredient = ingredientDao.find(Ingredient.builder()
-                .name(ingredientDTO.getName())
-                .type(ingredientDTO.getType()).build());
-
-        List<RecipeResponseDTO> results = new ArrayList<>();
-
-        for(Recipe recipe :findIngredient.getRecipes()){
-            results.add(RecipeMapper.INSTANCE.recipeToResponseDTO(recipe));
-        }
-
-        return results;
+        return RecipeMapper.INSTANCE.recipeListToResponseDTOList(findIngredient.getRecipes());
     }
 
     @Override

@@ -41,4 +41,14 @@ public class MemberServiceImpl implements MemberService {
     public void addIngredientsToMember(String memberId, List<IngredientDTO> ingredientDTOs) {
         memberDao.addIngredientsToMember(memberId, IngredientMapper.INSTANCE.ingredientListToDTOList(ingredientDTOs));
     }
+
+    @Override
+    public void updateMemberById(String memberId, MemberDTO updateDataMemberDTO) {
+        memberDao.updateMemberById(memberId, updateDataMemberDTO);
+    }
+
+    @Override
+    public void deleteMemberById(String id) {
+        memberDao.deleteMemberById(id);
+    }
 }
