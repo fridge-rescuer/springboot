@@ -4,6 +4,7 @@ import com.fridgerescuer.springboot.data.dto.MemberDTO;
 import com.fridgerescuer.springboot.data.dto.MemberResponseDTO;
 import com.fridgerescuer.springboot.data.entity.Member;
 import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
 import org.mapstruct.factory.Mappers;
 
 @Mapper
@@ -11,8 +12,11 @@ public interface MemberMapper {
 
     MemberMapper INSTANCE = Mappers.getMapper(MemberMapper.class);
 
-    MemberDTO memberToMemberDto(Member member);
-    Member memberDtoToMember(MemberDTO memberDto);
+    MemberDTO memberToDto(Member member);
 
-    MemberResponseDTO memberToMemberResponseDto(Member member);
+    Member DtoToMember(MemberDTO memberDto);
+
+    @Mapping(source = "ingredients", target = "ingredientDTOs")
+    @Mapping(source = "recipes", target = "recipeDTOs")
+    MemberResponseDTO memberToResponseDto(Member member);
 }

@@ -7,7 +7,6 @@ import com.fridgerescuer.springboot.data.dto.MemberResponseDTO;
 import com.fridgerescuer.springboot.data.entity.Member;
 import com.fridgerescuer.springboot.data.mapper.IngredientMapper;
 import com.fridgerescuer.springboot.data.mapper.MemberMapper;
-import com.fridgerescuer.springboot.data.mapper.RecipeMapper;
 import com.fridgerescuer.springboot.service.MemberService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,17 +22,15 @@ public class MemberServiceImpl implements MemberService {
 
     @Override
     public MemberResponseDTO saveMember(MemberDTO memberDto) {
-        Member savedMember = memberDao.saveMember(MemberMapper.INSTANCE.memberDtoToMember(memberDto));
-        return MemberMapper.INSTANCE.memberToMemberResponseDto(savedMember);
+        Member savedMember = memberDao.saveMember(MemberMapper.INSTANCE.DtoToMember(memberDto));
+        return MemberMapper.INSTANCE.memberToResponseDto(savedMember);
     }
 
     @Override
     public MemberResponseDTO findMemberById(String memberId) {
         Member findMember = memberDao.findById(memberId);
 
-        MemberResponseDTO memberResponseDto = MemberMapper.INSTANCE.memberToMemberResponseDto(findMember);  //재료 리스트는 타입을 변환해 주입해줘
-        memberResponseDto.setIngredientDTOs(IngredientMapper.INSTANCE.ingredientListToDtoList(findMember.getIngredients()));
-        memberResponseDto.setRecipeDTOs(RecipeMapper.INSTANCE.recipeListToDTOList(findMember.getRecipes()));
+        MemberResponseDTO memberResponseDto = MemberMapper.INSTANCE.memberToResponseDto(findMember);  //재료 리스트는 타입을 변환해 주입해줘
         return memberResponseDto;
     }
 

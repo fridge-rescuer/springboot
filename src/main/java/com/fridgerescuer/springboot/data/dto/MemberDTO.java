@@ -14,5 +14,5 @@ public class MemberDTO {
     private String id;
     private String name;
     private List<IngredientDTO> ingredientDTOs;
-    private List<RecipeDTO> ingredientDTO;
+    private List<RecipeDTO> recipeDTOs;  //이름 바꾸면 오류터짐
 }
