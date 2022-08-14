@@ -1,6 +1,7 @@
 package com.fridgerescuer.springboot.data.entity;
 
 import lombok.*;
+import org.bson.types.Binary;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.DocumentReference;
@@ -24,4 +25,7 @@ public class Recipe {
 
     @DocumentReference
     private Member producerMember;
+
+    private Binary image;
+
 }

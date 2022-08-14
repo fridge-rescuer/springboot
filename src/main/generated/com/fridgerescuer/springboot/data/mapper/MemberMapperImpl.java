@@ -14,7 +14,7 @@ import javax.annotation.processing.Generated;
 
 @Generated(
     value = "org.mapstruct.ap.MappingProcessor",
-    date = "2022-08-13T19:44:20+0900",
+    date = "2022-08-14T21:12:21+0900",
     comments = "version: 1.5.2.Final, compiler: javac, environment: Java 11.0.1 (Oracle Corporation)"
 )
 public class MemberMapperImpl implements MemberMapper {
@@ -27,8 +27,6 @@ public class MemberMapperImpl implements MemberMapper {
 
         MemberDTO.MemberDTOBuilder memberDTO = MemberDTO.builder();
 
-        memberDTO.ingredientDTOs( ingredientListToIngredientDTOList( member.getIngredients() ) );
-        memberDTO.recipeDTOs( recipeListToRecipeDTOList( member.getRecipes() ) );
         memberDTO.id( member.getId() );
         memberDTO.name( member.getName() );
 
@@ -106,6 +104,7 @@ public class MemberMapperImpl implements MemberMapper {
             recipeDTO.ingredientNames( Arrays.copyOf( ingredientNames, ingredientNames.length ) );
         }
         recipeDTO.producerMember( memberToDto( recipe.getProducerMember() ) );
+        recipeDTO.image( recipe.getImage() );
 
         return recipeDTO.build();
     }

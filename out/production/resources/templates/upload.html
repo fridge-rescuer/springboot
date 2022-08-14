@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<h1>Upload new Photo</h1>
+<form method="POST" action="/recipe/addimage" enctype="multipart/form-data">
+
+
+    Name:<input type="text" name="name" />
+    Image:<input type="file" name="image" accept="image/*" />
+    <input type="submit" value="Upload" />
+</form>
+</body>
+</html>

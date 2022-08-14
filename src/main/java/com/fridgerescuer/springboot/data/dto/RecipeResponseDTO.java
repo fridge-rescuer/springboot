@@ -3,6 +3,7 @@ package com.fridgerescuer.springboot.data.dto;
 
 import com.fridgerescuer.springboot.data.entity.Member;
 import lombok.*;
+import org.bson.types.Binary;
 
 @ToString
 @Builder
@@ -14,4 +15,5 @@ public class RecipeResponseDTO {
     private String[] ingredientNames;
 
     private MemberDTO producerMember;
+    private Binary image;
 }

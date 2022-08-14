@@ -3,7 +3,9 @@ package com.fridgerescuer.springboot.service;
 import com.fridgerescuer.springboot.data.dto.IngredientDTO;
 import com.fridgerescuer.springboot.data.dto.RecipeDTO;
 import com.fridgerescuer.springboot.data.dto.RecipeResponseDTO;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.List;
 
 public interface RecipeService {
@@ -17,4 +19,6 @@ public interface RecipeService {
 
     void updateRecipeById(String recipeId,RecipeDTO updateRecipeDTO);
     void deleteRecipeById(String recipeId);
+
+    void addRecipeImage(String targetId, MultipartFile image) throws IOException;
 }

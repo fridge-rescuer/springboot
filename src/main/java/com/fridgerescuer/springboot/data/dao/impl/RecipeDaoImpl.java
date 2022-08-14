@@ -10,13 +10,18 @@ import com.fridgerescuer.springboot.exception.data.repository.NoSuchRecipeExcept
 import com.mongodb.client.result.UpdateResult;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.bson.BsonBinarySubType;
+import org.bson.conversions.Bson;
+import org.bson.types.Binary;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.stereotype.Component;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
 
@@ -107,7 +112,26 @@ public class RecipeDaoImpl implements RecipeDao {
                 .first();
     }
 
+    @Override
+    public void addImage(String targetId, MultipartFile file) throws IOException {
+        Query query = new Query();
+        query.addCriteria(Criteria.where("id").is(targetId));
+
+        Update update = new Update();
+        update.set("image", new Binary(BsonBinarySubType.BINARY, file.getBytes()));
+        UpdateResult updateResult = template.updateMulti(query, update, Recipe.class);
+
+        if(updateResult.getModifiedCount() ==0){
+            throw new NoSuchRecipeException(new NullPointerException("no such recipe id in Repository, id=" + targetId));
+        }
+
+
+    }
+
     private void setReferenceWithIngredientsByName(String[] ingredientNames, Recipe recipe){
+        if(ingredientNames== null || ingredientNames.length ==0)
+            return;
+
         for (String name:ingredientNames) {
             template.update(Ingredient.class)
                     .matching(where("name").is(name))

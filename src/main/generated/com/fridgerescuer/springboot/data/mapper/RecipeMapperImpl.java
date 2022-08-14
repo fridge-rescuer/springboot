@@ -9,12 +9,14 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import javax.annotation.processing.Generated;
+import org.springframework.stereotype.Component;
 
 @Generated(
     value = "org.mapstruct.ap.MappingProcessor",
-    date = "2022-08-13T19:12:55+0900",
+    date = "2022-08-14T22:06:05+0900",
     comments = "version: 1.5.2.Final, compiler: javac, environment: Java 11.0.1 (Oracle Corporation)"
 )
+@Component
 public class RecipeMapperImpl implements RecipeMapper {
 
     @Override
@@ -32,6 +34,7 @@ public class RecipeMapperImpl implements RecipeMapper {
         if ( ingredientNames != null ) {
             recipeDTO.ingredientNames( Arrays.copyOf( ingredientNames, ingredientNames.length ) );
         }
+        recipeDTO.image( recipe.getImage() );
 
         return recipeDTO.build();
     }
@@ -51,6 +54,7 @@ public class RecipeMapperImpl implements RecipeMapper {
             recipe1.ingredientNames( Arrays.copyOf( ingredientNames, ingredientNames.length ) );
         }
         recipe1.producerMember( memberDTOToMember( recipe.getProducerMember() ) );
+        recipe1.image( recipe.getImage() );
 
         return recipe1.build();
     }
@@ -71,6 +75,7 @@ public class RecipeMapperImpl implements RecipeMapper {
             recipe1.ingredientNames( Arrays.copyOf( ingredientNames, ingredientNames.length ) );
         }
         recipe1.producerMember( memberDTOToMember( recipe.getProducerMember() ) );
+        recipe1.image( recipe.getImage() );
 
         return recipe1.build();
     }
@@ -91,6 +96,7 @@ public class RecipeMapperImpl implements RecipeMapper {
             recipeResponseDTO.ingredientNames( Arrays.copyOf( ingredientNames, ingredientNames.length ) );
         }
         recipeResponseDTO.producerMember( memberToMemberDTO( recipe.getProducerMember() ) );
+        recipeResponseDTO.image( recipe.getImage() );
 
         return recipeResponseDTO.build();
     }

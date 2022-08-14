@@ -14,7 +14,9 @@ import com.fridgerescuer.springboot.service.RecipeService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -105,5 +107,9 @@ public class RecipeServiceImpl implements RecipeService {
         recipeDao.deleteById(recipeId);
     }
 
+    @Override
+    public void addRecipeImage(String targetId, MultipartFile image) throws IOException {
+        recipeDao.addImage(targetId, image);
+    }
 
 }
