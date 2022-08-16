@@ -6,12 +6,14 @@ import com.fridgerescuer.springboot.data.entity.Ingredient;
 import java.util.ArrayList;
 import java.util.List;
 import javax.annotation.processing.Generated;
+import org.springframework.stereotype.Component;
 
 @Generated(
     value = "org.mapstruct.ap.MappingProcessor",
-    date = "2022-08-15T16:55:31+0900",
+    date = "2022-08-16T22:55:18+0900",
     comments = "version: 1.5.2.Final, compiler: javac, environment: Java 11.0.1 (Oracle Corporation)"
 )
+@Component
 public class IngredientMapperImpl implements IngredientMapper {
 
     @Override
@@ -24,7 +26,6 @@ public class IngredientMapperImpl implements IngredientMapper {
 
         ingredientDTO.id( ingredient.getId() );
         ingredientDTO.name( ingredient.getName() );
-        ingredientDTO.type( ingredient.getType() );
 
         return ingredientDTO.build();
     }
@@ -39,7 +40,6 @@ public class IngredientMapperImpl implements IngredientMapper {
 
         ingredient.id( ingredientDTO.getId() );
         ingredient.name( ingredientDTO.getName() );
-        ingredient.type( ingredientDTO.getType() );
 
         return ingredient.build();
     }
@@ -54,7 +54,6 @@ public class IngredientMapperImpl implements IngredientMapper {
 
         ingredientResponseDTO.id( ingredient.getId() );
         ingredientResponseDTO.name( ingredient.getName() );
-        ingredientResponseDTO.type( ingredient.getType() );
 
         return ingredientResponseDTO.build();
     }
@@ -124,7 +123,6 @@ public class IngredientMapperImpl implements IngredientMapper {
 
         ingredientDTO.id( ingredientResponseDTO.getId() );
         ingredientDTO.name( ingredientResponseDTO.getName() );
-        ingredientDTO.type( ingredientResponseDTO.getType() );
 
         return ingredientDTO.build();
     }

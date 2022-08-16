@@ -9,6 +9,5 @@ import lombok.Getter;
 public class IngredientDTO {
     private String id;
     private String name;
-    private String type;
 
 }

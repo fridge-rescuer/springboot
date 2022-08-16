@@ -41,7 +41,7 @@ class IngredientRepositoryTest {
     @Test
     void deleteIngredient(){
         //given
-        IngredientDTO ingredientDTO = IngredientDTO.builder().name("마늘").type("채소").build();
+        IngredientDTO ingredientDTO = IngredientDTO.builder().name("마늘").build();
 
         //when
         IngredientResponseDTO savedIngredient = ingredientService.saveIngredient(ingredientDTO);
@@ -60,8 +60,8 @@ class IngredientRepositoryTest {
     @Test
     @DisplayName("재료의 id를 통해 재료 update")
     void updateIngredientById(){
-        IngredientDTO ingredientDTO = IngredientDTO.builder().name("마늘").type("채소").build();
-        IngredientDTO updateIngredientDTO = IngredientDTO.builder().name("삼겹살").type("돼지고기").build();
+        IngredientDTO ingredientDTO = IngredientDTO.builder().name("마늘").build();
+        IngredientDTO updateIngredientDTO = IngredientDTO.builder().name("삼겹살").build();
 
         IngredientResponseDTO savedIngredient = ingredientService.saveIngredient(ingredientDTO);
         ingredientService.updateIngredient(savedIngredient.getId(), updateIngredientDTO);
@@ -77,7 +77,7 @@ class IngredientRepositoryTest {
     @Test
     @DisplayName("이름으로 재료 id 찾기")
     void findIngredientIdByName(){
-        IngredientDTO ingredientDTO = IngredientDTO.builder().name("마늘").type("채소").build();
+        IngredientDTO ingredientDTO = IngredientDTO.builder().name("마늘").build();
 
         IngredientResponseDTO savedIngredient = ingredientService.saveIngredient(ingredientDTO);
         IngredientResponseDTO findIngredient = ingredientService.findIngredientByName(ingredientDTO.getName());
@@ -89,7 +89,7 @@ class IngredientRepositoryTest {
     @Test
     @DisplayName("없는 재료명으로 인한 런타임 예외 처리 확인, NoSuchIngredientException")
     void occurExceptionByNoSameName(){
-        IngredientDTO ingredientDTO = IngredientDTO.builder().name("마늘").type("채소").build();
+        IngredientDTO ingredientDTO = IngredientDTO.builder().name("마늘").build();
 
         ingredientService.saveIngredient(ingredientDTO);
         assertThatThrownBy(() ->ingredientService.findIngredientByName("양파"))

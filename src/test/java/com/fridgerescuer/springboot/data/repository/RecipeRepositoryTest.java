@@ -50,9 +50,9 @@ class RecipeRepositoryTest {
     @Test
     void deleteRecipeById(){
         //given
-        IngredientDTO ingredient1 = IngredientDTO.builder().name("마늘").type("채소").build();
-        IngredientDTO ingredient2 = IngredientDTO.builder().name("올리브유").type("식용유").build();
-        IngredientDTO ingredient3 = IngredientDTO.builder().name("고추").type("채소").build();
+        IngredientDTO ingredient1 = IngredientDTO.builder().name("마늘").build();
+        IngredientDTO ingredient2 = IngredientDTO.builder().name("올리브유").build();
+        IngredientDTO ingredient3 = IngredientDTO.builder().name("고추").build();
 
         RecipeDTO recipe = RecipeDTO.builder().name("알리오 올리오").type("파스타").ingredientNames(new String[]{"마늘","올리브유","고추"}).build();
 
@@ -77,10 +77,10 @@ class RecipeRepositoryTest {
     @Test
     void recipeUpdateAndDelete(){
         //given
-        IngredientDTO ingredient1 = IngredientDTO.builder().name("마늘").type("채소").build();
-        IngredientDTO ingredient2 = IngredientDTO.builder().name("올리브유").type("식용유").build();
-        IngredientDTO ingredient3 = IngredientDTO.builder().name("고추").type("채소").build();
-        IngredientDTO ingredient4 = IngredientDTO.builder().name("감자").type("채소").build();
+        IngredientDTO ingredient1 = IngredientDTO.builder().name("마늘").build();
+        IngredientDTO ingredient2 = IngredientDTO.builder().name("올리브유").build();
+        IngredientDTO ingredient3 = IngredientDTO.builder().name("고추").build();
+        IngredientDTO ingredient4 = IngredientDTO.builder().name("감자").build();
 
         RecipeDTO recipe = RecipeDTO.builder().name("알리오 올리오").type("파스타").ingredientNames(new String[]{"마늘","올리브유","고추"}).build();
         RecipeDTO updateDateRecipe = RecipeDTO.builder().name("감자 튀김").type("튀김").ingredientNames(new String[]{"감자"}).build();
@@ -132,10 +132,10 @@ class RecipeRepositoryTest {
     @DisplayName("여러 재료로 여러 레시피 검색")
     void findRecipesByMultipleIngredients(){
         //given
-        IngredientDTO ingredient1 = IngredientDTO.builder().name("마늘").type("채소").build();
-        IngredientDTO ingredient2 = IngredientDTO.builder().name("올리브유").type("식용유").build();
-        IngredientDTO ingredient3 = IngredientDTO.builder().name("계란").type("유제품").build();
-        IngredientDTO ingredient4 = IngredientDTO.builder().name("고추").type("채소").build();
+        IngredientDTO ingredient1 = IngredientDTO.builder().name("마늘").build();
+        IngredientDTO ingredient2 = IngredientDTO.builder().name("올리브유").build();
+        IngredientDTO ingredient3 = IngredientDTO.builder().name("계란").build();
+        IngredientDTO ingredient4 = IngredientDTO.builder().name("고추").build();
 
         RecipeDTO recipe1 = RecipeDTO.builder().name("알리오 올리오").type("파스타").ingredientNames(new String[]{"마늘","올리브유","고추"}).build();
         RecipeDTO recipe2 = RecipeDTO.builder().name("계란 프라이").type("전").ingredientNames(new String[]{"계란","올리브유","고추"}).build();
@@ -167,9 +167,9 @@ class RecipeRepositoryTest {
     @DisplayName("레시피 저장, 재료와 연관")
     void saveRecipeWithIngredient(){
         //given
-        IngredientDTO ingredient1 = IngredientDTO.builder().name("마늘").type("채소").build();
-        IngredientDTO ingredient2 = IngredientDTO.builder().name("올리브유").type("식용유").build();
-        IngredientDTO ingredient3 = IngredientDTO.builder().name("고추").type("채소").build();
+        IngredientDTO ingredient1 = IngredientDTO.builder().name("마늘").build();
+        IngredientDTO ingredient2 = IngredientDTO.builder().name("올리브유").build();
+        IngredientDTO ingredient3 = IngredientDTO.builder().name("고추").build();
 
         RecipeDTO recipe = RecipeDTO.builder().name("알리오 올리오").type("파스타").ingredientNames(new String[]{"마늘","올리브유","고추"}).build();
 
@@ -188,7 +188,7 @@ class RecipeRepositoryTest {
     @DisplayName("재료로 레시피 검색하기")
     void findRecipesByIngredient(){
         //given
-        IngredientDTO ingredient = IngredientDTO.builder().name("마늘").type("채소").build();
+        IngredientDTO ingredient = IngredientDTO.builder().name("마늘").build();
         RecipeDTO recipe1 = RecipeDTO.builder().name("알리오 올리오").type("파스타").ingredientNames(new String[]{"마늘"}).build();
         RecipeDTO recipe2 = RecipeDTO.builder().name("마늘 장아찌").type("발효 식품").ingredientNames(new String[]{"마늘"}).build();
 

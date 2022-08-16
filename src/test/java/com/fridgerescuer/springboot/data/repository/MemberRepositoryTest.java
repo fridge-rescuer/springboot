@@ -102,10 +102,10 @@ class MemberRepositoryTest {
         MemberDTO member = MemberDTO.builder().name("종원").build();
         MemberResponseDTO memberResponseDto = memberService.saveMember(member);
 
-        IngredientDTO ingredient1 = IngredientDTO.builder().name("마늘").type("채소").build();
-        IngredientDTO ingredient2 = IngredientDTO.builder().name("올리브유").type("식용유").build();
-        IngredientDTO ingredient3 = IngredientDTO.builder().name("계란").type("유제품").build();
-        IngredientDTO ingredient4 = IngredientDTO.builder().name("고추").type("채소").build();
+        IngredientDTO ingredient1 = IngredientDTO.builder().name("마늘").build();
+        IngredientDTO ingredient2 = IngredientDTO.builder().name("올리브유").build();
+        IngredientDTO ingredient3 = IngredientDTO.builder().name("계란").build();
+        IngredientDTO ingredient4 = IngredientDTO.builder().name("고추").build();
 
 
         //when
@@ -133,7 +133,7 @@ class MemberRepositoryTest {
     void saveRecipeByMember(){
         //given
         MemberDTO member = MemberDTO.builder().name("우왁굳").build();
-        IngredientDTO ingredient = IngredientDTO.builder().name("감자").type("채소").build();
+        IngredientDTO ingredient = IngredientDTO.builder().name("감자").build();
         RecipeDTO recipe = RecipeDTO.builder().name("감자 튀김").type("튀김").ingredientNames(new String[]{"감자"}).build();
 
         //when

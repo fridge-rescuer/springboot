@@ -65,7 +65,7 @@ public class IngredientDaoImpl implements IngredientDao {
 
         Update update = new Update();
         update.set("name", ingredient.getName());
-        update.set("type", ingredient.getType());
+        //update.set("type", ingredient.getType());
         UpdateResult updateResult = template.updateMulti(query, update, Ingredient.class);
 
         log.info("update id={} to ingredient ={}", targetId,ingredient);

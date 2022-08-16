@@ -11,12 +11,14 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import javax.annotation.processing.Generated;
+import org.springframework.stereotype.Component;
 
 @Generated(
     value = "org.mapstruct.ap.MappingProcessor",
-    date = "2022-08-15T16:55:30+0900",
+    date = "2022-08-16T22:56:43+0900",
     comments = "version: 1.5.2.Final, compiler: javac, environment: Java 11.0.1 (Oracle Corporation)"
 )
+@Component
 public class MemberMapperImpl implements MemberMapper {
 
     @Override
@@ -72,7 +74,6 @@ public class MemberMapperImpl implements MemberMapper {
 
         ingredientDTO.id( ingredient.getId() );
         ingredientDTO.name( ingredient.getName() );
-        ingredientDTO.type( ingredient.getType() );
 
         return ingredientDTO.build();
     }
