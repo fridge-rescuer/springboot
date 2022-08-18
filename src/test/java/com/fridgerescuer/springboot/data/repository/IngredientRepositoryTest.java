@@ -1,12 +1,15 @@
 package com.fridgerescuer.springboot.data.repository;
 
+import com.fridgerescuer.springboot.data.entity.Component;
 import com.fridgerescuer.springboot.data.entity.Ingredient;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.data.mongo.DataMongoTest;
 import org.springframework.context.annotation.ComponentScan;
+import org.springframework.data.mongodb.core.MongoTemplate;
 
 import static org.assertj.core.api.Assertions.*;
 import static org.junit.jupiter.api.Assertions.*;
@@ -16,6 +19,9 @@ import static org.junit.jupiter.api.Assertions.*;
 class IngredientRepositoryTest {
     @Autowired
     private IngredientRepository repository;
+
+    @Autowired
+    private MongoTemplate template;
 
 
     @BeforeEach
@@ -44,5 +50,21 @@ class IngredientRepositoryTest {
         assertThat(repository.findAllBySubCategory("생것").get(0).getId()).isEqualTo(savedId);
 
         assertTrue(repository.findAllBySubCategory("없는 카테고리").isEmpty());
+    }
+
+    @Test
+    @DisplayName("저장한 재료에서 성분 가져오기기")
+   void insertAndFindComponent(){
+        //given
+        Component component = Component.builder().kcal("12").water_g("10").build();
+        Ingredient ingredient = Ingredient.builder().name("닭가슴살").component(component).build();
+
+        //when
+        Ingredient savedIngredient = repository.save(ingredient);
+
+        //then
+        assertThat(savedIngredient.getComponent().getKcal()).isEqualTo("12");
+        assertThat(savedIngredient.getComponent().getKcal()).isEqualTo("12");
+        assertThat(savedIngredient.getComponent().getBetaCarotene_mcg()).isNull();
     }
 }
