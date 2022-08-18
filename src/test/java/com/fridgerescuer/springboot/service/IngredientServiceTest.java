@@ -1,8 +1,9 @@
-package com.fridgerescuer.springboot.data.repository;
+package com.fridgerescuer.springboot.service;
 
 import com.fridgerescuer.springboot.data.dto.IngredientDTO;
 import com.fridgerescuer.springboot.data.dto.IngredientResponseDTO;
 import com.fridgerescuer.springboot.data.entity.Ingredient;
+import com.fridgerescuer.springboot.data.repository.IngredientRepository;
 import com.fridgerescuer.springboot.exception.data.repository.NoSuchIngredientException;
 import com.fridgerescuer.springboot.service.IngredientService;
 import org.assertj.core.api.Assertions;
@@ -22,7 +23,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 @ComponentScan(basePackages = "com.fridgerescuer.springboot")
 @DataMongoTest
-class IngredientRepositoryTest {
+class IngredientServiceTest {
     @Autowired
     private IngredientRepository ingredientRepository;
 
