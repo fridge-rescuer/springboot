@@ -1,5 +1,6 @@
 package com.fridgerescuer.springboot.data.repository;
 
+import com.fridgerescuer.springboot.data.dao.IngredientDao;
 import com.fridgerescuer.springboot.data.entity.Component;
 import com.fridgerescuer.springboot.data.entity.Ingredient;
 import org.assertj.core.api.Assertions;
@@ -20,6 +21,8 @@ class IngredientRepositoryTest {
     @Autowired
     private IngredientRepository repository;
 
+    @Autowired
+    private IngredientDao ingredientDao;
     @Autowired
     private MongoTemplate template;
 
