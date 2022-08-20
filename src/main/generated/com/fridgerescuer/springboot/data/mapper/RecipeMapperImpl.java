@@ -13,7 +13,7 @@ import org.springframework.stereotype.Component;
 
 @Generated(
     value = "org.mapstruct.ap.MappingProcessor",
-    date = "2022-08-15T16:55:31+0900",
+    date = "2022-08-20T16:31:20+0900",
     comments = "version: 1.5.2.Final, compiler: javac, environment: Java 11.0.1 (Oracle Corporation)"
 )
 @Component
@@ -34,7 +34,6 @@ public class RecipeMapperImpl implements RecipeMapper {
         if ( ingredientNames != null ) {
             recipeDTO.ingredientNames( Arrays.copyOf( ingredientNames, ingredientNames.length ) );
         }
-        recipeDTO.image( recipe.getImage() );
 
         return recipeDTO.build();
     }
@@ -54,7 +53,6 @@ public class RecipeMapperImpl implements RecipeMapper {
             recipe1.ingredientNames( Arrays.copyOf( ingredientNames, ingredientNames.length ) );
         }
         recipe1.producerMember( memberDTOToMember( recipe.getProducerMember() ) );
-        recipe1.image( recipe.getImage() );
 
         return recipe1.build();
     }
@@ -75,7 +73,6 @@ public class RecipeMapperImpl implements RecipeMapper {
             recipe1.ingredientNames( Arrays.copyOf( ingredientNames, ingredientNames.length ) );
         }
         recipe1.producerMember( memberDTOToMember( recipe.getProducerMember() ) );
-        recipe1.image( recipe.getImage() );
 
         return recipe1.build();
     }
@@ -96,7 +93,6 @@ public class RecipeMapperImpl implements RecipeMapper {
             recipeResponseDTO.ingredientNames( Arrays.copyOf( ingredientNames, ingredientNames.length ) );
         }
         recipeResponseDTO.producerMember( memberToMemberDTO( recipe.getProducerMember() ) );
-        recipeResponseDTO.image( recipe.getImage() );
 
         return recipeResponseDTO.build();
     }
