@@ -1,8 +1,10 @@
-package com.fridgerescuer.springboot.data.repository;
+package com.fridgerescuer.springboot.service;
 
 import com.fridgerescuer.springboot.data.dao.RecipeDao;
 import com.fridgerescuer.springboot.data.dto.*;
 import com.fridgerescuer.springboot.data.mapper.RecipeMapper;
+import com.fridgerescuer.springboot.data.repository.IngredientRepository;
+import com.fridgerescuer.springboot.data.repository.RecipeRepository;
 import com.fridgerescuer.springboot.exception.data.repository.NoSuchMemberException;
 import com.fridgerescuer.springboot.exception.data.repository.NoSuchRecipeException;
 import com.fridgerescuer.springboot.service.IngredientService;
@@ -23,7 +25,7 @@ import static org.assertj.core.api.Assertions.*;
 
 @ComponentScan(basePackages = "com.fridgerescuer.springboot")
 @DataMongoTest
-class RecipeRepositoryTest {
+class RecipeServiceTest {
     @Autowired
     private RecipeRepository recipeRepository;
     @Autowired

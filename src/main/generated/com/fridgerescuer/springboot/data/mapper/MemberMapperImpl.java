@@ -15,8 +15,8 @@ import org.springframework.stereotype.Component;
 
 @Generated(
     value = "org.mapstruct.ap.MappingProcessor",
-    date = "2022-08-18T14:12:55+0900",
-    comments = "version: 1.5.2.Final, compiler: javac, environment: Java 11.0.13 (Oracle Corporation)"
+    date = "2022-08-20T16:31:19+0900",
+    comments = "version: 1.5.2.Final, compiler: javac, environment: Java 11.0.1 (Oracle Corporation)"
 )
 @Component
 public class MemberMapperImpl implements MemberMapper {
@@ -105,7 +105,6 @@ public class MemberMapperImpl implements MemberMapper {
             recipeDTO.ingredientNames( Arrays.copyOf( ingredientNames, ingredientNames.length ) );
         }
         recipeDTO.producerMember( memberToDto( recipe.getProducerMember() ) );
-        recipeDTO.image( recipe.getImage() );
 
         return recipeDTO.build();
     }

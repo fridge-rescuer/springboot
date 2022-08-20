@@ -1,37 +1,35 @@
 package com.fridgerescuer.springboot.data.repository;
 
-import com.fridgerescuer.springboot.data.dto.IngredientDTO;
-import com.fridgerescuer.springboot.data.dto.IngredientResponseDTO;
+import com.fridgerescuer.springboot.data.dao.IngredientDao;
+import com.fridgerescuer.springboot.data.entity.Component;
 import com.fridgerescuer.springboot.data.entity.Ingredient;
-import com.fridgerescuer.springboot.exception.data.repository.NoSuchIngredientException;
-import com.fridgerescuer.springboot.service.IngredientService;
 import org.assertj.core.api.Assertions;
-import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.data.mongo.DataMongoTest;
 import org.springframework.context.annotation.ComponentScan;
-
-import java.util.List;
+import org.springframework.data.mongodb.core.MongoTemplate;
 
 import static org.assertj.core.api.Assertions.*;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.*;
 
 @ComponentScan(basePackages = "com.fridgerescuer.springboot")
 @DataMongoTest
 class IngredientRepositoryTest {
     @Autowired
-    private IngredientRepository ingredientRepository;
+    private IngredientRepository repository;
 
     @Autowired
-    private IngredientService ingredientService;
+    private IngredientDao ingredientDao;
+    @Autowired
+    private MongoTemplate template;
+
 
     @BeforeEach
-    void beforeEach() {  //모두 롤백
-        ingredientRepository.deleteAll();
+    void beforeEach(){
+        repository.deleteAll();
     }
 
     //given
@@ -39,60 +37,37 @@ class IngredientRepositoryTest {
     //then
 
     @Test
-    void deleteIngredient(){
+    void findByCategories(){
         //given
-        IngredientDTO ingredientDTO = IngredientDTO.builder().name("마늘").build();
+        Ingredient ingredient = Ingredient.builder().name("귀리_겉귀리_도정_생것").representationName("귀리").largeCategory("곡류").mediumCategory("겉귀리").
+                smallCategory("도정").subCategory("생것").build();
 
         //when
-        IngredientResponseDTO savedIngredient = ingredientService.saveIngredient(ingredientDTO);
+        String savedId = repository.save(ingredient).getId();
 
         //then
-        ingredientService.deleteIngredient(savedIngredient.getId());
-        assertThatThrownBy(() -> ingredientService.findIngredientById(savedIngredient.getId()))
-                .isInstanceOf(NoSuchIngredientException.class);
+        assertThat(repository.findAllByRepresentationName("귀리").get(0).getId()).isEqualTo(savedId);
+        assertThat(repository.findAllByLargeCategory("곡류").get(0).getId()).isEqualTo(savedId);
+        assertThat(repository.findAllByMediumCategory("겉귀리").get(0).getId()).isEqualTo(savedId);
+        assertThat(repository.findAllBySmallCategory("도정").get(0).getId()).isEqualTo(savedId);
+        assertThat(repository.findAllBySubCategory("생것").get(0).getId()).isEqualTo(savedId);
 
-        //존재하지 않는 id를 삭제하는 경우
-        assertThatThrownBy(() -> ingredientService.deleteIngredient("1234560"))
-                .isInstanceOf(NoSuchIngredientException.class);
-
+        assertTrue(repository.findAllBySubCategory("없는 카테고리").isEmpty());
     }
 
     @Test
-    @DisplayName("재료의 id를 통해 재료 update")
-    void updateIngredientById(){
-        IngredientDTO ingredientDTO = IngredientDTO.builder().name("마늘").build();
-        IngredientDTO updateIngredientDTO = IngredientDTO.builder().name("삼겹살").build();
+    @DisplayName("저장한 재료에서 성분 가져오기기")
+   void insertAndFindComponent(){
+        //given
+        Component component = Component.builder().kcal("12").water_g("10").build();
+        Ingredient ingredient = Ingredient.builder().name("닭가슴살").component(component).build();
 
-        IngredientResponseDTO savedIngredient = ingredientService.saveIngredient(ingredientDTO);
-        ingredientService.updateIngredient(savedIngredient.getId(), updateIngredientDTO);
+        //when
+        Ingredient savedIngredient = repository.save(ingredient);
 
-        IngredientResponseDTO updatedResponseDTO = ingredientService.findIngredientById(savedIngredient.getId());
-
-        assertThat(savedIngredient.getId()).isEqualTo(updatedResponseDTO.getId());  //update된 document가 여전히 같은 id인지 확인
-        assertThat(updatedResponseDTO.getName()).isEqualTo(updateIngredientDTO.getName());
-
-        System.out.println("updatedResponseDTO = " + updatedResponseDTO);
-    }
-
-    @Test
-    @DisplayName("이름으로 재료 id 찾기")
-    void findIngredientIdByName(){
-        IngredientDTO ingredientDTO = IngredientDTO.builder().name("마늘").build();
-
-        IngredientResponseDTO savedIngredient = ingredientService.saveIngredient(ingredientDTO);
-        IngredientResponseDTO findIngredient = ingredientService.findIngredientByName(ingredientDTO.getName());
-
-        assertThat(findIngredient.getId()).isEqualTo(savedIngredient.getId());
-    }
-
-
-    @Test
-    @DisplayName("없는 재료명으로 인한 런타임 예외 처리 확인, NoSuchIngredientException")
-    void occurExceptionByNoSameName(){
-        IngredientDTO ingredientDTO = IngredientDTO.builder().name("마늘").build();
-
-        ingredientService.saveIngredient(ingredientDTO);
-        assertThatThrownBy(() ->ingredientService.findIngredientByName("양파"))
-                .isInstanceOf(NoSuchIngredientException.class);
+        //then
+        assertThat(savedIngredient.getComponent().getKcal()).isEqualTo("12");
+        assertThat(savedIngredient.getComponent().getKcal()).isEqualTo("12");
+        assertThat(savedIngredient.getComponent().getBetaCarotene_mcg()).isNull();
     }
 }

@@ -15,5 +15,5 @@ public class RecipeResponseDTO {
     private String[] ingredientNames;
 
     private MemberDTO producerMember;
-    private Binary image;
+    //private Binary image;
 }
