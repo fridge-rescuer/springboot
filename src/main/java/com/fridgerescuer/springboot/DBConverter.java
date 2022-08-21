@@ -1,5 +1,7 @@
 package com.fridgerescuer.springboot;
 
+import com.fridgerescuer.springboot.config.Config;
+import com.fridgerescuer.springboot.data.entity.CompactIngredient;
 import com.fridgerescuer.springboot.data.entity.Component;
 import com.fridgerescuer.springboot.data.entity.Ingredient;
 import com.fridgerescuer.springboot.data.entity.Recipe;
@@ -21,6 +23,7 @@ import org.bson.Document;
 import org.bson.types.Binary;
 import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Import;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
@@ -34,10 +37,16 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
+import java.util.StringTokenizer;
 
 import static org.springframework.data.mongodb.core.query.Criteria.where;
 
 @Slf4j
+@Import(Config.class)
+@org.springframework.stereotype.Component
 public class DBConverter {
     
     @Autowired
@@ -63,7 +72,53 @@ public class DBConverter {
     @Autowired
     private GridFsOperations operations;
 
-    private void convertRecipeJsonToDocument(){
+    public void injectRecipeToIngredient(){
+        MongoDatabase mongoDb = mongoClient.getDatabase("test");  //get database, where DBname is the name of your database
+
+        MongoCollection<Document> robosCollection = mongoDb.getCollection("recipe"); //get the name of the collection that you want
+
+        MongoCursor<Document> cursor =  robosCollection.find().cursor();//Mongo Cursor interface implementing the iterator protocol
+        int count = 0;
+        //while(cursor.hasNext())
+        {
+            Document doc = cursor.next();
+            doc = cursor.next();
+            String ingredientData = doc.getString("ingredientData");
+            Recipe recipe = recipeRepository.findById(doc.get("_id").toString()).get();
+
+
+            List<String> ingredientName = new ArrayList<>();
+
+            String[] splitedData = ingredientData.split("\\n");
+            for(int i=1; i< splitedData.length ; i+=2){
+                StringTokenizer stringTokenizer = new StringTokenizer(splitedData[i], ", ");
+
+                while (stringTokenizer.hasMoreTokens()){
+                    String token = stringTokenizer.nextToken();
+
+                    if(token.contains("g") || token.contains("(") || token.contains("약간") || token.equals("흰") || token.equals("검은"))
+                        continue;
+
+                    Query query = new Query();
+                    query.addCriteria(Criteria.where("name").is(token));
+                    CompactIngredient compactIngredient = template.findOne(query, CompactIngredient.class, "compactIngredient");
+
+                    if(compactIngredient == null)
+                        compactIngredient = template.save(CompactIngredient.builder().name(token).build());
+
+                    template.update(CompactIngredient.class)
+                            .matching(where("_id").is(compactIngredient.getId()))
+                            .apply(new Update().push("recipes", recipe))
+                            .first();
+                }
+
+            }
+
+
+        }
+    }
+
+    void convertRecipeJsonToDocument(){
         MongoDatabase mongoDb = mongoClient.getDatabase("test");  //get database, where DBname is the name of your database
 
         MongoCollection<Document> robosCollection = mongoDb.getCollection("recipeSetting"); //get the name of the collection that you want
@@ -71,70 +126,72 @@ public class DBConverter {
         MongoCursor<Document> cursor =  robosCollection.find().cursor();//Mongo Cursor interface implementing the iterator protocol
 
         int count = 0;
-        //while(cursor.hasNext()){
-        Document doc = cursor.next();
-        String name = doc.getString("name");
-        String image = doc.getString("image");
+        while(cursor.hasNext()){
+            Document doc = cursor.next();
+            String name = doc.getString("name");
+            String image = doc.getString("image");
 
-        String sequence =doc.getString("sequence");
-        String category = doc.getString("category");
-        String cookingType = doc.getString("cookingType");
-        String ingredientData = doc.getString("ingredientData");
-        String carbohydrate_g = doc.getString("carbohydrate_g");
-        String fat_g = doc.getString("fat_g");
-        String kcal = doc.getString("kcal");
-        String na_mg = doc.getString("na_mg");
-        String protein_g = doc.getString("protein_g");
+            String sequence =doc.getString("sequence");
+            String category = doc.getString("category");
+            String cookingType = doc.getString("cookingType");
+            String ingredientData = doc.getString("ingredientData");
+            String carbohydrate_g = doc.getString("carbohydrate_g");
+            String fat_g = doc.getString("fat_g");
+            String kcal = doc.getString("kcal");
+            String na_mg = doc.getString("na_mg");
+            String protein_g = doc.getString("protein_g");
 
-        String[] manuals = new String[20];
-        String[] manualImages = new String[20];
+            String[] manuals = new String[20];
+            String[] manualImages = new String[20];
 
-        for (int idx = 1; idx <=9 ; idx++) {
-            String manualName = "MANUAL0" + Integer.toString(idx);
-            String imageName = "MANUAL_IMG0" + Integer.toString(idx);
+            for (int idx = 1; idx <=9 ; idx++) {
+                String manualName = "MANUAL0" + Integer.toString(idx);
+                String imageName = "MANUAL_IMG0" + Integer.toString(idx);
 
-            manuals[idx -1] = doc.getString(manualName);
-            manualImages[idx -1] = doc.getString(imageName);
-        }
-
-        for (int idx = 10; idx <=20 ; idx++) {
-            String manualName = "MANUAL" + Integer.toString(idx);
-            String imageName = "MANUAL_IMG" + Integer.toString(idx);
-
-            manuals[idx -1] = doc.getString(manualName);
-            manualImages[idx -1] = doc.getString(imageName);
-        }
-
-        //일단 저장
-        Recipe recipe = new Recipe(name, sequence, category, cookingType, ingredientData,
-                carbohydrate_g, fat_g, kcal, na_mg, protein_g,manuals);
-        Recipe savedRecipe = template.save(recipe);
-
-
-        String imageId = addGridFs(-1, savedRecipe,getInputStreamByUrl(image) ).toString();
-
-        UpdateResult updateResult = template.update(Recipe.class)
-                .matching(where("id").is(savedRecipe.getId()))
-                .apply(new Update().set("imageId", imageId))
-                .first();
-        log.info("updated ={}", updateResult.getModifiedCount());
-
-        for (int i = 0; i < 20; i++) {
-            if(manualImages[i].length() == 0){
-                continue;
+                manuals[idx -1] = doc.getString(manualName);
+                manualImages[idx -1] = doc.getString(imageName);
             }
 
-            InputStream imageStream = getInputStreamByUrl(manualImages[i]);
-            if(imageStream == null)
-                continue;
+            for (int idx = 10; idx <=20 ; idx++) {
+                String manualName = "MANUAL" + Integer.toString(idx);
+                String imageName = "MANUAL_IMG" + Integer.toString(idx);
 
-            String manualImageId = addGridFs(i, savedRecipe, imageStream);
-            putGridFs(savedRecipe.getId(), manualImageId);
+                manuals[idx -1] = doc.getString(manualName);
+                manualImages[idx -1] = doc.getString(imageName);
+            }
+
+            //일단 저장
+            Recipe recipe = new Recipe(name, sequence, category, cookingType, ingredientData,
+                    carbohydrate_g, fat_g, kcal, na_mg, protein_g,manuals);
+            Recipe savedRecipe = template.save(recipe);
+
+
+            InputStream inputStreamByUrl = getInputStreamByUrl(image);
+            if(inputStreamByUrl != null){
+                String imageId = addGridFs(-1, savedRecipe,inputStreamByUrl ).toString();   //대표 이미지가 없는 경우
+
+                template.update(Recipe.class)
+                        .matching(where("id").is(savedRecipe.getId()))
+                        .apply(new Update().set("imageId", imageId))
+                        .first();
+            }
+
+
+            for (int i = 0; i < 20; i++) {
+                if(manualImages[i].length() == 0){
+                    continue;
+                }
+
+                InputStream imageStream = getInputStreamByUrl(manualImages[i]);
+                if(imageStream == null)
+                    continue;
+
+                String manualImageId = addGridFs(i, savedRecipe, imageStream);
+                putGridFs(savedRecipe.getId(), manualImageId);
+            }
+
+            log.info("saved idx = {}", count++);
         }
-
-        log.info("saved recipe= {}", recipeRepository.findById(savedRecipe.getId()));
-        log.info("saved idx = {}", count++);
-        //}
     }
 
     private InputStream getInputStreamByUrl(String urlString){
@@ -166,15 +223,8 @@ public class DBConverter {
         meta.put("recipeName", recipe.getName());
 
         ObjectId id = gridFsTemplate.store(inputStream, recipe.getName(), meta);
-        log.info("objectId = {}", id.toString());
 
         return id.toString();
-    }
-
-    private void loadGridFs(){
-        GridFSFile file = gridFsTemplate.findOne(new Query(Criteria.where("_id").is("63006b72d90e8517ff39601e")));
-        operations.getResource(file);
-
     }
 
     private Binary getBinaryImageByUrl(String urlString){
@@ -193,7 +243,6 @@ public class DBConverter {
 
         return null;
     }
-
 
     void convertDocumentAddComponent(){
 

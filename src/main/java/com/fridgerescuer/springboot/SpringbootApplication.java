@@ -48,6 +48,8 @@ import static org.springframework.data.mongodb.core.query.Criteria.where;
 @SpringBootApplication()
 public class SpringbootApplication implements CommandLineRunner {
 
+	@Autowired
+	private  DBConverter dbConverter;
 
 	public static void main(String[] args) {
 		SpringApplication.run(SpringbootApplication.class, args);
@@ -56,10 +58,11 @@ public class SpringbootApplication implements CommandLineRunner {
 	public void run(String... args) throws Exception {
 
 		log.info("==서버 초기 동작 시작==");
-
 		//convertDocumentAddComponent();
 		//renameFields();
+		//dbConverter.convertRecipeJsonToDocument();
 		//convertRecipeJsonToDocument();
+		//dbConverter.injectRecipeToIngredient();
 
 		log.info("==서버 초기 동작 끝~==");
 	}
