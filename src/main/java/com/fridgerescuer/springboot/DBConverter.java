@@ -1,7 +1,7 @@
 package com.fridgerescuer.springboot;
 
 import com.fridgerescuer.springboot.config.Config;
-import com.fridgerescuer.springboot.data.entity.CompactIngredient;
+import com.fridgerescuer.springboot.data.entity.DetailIngredient;
 import com.fridgerescuer.springboot.data.entity.Component;
 import com.fridgerescuer.springboot.data.entity.Ingredient;
 import com.fridgerescuer.springboot.data.entity.Recipe;
@@ -15,8 +15,6 @@ import com.mongodb.client.MongoClient;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoCursor;
 import com.mongodb.client.MongoDatabase;
-import com.mongodb.client.gridfs.model.GridFSFile;
-import com.mongodb.client.result.UpdateResult;
 import lombok.extern.slf4j.Slf4j;
 import org.bson.BsonBinarySubType;
 import org.bson.Document;
@@ -39,7 +37,6 @@ import java.io.InputStream;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 import java.util.StringTokenizer;
 
 import static org.springframework.data.mongodb.core.query.Criteria.where;
@@ -79,34 +76,63 @@ public class DBConverter {
 
         MongoCursor<Document> cursor =  robosCollection.find().cursor();//Mongo Cursor interface implementing the iterator protocol
         int count = 0;
-        //while(cursor.hasNext())
+        while(cursor.hasNext())
         {
             Document doc = cursor.next();
-            doc = cursor.next();
+            //doc = cursor.next();
             String ingredientData = doc.getString("ingredientData");
             Recipe recipe = recipeRepository.findById(doc.get("_id").toString()).get();
 
 
             List<String> ingredientName = new ArrayList<>();
 
-            String[] splitedData = ingredientData.split("\\n");
-            for(int i=1; i< splitedData.length ; i+=2){
-                StringTokenizer stringTokenizer = new StringTokenizer(splitedData[i], ", ");
+            ingredientData = ingredientData.replaceAll("\\[", ",");
+            String[] splitedData = ingredientData.split("\\n|:|-|\\)");
 
-                while (stringTokenizer.hasMoreTokens()){
+            for (int i=0; i< splitedData.length ; i++) {
+                splitedData[i] = splitedData[i].replaceAll("\\(.*", " @");
+            }
+
+            for(int i=0; i< splitedData.length ; i++) {
+
+                splitedData[i] = splitedData[i].replaceAll("[0-9]", "@");
+                StringTokenizer stringTokenizer = new StringTokenizer(splitedData[i], ",");
+
+                while (stringTokenizer.hasMoreTokens()) {
                     String token = stringTokenizer.nextToken();
+                    //log.info("token: {} ", token);
+                    StringTokenizer innerTokenizer = new StringTokenizer(token, " ");
+                    StringBuilder stringBuilder = new StringBuilder();
 
-                    if(token.contains("g") || token.contains("(") || token.contains("약간") || token.equals("흰") || token.equals("검은"))
+                    while (innerTokenizer.hasMoreTokens()) {
+                        String innerToken = innerTokenizer.nextToken();
+
+                        //log.info("inner token: {} ", innerToken);
+                        if (innerToken.contains("@") || innerToken.contains("g") || innerToken.contains("m") || innerToken.contains("/")
+                                || innerToken.contains("약간") || innerToken.contains("재료") || innerToken.contains("2인분") || innerToken.contains("[")
+                                || innerToken.contains("]") || innerToken.contains(".") || innerToken.contains("4인분"))
+                            continue;
+
+                        stringBuilder.append(innerToken);
+                        if (innerTokenizer.hasMoreTokens())
+                            stringBuilder.append(" ");
+                    }
+
+                    String compactIngredientName = stringBuilder.toString();
+                    if(compactIngredientName.length() ==0)
                         continue;
 
+                    if(compactIngredientName.substring(compactIngredientName.length()-1).equals(" "))
+                        compactIngredientName = compactIngredientName.substring(0,compactIngredientName.length()-1);
+
                     Query query = new Query();
-                    query.addCriteria(Criteria.where("name").is(token));
-                    CompactIngredient compactIngredient = template.findOne(query, CompactIngredient.class, "compactIngredient");
+                    query.addCriteria(Criteria.where("name").is(compactIngredientName));
+                    DetailIngredient compactIngredient = template.findOne(query, DetailIngredient.class, "compactIngredient");
 
                     if(compactIngredient == null)
-                        compactIngredient = template.save(CompactIngredient.builder().name(token).build());
+                        compactIngredient = template.save(DetailIngredient.builder().name(compactIngredientName).build());
 
-                    template.update(CompactIngredient.class)
+                    template.update(DetailIngredient.class)
                             .matching(where("_id").is(compactIngredient.getId()))
                             .apply(new Update().push("recipes", recipe))
                             .first();
@@ -114,8 +140,9 @@ public class DBConverter {
 
             }
 
-
+            log.info("count = {}", count++);
         }
+
     }
 
     void convertRecipeJsonToDocument(){
@@ -296,9 +323,9 @@ public class DBConverter {
                     transFat_g, refuse);
 
 
-            Ingredient ingredient = new Ingredient(name, dataCode, dataTypeName, representationName,
+            DetailIngredient ingredient = new DetailIngredient(name, dataCode, dataTypeName, representationName,
                     originTypeName, largeCategory, mediumCategory, smallCategory, subCategory,component);
-            ingredientRepository.save(ingredient);
+            //ingredientRepository.save(ingredient);
         }
         //cursor.forEachRemaining(System.out::println);
     }
