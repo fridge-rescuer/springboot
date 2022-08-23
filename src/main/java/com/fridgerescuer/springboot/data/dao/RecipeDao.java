@@ -1,5 +1,6 @@
 package com.fridgerescuer.springboot.data.dao;
 
+import com.fridgerescuer.springboot.data.entity.Comment;
 import com.fridgerescuer.springboot.data.entity.Member;
 import com.fridgerescuer.springboot.data.entity.Recipe;
 import org.springframework.web.multipart.MultipartFile;
@@ -21,4 +22,5 @@ public interface RecipeDao {
     void setProducerMemberOfRecipeById(String recipeId, Member producerMember);
 
     void addImage(String targetId, MultipartFile file) throws IOException;
+    void addCommentToRecipe(String recipeId, Comment comment);
 }
