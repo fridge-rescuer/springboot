@@ -62,7 +62,7 @@ public class IngredientDaoImpl implements IngredientDao {
 
         return findIngredient.get();
     }
-
+    /* db문제로 배제
     @Override
     public List<Ingredient> findAllByCategory(String category) {
         Query query = new Query();
@@ -75,7 +75,7 @@ public class IngredientDaoImpl implements IngredientDao {
         }
 
         return foundIngredients;
-    }
+    } */
 
     @Override
     public void update(String targetId, Ingredient ingredient) {

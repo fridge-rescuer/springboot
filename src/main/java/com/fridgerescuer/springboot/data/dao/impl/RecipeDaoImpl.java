@@ -4,6 +4,7 @@ import com.fridgerescuer.springboot.data.dao.RecipeDao;
 import com.fridgerescuer.springboot.data.entity.Ingredient;
 import com.fridgerescuer.springboot.data.entity.Member;
 import com.fridgerescuer.springboot.data.entity.Recipe;
+import com.fridgerescuer.springboot.data.gridfs.RecipeGridFsAccessObject;
 import com.fridgerescuer.springboot.data.repository.RecipeRepository;
 import com.fridgerescuer.springboot.exception.data.repository.NoSuchIngredientException;
 import com.fridgerescuer.springboot.exception.data.repository.NoSuchRecipeException;
@@ -36,6 +37,9 @@ public class RecipeDaoImpl implements RecipeDao {
     private final RecipeRepository repository;
     @Autowired
     private final MongoTemplate template;
+
+    @Autowired
+    private final RecipeGridFsAccessObject gridFsAO;
 
     @Override
     public Recipe save(Recipe recipe) {
@@ -114,18 +118,14 @@ public class RecipeDaoImpl implements RecipeDao {
 
     @Override
     public void addImage(String targetId, MultipartFile file) throws IOException {
-        Query query = new Query();
-        query.addCriteria(Criteria.where("id").is(targetId));
+        Recipe foundRecipe = this.findById(targetId);   //존재하지 않는 id는 여기서 예외 처리됨
 
-        Update update = new Update();
-        update.set("image", new Binary(BsonBinarySubType.BINARY, file.getBytes()));
-        UpdateResult updateResult = template.updateMulti(query, update, Recipe.class);
+        String imageId = gridFsAO.saveImageByGridFs(-1, foundRecipe, file.getInputStream());
 
-        if(updateResult.getModifiedCount() ==0){
-            throw new NoSuchRecipeException(new NullPointerException("no such recipe id in Repository, id=" + targetId));
-        }
-
-
+        template.update(Recipe.class)
+                .matching(where("id").is(targetId))
+                .apply(new Update().set("imageId", imageId))
+                .first();
     }
 
     private void setReferenceWithIngredientsByName(String[] ingredientNames, Recipe recipe){
