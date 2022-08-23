@@ -25,4 +25,7 @@ public class Member {
 
     @DocumentReference
     private List<Recipe> recipes;
+
+    @DocumentReference
+    private List<Comment> comments;
 }

@@ -29,6 +29,11 @@ public class Recipe {
     @DocumentReference
     private Member producerMember;
 
+    @DocumentReference
+    private List<Comment> comments;
+    private double ratingAvg; //comment들로 부터 계산한 평균값
+    private double ratingTotalSum;
+
     private String imageId;
 
     private String sequence;
