@@ -4,13 +4,9 @@ import com.fridgerescuer.springboot.data.dao.CommentDao;
 import com.fridgerescuer.springboot.data.dao.MemberDao;
 import com.fridgerescuer.springboot.data.dao.RecipeDao;
 import com.fridgerescuer.springboot.data.entity.Comment;
-import com.fridgerescuer.springboot.data.entity.Member;
-import com.fridgerescuer.springboot.data.entity.Recipe;
 import com.fridgerescuer.springboot.data.gridfs.CommentGridFsAccessObject;
 import com.fridgerescuer.springboot.data.repository.CommentRepository;
 import com.fridgerescuer.springboot.exception.data.repository.NoSuchCommentException;
-import com.fridgerescuer.springboot.exception.data.repository.NoSuchRecipeException;
-import com.mongodb.client.result.UpdateResult;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,7 +33,7 @@ import static org.springframework.data.mongodb.core.query.Criteria.where;
 public class CommentDaoImpl implements CommentDao {
 
     @Autowired
-    private final CommentRepository repository;
+    private final CommentRepository commentRepository;
     @Autowired
     private final MongoTemplate template;
 
@@ -54,7 +50,7 @@ public class CommentDaoImpl implements CommentDao {
     // 추후 검토 후에 서비스 계층으로 변경 요망(서비스 계층이 할일이 너무 많이 지는 문제도 고려해야함)
     @Override
     public Comment save(String memberId, String recipeId, Comment comment){
-        Comment savedComment = repository.save(comment);
+        Comment savedComment = commentRepository.save(comment);
 
         memberDao.addCommentToMember(memberId, comment);
         recipeDao.addCommentToRecipe(recipeId, comment);
@@ -65,7 +61,7 @@ public class CommentDaoImpl implements CommentDao {
 
     @Override
     public Comment findById(String commentId) {
-        Optional<Comment> foundComment = repository.findById(commentId);
+        Optional<Comment> foundComment = commentRepository.findById(commentId);
 
         if (foundComment.isEmpty()){
             throw new NoSuchCommentException(new NullPointerException("no such comment id =" + commentId));
@@ -107,6 +103,18 @@ public class CommentDaoImpl implements CommentDao {
                 .set("date", updateData.getDate());
 
         template.updateMulti(query, update, Comment.class);
+
+        log.info("Update comment id={}, to data ={}", commentId,updateData.toString());
+    }
+
+    @Override
+    public void deleteComment(String commentId) {
+        Comment comment = this.findById(commentId);
+        recipeDao.deleteRating(comment.getRecipeId(), comment.getRating());
+
+        commentRepository.deleteById(commentId);
+
+        log.info("delete comment id={}", commentId);
     }
 
 }

@@ -166,7 +166,7 @@ public class RecipeDaoImpl implements RecipeDao {
 
         template.updateMulti(query, referenceUpdate, Recipe.class);
 
-        log.info("update recipe ratingAvg ={} ", updatedRatingAvg);
+        log.info("update recipe id ={} to ratingAvg ={} ",recipeId ,updatedRatingAvg);
     }
 
     @Override
@@ -176,9 +176,9 @@ public class RecipeDaoImpl implements RecipeDao {
         double totalSum = 0;
         double updatedRatingAvg = 0;
 
-        if(recipe.getComments().size() >=1){
+        if(recipe.getComments().size() >1){
             totalSum = recipe.getRatingTotalSum() - rating;
-            updatedRatingAvg = totalSum/ recipe.getComments().size();
+            updatedRatingAvg = totalSum/ (recipe.getComments().size() -1);
         }
 
         Query query = new Query();
@@ -188,7 +188,7 @@ public class RecipeDaoImpl implements RecipeDao {
 
         template.updateMulti(query, referenceUpdate, Recipe.class);
 
-        log.info("delete recipe rating ={}, now avg={} ", rating, updatedRatingAvg);
+        log.info("delete recipe id ={} of rating ={}, now avg={} ", recipeId,rating, updatedRatingAvg);
     }
 
 

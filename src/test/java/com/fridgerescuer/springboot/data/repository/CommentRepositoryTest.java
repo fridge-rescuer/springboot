@@ -43,6 +43,38 @@ class CommentRepositoryTest {
     //when
     //then
 
+    @Test
+    void deleteComment(){
+        //given
+        Recipe recipe = recipeRepository.save(Recipe.builder().name("피자").build());
+        Member member = memberRepository.save(Member.builder().name("taka").build());
+
+        Comment comment1 = Comment.builder().rating(3.5).date(LocalDate.now().toString()).recipeId(recipe.getId()).build();
+        Comment comment2 = Comment.builder().rating(3.0).date(LocalDate.now().toString()).recipeId(recipe.getId()).build();
+
+        //when
+        Comment savedComment1 = commentDao.save(member.getId(), recipe.getId(), comment1);
+        Comment savedComment2 = commentDao.save(member.getId(), recipe.getId(), comment2);
+
+
+        //then
+        commentDao.deleteComment(savedComment2.getId());
+        Recipe commentRecipe = recipeRepository.findById(recipe.getId()).get();
+
+        assertThat(commentRecipe.getComments().size()).isEqualTo(1);
+        assertThat(commentRecipe.getRatingTotalSum()).isEqualTo(3.5);
+        assertThat(commentRecipe.getRatingAvg()).isEqualTo(3.5);
+
+        commentDao.deleteComment(savedComment1.getId());
+        commentRecipe = recipeRepository.findById(recipe.getId()).get();
+
+        assertThat(commentRecipe.getComments().size()).isEqualTo(0);
+        assertThat(commentRecipe.getRatingTotalSum()).isEqualTo(0);
+        assertThat(commentRecipe.getRatingAvg()).isEqualTo(0);
+
+        Member commentMember = memberRepository.findById(member.getId()).get();     //후기를 남기 멤버에서도 지워졌나 확인
+        assertThat(commentMember.getComments().size()).isEqualTo(0);
+    }
 
     @Test
     void updateCommentData(){
@@ -55,15 +87,14 @@ class CommentRepositoryTest {
         Comment comment3 = Comment.builder().rating(4.5).date(LocalDate.now().toString()).recipeId(recipe.getId()).build();
 
         Comment updateComment = Comment.builder().rating(1.0).date(LocalDate.now().toString()).build();
-        //when
 
+        //when
         commentDao.save(member.getId(), recipe.getId(), comment1);
         commentDao.save(member.getId(), recipe.getId(), comment2);
         Comment targetComment = commentDao.save(member.getId(), recipe.getId(), comment3);
 
         Recipe foundRecipe = recipeRepository.findById(recipe.getId()).get();
         double ratingTotalSum = foundRecipe.getRatingTotalSum();
-        double ratingAvg = foundRecipe.getRatingAvg();
 
         //then
         commentDao.updateComment(targetComment.getId(), updateComment);
