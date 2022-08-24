@@ -43,15 +43,49 @@ class CommentRepositoryTest {
     //when
     //then
 
-    @Test
-    void saveCommentWithMemberAndRecipe(){
-        //given
-        Comment comment = Comment.builder().rating(3.5).body("조금 어려웠습니다.").date(LocalDate.now().toString()).build();
 
-        //when
+    @Test
+    void updateCommentData(){
+        //given
         Recipe recipe = recipeRepository.save(Recipe.builder().name("피자").build());
         Member member = memberRepository.save(Member.builder().name("taka").build());
 
+        Comment comment1 = Comment.builder().rating(3.5).date(LocalDate.now().toString()).recipeId(recipe.getId()).build();
+        Comment comment2 = Comment.builder().rating(3.0).date(LocalDate.now().toString()).recipeId(recipe.getId()).build();
+        Comment comment3 = Comment.builder().rating(4.5).date(LocalDate.now().toString()).recipeId(recipe.getId()).build();
+
+        Comment updateComment = Comment.builder().rating(1.0).date(LocalDate.now().toString()).build();
+        //when
+
+        commentDao.save(member.getId(), recipe.getId(), comment1);
+        commentDao.save(member.getId(), recipe.getId(), comment2);
+        Comment targetComment = commentDao.save(member.getId(), recipe.getId(), comment3);
+
+        Recipe foundRecipe = recipeRepository.findById(recipe.getId()).get();
+        double ratingTotalSum = foundRecipe.getRatingTotalSum();
+        double ratingAvg = foundRecipe.getRatingAvg();
+
+        //then
+        commentDao.updateComment(targetComment.getId(), updateComment);
+        Comment updatedComment = commentDao.findById(targetComment.getId());
+
+        double expectTotalSum = ratingTotalSum + (-4.5 + 1.0);
+        double expectAvg = expectTotalSum / 3;
+
+        assertThat(updatedComment.getRating()).isEqualTo(updatedComment.getRating());   //내용 수정 확인
+        assertThat(recipeRepository.findById(recipe.getId()).get().getRatingTotalSum()).isEqualTo(expectTotalSum);  //레시피의 레이핑 변동 확인
+        assertThat(recipeRepository.findById(recipe.getId()).get().getRatingAvg()).isEqualTo(expectAvg);
+    }
+
+    @Test
+    void saveCommentWithMemberAndRecipe(){
+        //given
+        Recipe recipe = recipeRepository.save(Recipe.builder().name("피자").build());
+        Member member = memberRepository.save(Member.builder().name("taka").build());
+
+        Comment comment = Comment.builder().rating(3.5).body("조금 어려웠습니다.").date(LocalDate.now().toString()).recipeId(recipe.getId()).build();
+
+        //when
         Comment savedComment = commentDao.save(member.getId(), recipe.getId(), comment);
 
         //then
@@ -60,6 +94,7 @@ class CommentRepositoryTest {
 
         assertThat(commentInRecipe.getId()).isEqualTo(savedComment.getId());
         assertThat(commentInMember.getBody()).isEqualTo("조금 어려웠습니다.");
+        assertThat(recipeRepository.findById(savedComment.getRecipeId()).get().getName()).isEqualTo(recipe.getName());
     }
 
     @Test

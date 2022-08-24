@@ -23,4 +23,6 @@ public interface RecipeDao {
 
     void addImage(String targetId, MultipartFile file) throws IOException;
     void addCommentToRecipe(String recipeId, Comment comment);
+    void updateRating(String recipeId, double newRating, double originRating);
+    void deleteRating(String recipeId, double rating);
 }

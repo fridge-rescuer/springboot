@@ -148,10 +148,49 @@ public class RecipeDaoImpl implements RecipeDao {
                 .set("ratingTotalSum", ratingTotalSum)
                 .set("ratingAvg", finalRatingAvg);
 
-        UpdateResult updateResult = template.updateMulti(query, referenceUpdate, Recipe.class);
+        template.updateMulti(query, referenceUpdate, Recipe.class);
 
         log.info("addCommentToMember recipeId={}, ratingTotalSum ={}, finalRatingAvg ={}", recipeId,ratingTotalSum,finalRatingAvg);
     }
+
+    @Override
+    public void updateRating(String recipeId, double newRating, double originRating) {
+        Recipe recipe = this.findById(recipeId);
+        double totalSum = recipe.getRatingTotalSum() - originRating + newRating;
+        double updatedRatingAvg = totalSum/ recipe.getComments().size();
+
+        Query query = new Query();
+        query.addCriteria(Criteria.where("id").is(recipeId));
+        Update referenceUpdate = new Update().set("ratingTotalSum", totalSum)
+                .set("ratingAvg", updatedRatingAvg);
+
+        template.updateMulti(query, referenceUpdate, Recipe.class);
+
+        log.info("update recipe ratingAvg ={} ", updatedRatingAvg);
+    }
+
+    @Override
+    public void deleteRating(String recipeId, double rating) {
+        Recipe recipe = this.findById(recipeId);
+
+        double totalSum = 0;
+        double updatedRatingAvg = 0;
+
+        if(recipe.getComments().size() >=1){
+            totalSum = recipe.getRatingTotalSum() - rating;
+            updatedRatingAvg = totalSum/ recipe.getComments().size();
+        }
+
+        Query query = new Query();
+        query.addCriteria(Criteria.where("id").is(recipeId));
+        Update referenceUpdate = new Update().set("ratingTotalSum", totalSum)
+                .set("ratingAvg", updatedRatingAvg);
+
+        template.updateMulti(query, referenceUpdate, Recipe.class);
+
+        log.info("delete recipe rating ={}, now avg={} ", rating, updatedRatingAvg);
+    }
+
 
     private void setReferenceWithIngredientsByName(String[] ingredientNames, Recipe recipe){
         if(ingredientNames== null || ingredientNames.length ==0)

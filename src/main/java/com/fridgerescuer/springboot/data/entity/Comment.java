@@ -22,4 +22,6 @@ public class Comment {
 
     private String imageId;
     private String date;
+
+    private String recipeId;
 }

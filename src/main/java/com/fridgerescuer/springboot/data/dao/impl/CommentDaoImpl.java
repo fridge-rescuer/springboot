@@ -10,10 +10,13 @@ import com.fridgerescuer.springboot.data.gridfs.CommentGridFsAccessObject;
 import com.fridgerescuer.springboot.data.repository.CommentRepository;
 import com.fridgerescuer.springboot.exception.data.repository.NoSuchCommentException;
 import com.fridgerescuer.springboot.exception.data.repository.NoSuchRecipeException;
+import com.mongodb.client.result.UpdateResult;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.MongoTemplate;
+import org.springframework.data.mongodb.core.query.Criteria;
+import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Repository;
@@ -75,12 +78,35 @@ public class CommentDaoImpl implements CommentDao {
     public void addImage(String commentId, MultipartFile file) throws IOException {
         Comment comment = this.findById(commentId);
 
+        String originImageId = comment.getImageId();            //존재하던 이미지가 있었다면 삭제
+        if(originImageId == null || originImageId.equals("")){
+            gridFsAO.deleteImageByGridFsId(originImageId);
+        }
+
         String imageId = gridFsAO.saveImageByGridFs(comment, file.getInputStream());
 
         template.update(Comment.class)
                 .matching(where("id").is(commentId))
                 .apply(new Update().set("imageId", imageId))
                 .first();
+    }
+
+    @Override
+    public void updateComment(String commentId, Comment updateData) {
+        Comment originComment = this.findById(commentId);
+
+        if(originComment.getRating() != updateData.getRating()){    //평점에 변동이 있는 경우만 반영
+            recipeDao.updateRating(originComment.getRecipeId(),updateData.getRating(), originComment.getRating());
+        }
+
+       Query query = new Query();
+        query.addCriteria(Criteria.where("id").is(commentId));
+        Update update = new Update().set("rating", updateData.getRating())
+                .set("body",  updateData.getBody())
+                .set("imageId", updateData.getImageId())
+                .set("date", updateData.getDate());
+
+        template.updateMulti(query, update, Comment.class);
     }
 
 }
