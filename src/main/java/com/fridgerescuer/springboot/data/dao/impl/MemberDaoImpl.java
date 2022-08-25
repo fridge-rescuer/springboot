@@ -2,6 +2,7 @@ package com.fridgerescuer.springboot.data.dao.impl;
 
 import com.fridgerescuer.springboot.data.dao.MemberDao;
 import com.fridgerescuer.springboot.data.dto.MemberDTO;
+import com.fridgerescuer.springboot.data.entity.Comment;
 import com.fridgerescuer.springboot.data.entity.Ingredient;
 import com.fridgerescuer.springboot.data.entity.Member;
 import com.fridgerescuer.springboot.data.entity.Recipe;
@@ -88,6 +89,20 @@ public class MemberDaoImpl implements MemberDao {
         }
 
         log.info("add recipe ={}, to member id={}", recipe,memberId);
+    }
+
+    @Override
+    public void addCommentToMember(String memberId, Comment comment) {
+        UpdateResult updateResult = template.update(Member.class)
+                .matching(where("id").is(memberId))
+                .apply(new Update().push("comments", comment))
+                .first();
+
+        if(updateResult.getModifiedCount() == 0){ //write 가 실패한 경우
+            throw new NoSuchMemberException(new NullPointerException("no such member id in Repository, id=" + memberId));
+        }
+
+        log.info("addCommentToMember memberId={}", memberId);
     }
 
     @Override

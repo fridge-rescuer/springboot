@@ -1,12 +1,14 @@
 package com.fridgerescuer.springboot.data.dao.impl;
 
 import com.fridgerescuer.springboot.data.dao.RecipeDao;
+import com.fridgerescuer.springboot.data.entity.Comment;
 import com.fridgerescuer.springboot.data.entity.Ingredient;
 import com.fridgerescuer.springboot.data.entity.Member;
 import com.fridgerescuer.springboot.data.entity.Recipe;
 import com.fridgerescuer.springboot.data.gridfs.RecipeGridFsAccessObject;
 import com.fridgerescuer.springboot.data.repository.RecipeRepository;
 import com.fridgerescuer.springboot.exception.data.repository.NoSuchIngredientException;
+import com.fridgerescuer.springboot.exception.data.repository.NoSuchMemberException;
 import com.fridgerescuer.springboot.exception.data.repository.NoSuchRecipeException;
 import com.mongodb.client.result.UpdateResult;
 import lombok.RequiredArgsConstructor;
@@ -127,6 +129,68 @@ public class RecipeDaoImpl implements RecipeDao {
                 .apply(new Update().set("imageId", imageId))
                 .first();
     }
+
+    @Override
+    public void addCommentToRecipe(String recipeId, Comment comment) {
+        Recipe recipe = this.findById(recipeId);
+
+        double ratingTotalSum = comment.getRating();
+        double finalRatingAvg = ratingTotalSum;
+
+        if(recipe.getComments() != null || recipe.getComments().size() > 0){   // comment가 이미 1개 이상 존재시
+            ratingTotalSum = recipe.getRatingTotalSum() + comment.getRating();
+            finalRatingAvg = ratingTotalSum/(recipe.getComments().size() +1);
+        }
+
+        Query query = new Query();
+        query.addCriteria(Criteria.where("id").is(recipeId));
+        Update referenceUpdate = new Update().push("comments", comment)
+                .set("ratingTotalSum", ratingTotalSum)
+                .set("ratingAvg", finalRatingAvg);
+
+        template.updateMulti(query, referenceUpdate, Recipe.class);
+
+        log.info("addCommentToMember recipeId={}, ratingTotalSum ={}, finalRatingAvg ={}", recipeId,ratingTotalSum,finalRatingAvg);
+    }
+
+    @Override
+    public void updateRating(String recipeId, double newRating, double originRating) {
+        Recipe recipe = this.findById(recipeId);
+        double totalSum = recipe.getRatingTotalSum() - originRating + newRating;
+        double updatedRatingAvg = totalSum/ recipe.getComments().size();
+
+        Query query = new Query();
+        query.addCriteria(Criteria.where("id").is(recipeId));
+        Update referenceUpdate = new Update().set("ratingTotalSum", totalSum)
+                .set("ratingAvg", updatedRatingAvg);
+
+        template.updateMulti(query, referenceUpdate, Recipe.class);
+
+        log.info("update recipe id ={} to ratingAvg ={} ",recipeId ,updatedRatingAvg);
+    }
+
+    @Override
+    public void deleteRating(String recipeId, double rating) {
+        Recipe recipe = this.findById(recipeId);
+
+        double totalSum = 0;
+        double updatedRatingAvg = 0;
+
+        if(recipe.getComments().size() >1){
+            totalSum = recipe.getRatingTotalSum() - rating;
+            updatedRatingAvg = totalSum/ (recipe.getComments().size() -1);
+        }
+
+        Query query = new Query();
+        query.addCriteria(Criteria.where("id").is(recipeId));
+        Update referenceUpdate = new Update().set("ratingTotalSum", totalSum)
+                .set("ratingAvg", updatedRatingAvg);
+
+        template.updateMulti(query, referenceUpdate, Recipe.class);
+
+        log.info("delete recipe id ={} of rating ={}, now avg={} ", recipeId,rating, updatedRatingAvg);
+    }
+
 
     private void setReferenceWithIngredientsByName(String[] ingredientNames, Recipe recipe){
         if(ingredientNames== null || ingredientNames.length ==0)
