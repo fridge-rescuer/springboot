@@ -50,6 +50,7 @@ public class CommentDaoImpl implements CommentDao {
     // 추후 검토 후에 서비스 계층으로 변경 요망(서비스 계층이 할일이 너무 많이 지는 문제도 고려해야함)
     @Override
     public Comment save(String memberId, String recipeId, Comment comment){
+        comment.setRecipeId(recipeId);      //애초에 comment 내에 담겨 와야 할 필요성이 느껴짐
         Comment savedComment = commentRepository.save(comment);
 
         memberDao.addCommentToMember(memberId, comment);

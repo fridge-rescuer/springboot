@@ -24,4 +24,8 @@ public class Comment {
     private String date;
 
     private String recipeId;
+
+    public void setRecipeId(String recipeId) {
+        this.recipeId = recipeId;
+    }
 }
