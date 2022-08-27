@@ -6,10 +6,6 @@ import com.fridgerescuer.springboot.data.repository.IngredientRepository;
 import com.fridgerescuer.springboot.data.repository.MemberRepository;
 import com.fridgerescuer.springboot.data.repository.RecipeRepository;
 import com.fridgerescuer.springboot.exception.data.repository.NoSuchMemberException;
-import com.fridgerescuer.springboot.service.IngredientService;
-import com.fridgerescuer.springboot.service.MemberService;
-import com.fridgerescuer.springboot.service.RecipeService;
-import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -20,7 +16,6 @@ import org.springframework.context.annotation.ComponentScan;
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.assertj.core.api.Assertions.*;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
@@ -124,10 +119,10 @@ class MemberServiceTest {
         MemberResponseDTO findMember = memberService.findMemberById(memberResponseDto.getId());
         System.out.println("findMember = " + findMember);
 
-        assertThat(findMember.getIngredientDTOs().size()).isEqualTo(responseDTOList.size());
+        assertThat(findMember.getIngredientResponseDTOs().size()).isEqualTo(responseDTOList.size());
 
-        for (IngredientDTO ingredientDTO: findMember.getIngredientDTOs() ) {
-            System.out.println("ingredientDTO = " + ingredientDTO);
+        for (IngredientResponseDTO ingredientResponseDTO: findMember.getIngredientResponseDTOs() ) {
+            System.out.println("ingredientDTO = " + ingredientResponseDTO);
         }
     }
 
@@ -145,8 +140,8 @@ class MemberServiceTest {
         RecipeResponseDTO recipeResponseDTO = recipeService.saveRecipeByMember(memberResponseDto.getId(), recipe);
 
         //then
-        List<RecipeDTO> recipeDTOs = memberService.findMemberById(memberResponseDto.getId()).getRecipeDTOs();
-        RecipeDTO referenceRecipe = recipeDTOs.get(0);
+        List<RecipeResponseDTO> recipeResponseDTOs = memberService.findMemberById(memberResponseDto.getId()).getRecipeResponseDTOs();
+        RecipeResponseDTO referenceRecipe = recipeResponseDTOs.get(0);
 
         System.out.println("referenceRecipe = " + referenceRecipe);
 

@@ -16,7 +16,7 @@ public interface MemberMapper {
 
     Member DtoToMember(MemberDTO memberDto);
 
-    @Mapping(source = "ingredients", target = "ingredientDTOs")
-    @Mapping(source = "recipes", target = "recipeDTOs")
+    @Mapping(source = "ingredients", target = "ingredientResponseDTOs")
+    @Mapping(source = "recipes", target = "recipeResponseDTOs")
     MemberResponseDTO memberToResponseDto(Member member);
 }
