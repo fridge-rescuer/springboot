@@ -33,4 +33,9 @@ public class CommentServiceImpl implements CommentService {
     public void updateCommentById(String commentId, CommentDTO updateCommentDTO) {
         commentDao.updateComment(commentId, CommentMapper.INSTANCE.DTOtoComment(updateCommentDTO));
     }
+
+    @Override
+    public void deleteCommentById(String commentId) {
+        commentDao.deleteComment(commentId);
+    }
 }

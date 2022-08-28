@@ -77,5 +77,9 @@ class CommentServiceTest {
         //then
         assertThat(commentService.findCommentById(commentResponseDTO.getId()).getBody()).isEqualTo(updateCommentDTO.getBody());
         assertThat(recipeService.findById(recipeResponseDTO.getId()).getRatingAvg()).isEqualTo(2.5);
+
+        commentService.deleteCommentById(commentResponseDTO.getId());   //삭제 진행
+        assertThat(recipeService.getCommentsByRecipeId(recipeResponseDTO.getId()).size()).isEqualTo(0); //평점 존재x
+        assertThat(recipeService.findById(recipeResponseDTO.getId()).getRatingAvg()).isEqualTo(0);  //삭제 시, 평점 변동
     }
 }

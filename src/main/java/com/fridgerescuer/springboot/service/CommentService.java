@@ -9,4 +9,6 @@ public interface CommentService {
     CommentResponseDTO findCommentById(String commentId);
 
     void updateCommentById(String commentId, CommentDTO updateCommentDTO);
+
+    void deleteCommentById(String commentId);
 }
