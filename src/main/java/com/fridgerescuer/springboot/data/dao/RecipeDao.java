@@ -15,6 +15,7 @@ public interface RecipeDao {
     Recipe findById(String id);
     Recipe findByName(String name);
     List<Recipe> findAllByContainName(String name);
+    List<Comment> getCommentsByRecipeId(String recipeId);
 
     void updateRecipeById(String targetId, Recipe updateData);
     void deleteById(String targetId);

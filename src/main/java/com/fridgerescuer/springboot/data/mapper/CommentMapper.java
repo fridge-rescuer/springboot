@@ -7,6 +7,8 @@ import com.fridgerescuer.springboot.data.entity.Ingredient;
 import org.mapstruct.Mapper;
 import org.mapstruct.factory.Mappers;
 
+import java.util.List;
+
 @Mapper//(componentModel = "spring", uses = {})
 public interface CommentMapper {
 
@@ -18,4 +20,6 @@ public interface CommentMapper {
     Comment DTOtoComment(CommentDTO commentDTO);
 
     Comment responseDTOtoComment(CommentResponseDTO commentResponseDTO);
+
+    List<CommentResponseDTO> commentListToResponseDTOList(List<Comment> comments);
 }

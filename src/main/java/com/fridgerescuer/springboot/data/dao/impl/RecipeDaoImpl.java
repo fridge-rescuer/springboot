@@ -87,6 +87,13 @@ public class RecipeDaoImpl implements RecipeDao {
     }
 
     @Override
+    public List<Comment> getCommentsByRecipeId(String recipeId) {
+        Recipe foundRecipe = this.findById(recipeId);
+
+        return foundRecipe.getComments();
+    }
+
+    @Override
     public void updateRecipeById(String targetId, Recipe updateData) {
         Recipe targetRecipe = this.findById(targetId);  //존재하지 않는 id면 여기서 예외 처리됨
         deleteReferenceWithIngredients(targetRecipe);

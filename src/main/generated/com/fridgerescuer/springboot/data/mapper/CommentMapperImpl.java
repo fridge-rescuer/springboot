@@ -3,11 +3,13 @@ package com.fridgerescuer.springboot.data.mapper;
 import com.fridgerescuer.springboot.data.dto.CommentDTO;
 import com.fridgerescuer.springboot.data.dto.CommentResponseDTO;
 import com.fridgerescuer.springboot.data.entity.Comment;
+import java.util.ArrayList;
+import java.util.List;
 import javax.annotation.processing.Generated;
 
 @Generated(
     value = "org.mapstruct.ap.MappingProcessor",
-    date = "2022-08-28T11:42:58+0900",
+    date = "2022-08-28T14:46:00+0900",
     comments = "version: 1.5.2.Final, compiler: javac, environment: Java 11.0.13 (Oracle Corporation)"
 )
 public class CommentMapperImpl implements CommentMapper {
@@ -82,5 +84,19 @@ public class CommentMapperImpl implements CommentMapper {
         comment.recipeId( commentResponseDTO.getRecipeId() );
 
         return comment.build();
+    }
+
+    @Override
+    public List<CommentResponseDTO> commentListToResponseDTOList(List<Comment> comments) {
+        if ( comments == null ) {
+            return null;
+        }
+
+        List<CommentResponseDTO> list = new ArrayList<CommentResponseDTO>( comments.size() );
+        for ( Comment comment : comments ) {
+            list.add( commentToResponseDTO( comment ) );
+        }
+
+        return list;
     }
 }

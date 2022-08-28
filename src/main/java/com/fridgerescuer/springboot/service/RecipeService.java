@@ -1,5 +1,6 @@
 package com.fridgerescuer.springboot.service;
 
+import com.fridgerescuer.springboot.data.dto.CommentResponseDTO;
 import com.fridgerescuer.springboot.data.dto.IngredientDTO;
 import com.fridgerescuer.springboot.data.dto.RecipeDTO;
 import com.fridgerescuer.springboot.data.dto.RecipeResponseDTO;
@@ -16,6 +17,7 @@ public interface RecipeService {
     List<RecipeResponseDTO> findAllRecipesByContainName(String name);
     List<RecipeResponseDTO> findRecipesByIngredient(IngredientDTO ingredientDTO);
     List<RecipeResponseDTO> findRecipesByMultipleIngredients(List<IngredientDTO> ingredientDTOs);
+    List<CommentResponseDTO> getCommentsByRecipeId(String recipeId);
 
     void updateRecipeById(String recipeId,RecipeDTO updateRecipeDTO);
     void deleteRecipeById(String recipeId);
