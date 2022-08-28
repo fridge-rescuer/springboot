@@ -1,10 +1,12 @@
 package com.fridgerescuer.springboot.service.impl;
 
 import com.fridgerescuer.springboot.data.dao.MemberDao;
+import com.fridgerescuer.springboot.data.dto.CommentResponseDTO;
 import com.fridgerescuer.springboot.data.dto.IngredientDTO;
 import com.fridgerescuer.springboot.data.dto.MemberDTO;
 import com.fridgerescuer.springboot.data.dto.MemberResponseDTO;
 import com.fridgerescuer.springboot.data.entity.Member;
+import com.fridgerescuer.springboot.data.mapper.CommentMapper;
 import com.fridgerescuer.springboot.data.mapper.IngredientMapper;
 import com.fridgerescuer.springboot.data.mapper.MemberMapper;
 import com.fridgerescuer.springboot.service.MemberService;
@@ -32,6 +34,13 @@ public class MemberServiceImpl implements MemberService {
 
         MemberResponseDTO memberResponseDto = MemberMapper.INSTANCE.memberToResponseDto(findMember);  //재료 리스트는 타입을 변환해 주입해줘
         return memberResponseDto;
+    }
+
+    @Override
+    public List<CommentResponseDTO> getCommentsByMemberId(String memberId) {
+        Member member = memberDao.findById(memberId);
+
+        return CommentMapper.INSTANCE.commentListToResponseDTOList(member.getComments());
     }
 
     @Override

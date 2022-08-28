@@ -114,7 +114,14 @@ public class RecipeDaoImpl implements RecipeDao {
 
     @Override
     public void deleteById(String targetId) {
+        Recipe targetRecipe = this.findById(targetId);
+
+        if(targetRecipe.getImageId() != null)   //이미지 부터 제거거
+           gridFsAO.deleteImageByGridFsId(targetRecipe.getImageId());
+
         repository.deleteById(targetId);
+
+        log.info("delete recipe, id={}", targetId);
     }
 
     @Override
