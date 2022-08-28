@@ -1,7 +1,10 @@
 package com.fridgerescuer.springboot.service;
 
 import com.fridgerescuer.springboot.data.dto.*;
+import com.fridgerescuer.springboot.data.entity.Member;
+import com.fridgerescuer.springboot.data.entity.Recipe;
 import com.fridgerescuer.springboot.data.mapper.IngredientMapper;
+import com.fridgerescuer.springboot.data.mapper.RecipeMapper;
 import com.fridgerescuer.springboot.data.repository.IngredientRepository;
 import com.fridgerescuer.springboot.data.repository.MemberRepository;
 import com.fridgerescuer.springboot.data.repository.RecipeRepository;
@@ -140,13 +143,22 @@ class MemberServiceTest {
         RecipeResponseDTO recipeResponseDTO = recipeService.saveRecipeByMember(memberResponseDto.getId(), recipe);
 
         //then
+        Recipe savedRecipe = recipeRepository.findById(recipeResponseDTO.getId()).get();
+        Member savedMember = memberRepository.findById(memberResponseDto.getId()).get();
+
+        List<Recipe> memberRecipes = savedMember.getRecipes();
+        for (RecipeResponseDTO responseDTO: RecipeMapper.INSTANCE.recipeListToResponseDTOList(memberRecipes)) {
+            System.out.println("  - responseMember : " + responseDTO);
+        }
+
         List<RecipeResponseDTO> recipeResponseDTOs = memberService.findMemberById(memberResponseDto.getId()).getRecipeResponseDTOs();
         RecipeResponseDTO referenceRecipe = recipeResponseDTOs.get(0);
 
         System.out.println("referenceRecipe = " + referenceRecipe);
 
+
         assertThat(referenceRecipe.getName()).isEqualTo("감자 튀김");
-        assertThat(referenceRecipe.getProducerMember().getId()).isEqualTo(memberResponseDto.getId());
+        assertThat(referenceRecipe.getProducerMemberId()).isEqualTo(memberResponseDto.getId());
 
         //존재하지 않는 id로 접근시
         assertThatThrownBy(() -> recipeService.saveRecipeByMember("123456", recipe))

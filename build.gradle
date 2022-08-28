@@ -38,6 +38,9 @@ dependencies {
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 	testImplementation 'de.flapdoodle.embed:de.flapdoodle.embed.mongo'
 	testImplementation 'io.projectreactor:reactor-test'
+
+	testAnnotationProcessor 'org.mapstruct:mapstruct-processor:1.5.2.Final'
+
 }
 
 tasks.named('test') {

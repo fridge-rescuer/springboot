@@ -12,6 +12,7 @@ import com.fridgerescuer.springboot.data.mapper.IngredientMapper;
 import com.fridgerescuer.springboot.data.mapper.RecipeMapper;
 import com.fridgerescuer.springboot.service.RecipeService;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -20,6 +21,7 @@ import java.io.IOException;
 import java.util.*;
 import java.util.stream.Collectors;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class RecipeServiceImpl implements RecipeService {
@@ -39,9 +41,11 @@ public class RecipeServiceImpl implements RecipeService {
     public RecipeResponseDTO saveRecipeByMember(String memberId, RecipeDTO recipeDTO) {
         RecipeResponseDTO recipeResponseDTO = this.saveRecipe(recipeDTO);
 
-        memberDao.addRecipeToMember(memberId, RecipeMapper.INSTANCE.responseDTOtoRecipe(recipeResponseDTO));
+        recipeDao.setProducerMemberOfRecipeById(recipeResponseDTO.getId(),memberId);
 
-        recipeDao.setProducerMemberOfRecipeById(recipeResponseDTO.getId(),memberDao.findById(memberId));
+        memberDao.addRecipeToMember(memberId, recipeDao.findById(recipeResponseDTO.getId()));
+
+        log.info("saveRecipeByMember ={}",this.findById(recipeResponseDTO.getId()));
         return this.findById(recipeResponseDTO.getId());
     }
 

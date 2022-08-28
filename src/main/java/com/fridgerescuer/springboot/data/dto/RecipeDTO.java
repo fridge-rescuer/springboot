@@ -4,14 +4,17 @@ import com.fridgerescuer.springboot.data.entity.Member;
 import lombok.*;
 import org.bson.types.Binary;
 
+import java.util.List;
+
 @Builder
 @Getter
 @ToString
 public class RecipeDTO {
+    private String id;
     private String name;
     private String type;
     private String[] ingredientNames;
 
-    private MemberDTO producerMember;
-    //private Binary image;
+    private String producerMemberId;
+    //private List<CommentDTO> commentDTOs;
 }

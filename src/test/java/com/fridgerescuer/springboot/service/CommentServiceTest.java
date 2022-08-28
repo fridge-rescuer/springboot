@@ -20,6 +20,10 @@ class CommentServiceTest {
     @Autowired
     private RecipeService recipeService;
 
+    //given
+    //when
+    //then
+
     @Test
     void saveComment(){
         CommentDTO commentDTO = CommentDTO.builder().rating(4.5).body("정말 맛있어요!! ㅋㅋ큐ㅋ").build();
@@ -36,5 +40,21 @@ class CommentServiceTest {
 
         assertThat(commentResponseDTO.getBody()).isEqualTo(commentDTO.getBody());
         assertThat(commentResponseDTO.getRecipeId()).isEqualTo(recipeResponseDTO.getId());
+    }
+
+    @Test
+    void findCommentByMemberAndRecipe(){
+        //given
+        CommentDTO commentDTO = CommentDTO.builder().rating(4.5).body("맛남").build();
+        RecipeDTO recipeDTO = RecipeDTO.builder().name("마라탕").build();
+        MemberDTO memberDTO = MemberDTO.builder().name("브레드 피트").build();
+
+        //when
+        MemberResponseDTO memberResponseDTO = memberService.saveMember(memberDTO);
+        RecipeResponseDTO recipeResponseDTO = recipeService.saveRecipeByMember(memberResponseDTO.getId(), recipeDTO);
+
+        //then
+
+
     }
 }

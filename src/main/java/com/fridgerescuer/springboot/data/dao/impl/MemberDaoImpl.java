@@ -79,6 +79,8 @@ public class MemberDaoImpl implements MemberDao {
         Query query = new Query();
         query.addCriteria(Criteria.where("id").is(memberId));
 
+        log.info("converted recipe ={}",recipe);
+
         Update update = new Update();
         update.push("recipes",recipe);
 

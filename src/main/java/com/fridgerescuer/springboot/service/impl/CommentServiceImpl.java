@@ -22,4 +22,10 @@ public class CommentServiceImpl implements CommentService {
         Comment savedComment = commentDao.save(memberId, recipeId, CommentMapper.INSTANCE.DTOtoComment(commentDTO));
         return CommentMapper.INSTANCE.commentToResponseDTO(savedComment);
     }
+
+    @Override
+    public CommentResponseDTO findCommentById(String commentId) {
+        Comment foundComment = commentDao.findById(commentId);
+        return CommentMapper.INSTANCE.commentToResponseDTO(foundComment);
+    }
 }

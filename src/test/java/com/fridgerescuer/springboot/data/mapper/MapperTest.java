@@ -6,7 +6,6 @@ import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 class MapperTest {
-
     @Test
     void builderWithMapperTest(){
         RecipeDTO recipeDTO = RecipeDTO.builder().name("pizza").type("instance")

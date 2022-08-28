@@ -7,13 +7,16 @@ import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.factory.Mappers;
 
-@Mapper(componentModel = "spring")
+@Mapper( uses = {RecipeMapper.class})
 public interface MemberMapper {
-
     MemberMapper INSTANCE = Mappers.getMapper(MemberMapper.class);
 
+    @Mapping(source = "ingredients", target = "ingredientDTOs")
+    @Mapping(source = "recipes", target = "recipeDTOs")
     MemberDTO memberToDto(Member member);
 
+    @Mapping(source = "ingredientDTOs", target = "ingredients")
+    @Mapping(source = "recipeDTOs", target = "recipes")
     Member DtoToMember(MemberDTO memberDto);
 
     @Mapping(source = "ingredients", target = "ingredientResponseDTOs")
