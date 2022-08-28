@@ -4,7 +4,6 @@ import com.fridgerescuer.springboot.data.dao.CommentDao;
 import com.fridgerescuer.springboot.data.entity.Comment;
 import com.fridgerescuer.springboot.data.entity.Member;
 import com.fridgerescuer.springboot.data.entity.Recipe;
-import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -58,14 +57,14 @@ class CommentRepositoryTest {
 
 
         //then
-        commentDao.deleteComment(savedComment2.getId());
+        commentDao.deleteCommentById(savedComment2.getId());
         Recipe commentRecipe = recipeRepository.findById(recipe.getId()).get();
 
         assertThat(commentRecipe.getComments().size()).isEqualTo(1);
         assertThat(commentRecipe.getRatingTotalSum()).isEqualTo(3.5);
         assertThat(commentRecipe.getRatingAvg()).isEqualTo(3.5);
 
-        commentDao.deleteComment(savedComment1.getId());
+        commentDao.deleteCommentById(savedComment1.getId());
         commentRecipe = recipeRepository.findById(recipe.getId()).get();
 
         assertThat(commentRecipe.getComments().size()).isEqualTo(0);
@@ -97,7 +96,7 @@ class CommentRepositoryTest {
         double ratingTotalSum = foundRecipe.getRatingTotalSum();
 
         //then
-        commentDao.updateComment(targetComment.getId(), updateComment);
+        commentDao.updateCommentById(targetComment.getId(), updateComment);
         Comment updatedComment = commentDao.findById(targetComment.getId());
 
         double expectTotalSum = ratingTotalSum + (-4.5 + 1.0);

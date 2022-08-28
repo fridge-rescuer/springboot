@@ -89,7 +89,7 @@ public class CommentDaoImpl implements CommentDao {
     }
 
     @Override
-    public void updateComment(String commentId, Comment updateData) {
+    public void updateCommentById(String commentId, Comment updateData) {
         Comment originComment = this.findById(commentId);
 
         if(originComment.getRating() != updateData.getRating()){    //평점에 변동이 있는 경우만 반영
@@ -114,7 +114,7 @@ public class CommentDaoImpl implements CommentDao {
     }
 
     @Override
-    public void deleteComment(String commentId) {
+    public void deleteCommentById(String commentId) {
         Comment comment = this.findById(commentId);
         recipeDao.deleteRating(comment.getRecipeId(), comment.getRating());
 

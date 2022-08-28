@@ -4,6 +4,8 @@ import com.fridgerescuer.springboot.data.entity.Recipe;
 import com.mongodb.BasicDBObject;
 import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.mongodb.core.query.Criteria;
+import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.data.mongodb.gridfs.GridFsOperations;
 import org.springframework.data.mongodb.gridfs.GridFsTemplate;
 import org.springframework.stereotype.Component;
@@ -31,6 +33,10 @@ public class RecipeGridFsAccessObject {
         ObjectId id = gridFsTemplate.store(inputStream, recipe.getName(), meta);
 
         return id.toString();
+    }
+
+    public void deleteImageByGridFsId(String imageId){
+        gridFsTemplate.delete(new Query(Criteria.where("_id").is(imageId)));
     }
 
 }

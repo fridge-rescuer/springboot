@@ -31,11 +31,11 @@ public class CommentServiceImpl implements CommentService {
 
     @Override
     public void updateCommentById(String commentId, CommentDTO updateCommentDTO) {
-        commentDao.updateComment(commentId, CommentMapper.INSTANCE.DTOtoComment(updateCommentDTO));
+        commentDao.updateCommentById(commentId, CommentMapper.INSTANCE.DTOtoComment(updateCommentDTO));
     }
 
     @Override
     public void deleteCommentById(String commentId) {
-        commentDao.deleteComment(commentId);
+        commentDao.deleteCommentById(commentId);
     }
 }
