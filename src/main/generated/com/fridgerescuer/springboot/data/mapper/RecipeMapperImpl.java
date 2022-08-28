@@ -10,7 +10,7 @@ import javax.annotation.processing.Generated;
 
 @Generated(
     value = "org.mapstruct.ap.MappingProcessor",
-    date = "2022-08-28T10:32:17+0900",
+    date = "2022-08-28T11:42:58+0900",
     comments = "version: 1.5.2.Final, compiler: javac, environment: Java 11.0.13 (Oracle Corporation)"
 )
 public class RecipeMapperImpl implements RecipeMapper {
@@ -31,6 +31,8 @@ public class RecipeMapperImpl implements RecipeMapper {
             recipe1.ingredientNames( Arrays.copyOf( ingredientNames, ingredientNames.length ) );
         }
         recipe1.producerMemberId( recipe.getProducerMemberId() );
+        recipe1.ratingAvg( recipe.getRatingAvg() );
+        recipe1.ratingTotalSum( recipe.getRatingTotalSum() );
 
         return recipe1.build();
     }
@@ -51,6 +53,8 @@ public class RecipeMapperImpl implements RecipeMapper {
             recipe1.ingredientNames( Arrays.copyOf( ingredientNames, ingredientNames.length ) );
         }
         recipe1.producerMemberId( recipe.getProducerMemberId() );
+        recipe1.ratingAvg( recipe.getRatingAvg() );
+        recipe1.ratingTotalSum( recipe.getRatingTotalSum() );
 
         return recipe1.build();
     }
@@ -71,6 +75,8 @@ public class RecipeMapperImpl implements RecipeMapper {
             recipeDTO.ingredientNames( Arrays.copyOf( ingredientNames, ingredientNames.length ) );
         }
         recipeDTO.producerMemberId( recipe.getProducerMemberId() );
+        recipeDTO.ratingAvg( recipe.getRatingAvg() );
+        recipeDTO.ratingTotalSum( recipe.getRatingTotalSum() );
 
         return recipeDTO.build();
     }
@@ -91,6 +97,8 @@ public class RecipeMapperImpl implements RecipeMapper {
             recipeResponseDTO.ingredientNames( Arrays.copyOf( ingredientNames, ingredientNames.length ) );
         }
         recipeResponseDTO.producerMemberId( recipe.getProducerMemberId() );
+        recipeResponseDTO.ratingAvg( recipe.getRatingAvg() );
+        recipeResponseDTO.ratingTotalSum( recipe.getRatingTotalSum() );
 
         return recipeResponseDTO.build();
     }

@@ -41,7 +41,7 @@ public class RecipeServiceImpl implements RecipeService {
     public RecipeResponseDTO saveRecipeByMember(String memberId, RecipeDTO recipeDTO) {
         RecipeResponseDTO recipeResponseDTO = this.saveRecipe(recipeDTO);
 
-        recipeDao.setProducerMemberOfRecipeById(recipeResponseDTO.getId(),memberId);
+        recipeDao.setProducerMemberIByRecipeId(recipeResponseDTO.getId(),memberId);
 
         memberDao.addRecipeToMember(memberId, recipeDao.findById(recipeResponseDTO.getId()));
 

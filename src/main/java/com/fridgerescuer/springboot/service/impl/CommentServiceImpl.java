@@ -28,4 +28,9 @@ public class CommentServiceImpl implements CommentService {
         Comment foundComment = commentDao.findById(commentId);
         return CommentMapper.INSTANCE.commentToResponseDTO(foundComment);
     }
+
+    @Override
+    public void updateCommentById(String commentId, CommentDTO updateCommentDTO) {
+        commentDao.updateComment(commentId, CommentMapper.INSTANCE.DTOtoComment(updateCommentDTO));
+    }
 }

@@ -111,7 +111,7 @@ public class RecipeDaoImpl implements RecipeDao {
     }
 
     @Override
-    public void setProducerMemberOfRecipeById(String recipeId, String producerMemberId){
+    public void setProducerMemberIByRecipeId(String recipeId, String producerMemberId){
         template.update(Recipe.class)
                 .matching(where("id").is(recipeId))
                 .apply(new Update().set("producerMemberId", producerMemberId))

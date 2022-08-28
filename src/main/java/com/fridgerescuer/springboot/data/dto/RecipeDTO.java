@@ -16,5 +16,7 @@ public class RecipeDTO {
     private String[] ingredientNames;
 
     private String producerMemberId;
-    //private List<CommentDTO> commentDTOs;
+
+    private double ratingAvg;
+    private double ratingTotalSum;
 }

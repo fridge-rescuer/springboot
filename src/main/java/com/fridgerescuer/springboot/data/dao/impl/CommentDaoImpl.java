@@ -96,7 +96,12 @@ public class CommentDaoImpl implements CommentDao {
             recipeDao.updateRating(originComment.getRecipeId(),updateData.getRating(), originComment.getRating());
         }
 
-       Query query = new Query();
+        // 이미지가 변경되면 기존 이미지 DB에서 제거
+        if(updateData.getImageId() != null && updateData.getImageId() != originComment.getImageId()){
+            gridFsAO.deleteImageByGridFsId(originComment.getImageId());
+        }
+
+        Query query = new Query();
         query.addCriteria(Criteria.where("id").is(commentId));
         Update update = new Update().set("rating", updateData.getRating())
                 .set("body",  updateData.getBody())
