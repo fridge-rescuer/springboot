@@ -49,6 +49,11 @@ public class MemberServiceImpl implements MemberService {
     }
 
     @Override
+    public void addIngredientsToMemberByIngredientIds(String memberId, List<String> ingredientIds) {
+        memberDao.addIngredientsToMemberByIngredientIds(memberId, ingredientIds);
+    }
+
+    @Override
     public void updateMemberById(String memberId, MemberDTO updateDataMemberDTO) {
         memberDao.updateMemberById(memberId, updateDataMemberDTO);
     }

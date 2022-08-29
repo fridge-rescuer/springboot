@@ -14,6 +14,7 @@ public interface MemberService {
     List<CommentResponseDTO> getCommentsByMemberId(String memberId);
 
     void addIngredientsToMember(String memberId, List<IngredientDTO> ingredientDTOs);
+    void addIngredientsToMemberByIngredientIds(String memberId, List<String> ingredientIds);
     void updateMemberById(String memberId, MemberDTO updateDataMemberDTO);
 
     void deleteMemberById(String id);

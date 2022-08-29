@@ -13,6 +13,8 @@ public interface MemberDao {
     Member findById(String memberId);
 
     void addIngredientsToMember(String memberId, List<Ingredient> ingredients);
+    void addIngredientsToMemberByIngredientIds(String memberId, List<String> ingredientIds);
+    void addIngredientsWithExpirationDateToMember(String memberId, List<Ingredient> ingredients);
     void addRecipeToMember(String memberId, Recipe recipe);
     void addCommentToMember(String memberId, Comment comment);
     void updateMemberById(String memberId, MemberDTO updateDataMemberDTO);

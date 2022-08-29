@@ -156,6 +156,39 @@ class MemberServiceTest {
     }
 
     @Test
+    void addIngredientsToMemberByIngredientIds(){
+        //given
+        MemberDTO member = MemberDTO.builder().name("종원").build();
+        MemberResponseDTO memberResponseDto = memberService.saveMember(member);
+
+        IngredientResponseDTO ingredient1 = ingredientService.saveIngredient(IngredientDTO.builder().name("마늘").build());
+        IngredientResponseDTO ingredient2 = ingredientService.saveIngredient(IngredientDTO.builder().name("올리브유").build());
+        IngredientResponseDTO ingredient3 = ingredientService.saveIngredient(IngredientDTO.builder().name("김계란").build());
+        IngredientResponseDTO ingredient4 = ingredientService.saveIngredient(IngredientDTO.builder().name("고추").build());
+
+
+        //when
+        List<String> responseIds = new ArrayList<>();
+        responseIds.add(ingredient1.getId());
+        responseIds.add(ingredient2.getId());
+        responseIds.add(ingredient3.getId());
+        responseIds.add(ingredient4.getId());
+
+        memberService.addIngredientsToMemberByIngredientIds(memberResponseDto.getId(), responseIds);
+
+        //then
+        MemberResponseDTO findMember = memberService.findMemberById(memberResponseDto.getId());
+        System.out.println("findMember = " + findMember);
+
+        assertThat(findMember.getIngredientResponseDTOs().size()).isEqualTo(responseIds.size());
+
+        for (IngredientResponseDTO ingredientResponseDTO: findMember.getIngredientResponseDTOs() ) {
+            System.out.println("ingredientDTO = " + ingredientResponseDTO);
+        }
+    }
+
+
+    @Test
     @DisplayName("멤버가 만든 레시피 등록, 레시피에는 만든 멤버를 등록")
     void saveRecipeByMember(){
         //given

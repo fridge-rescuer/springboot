@@ -1,5 +1,6 @@
 package com.fridgerescuer.springboot.data.dao.impl;
 
+import com.fridgerescuer.springboot.data.dao.IngredientDao;
 import com.fridgerescuer.springboot.data.dao.MemberDao;
 import com.fridgerescuer.springboot.data.dto.MemberDTO;
 import com.fridgerescuer.springboot.data.entity.Comment;
@@ -20,6 +21,7 @@ import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -36,6 +38,9 @@ public class MemberDaoImpl implements MemberDao {
 
     @Autowired
     private final MongoTemplate template;
+
+    @Autowired
+    private final IngredientDao ingredientDao;
 
     @Override
     public Member saveMember(Member member) {
@@ -72,6 +77,22 @@ public class MemberDaoImpl implements MemberDao {
                 .first();
 
         log.info("add ingredient size={}, to member id={}", ingredients.size(),memberId);
+    }
+
+    @Override
+    public void addIngredientsToMemberByIngredientIds(String memberId, List<String> ingredientIds) {
+        List<Ingredient> ingredients = new ArrayList<>();
+
+        for(String ingredientId : ingredientIds){
+            ingredients.add(ingredientDao.findById(ingredientId));
+        }
+
+        this.addIngredientsToMember(memberId,ingredients);  //파라미터 생성 후 대체 호출
+    }
+
+    @Override
+    public void addIngredientsWithExpirationDateToMember(String memberId, List<Ingredient> ingredients) {
+
     }
 
     @Override
