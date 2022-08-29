@@ -1,9 +1,12 @@
-package com.fridgerescuer.springboot.data.repository;
+package com.fridgerescuer.springboot.data.dao;
 
 import com.fridgerescuer.springboot.data.dao.CommentDao;
 import com.fridgerescuer.springboot.data.entity.Comment;
 import com.fridgerescuer.springboot.data.entity.Member;
 import com.fridgerescuer.springboot.data.entity.Recipe;
+import com.fridgerescuer.springboot.data.repository.CommentRepository;
+import com.fridgerescuer.springboot.data.repository.MemberRepository;
+import com.fridgerescuer.springboot.data.repository.RecipeRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -18,7 +21,7 @@ import static org.assertj.core.api.Assertions.*;
 
 @ComponentScan(basePackages = "com.fridgerescuer.springboot")
 @DataMongoTest
-class CommentRepositoryTest {
+class CommentDaoTest {
     @Autowired
     private CommentDao commentDao;
 
