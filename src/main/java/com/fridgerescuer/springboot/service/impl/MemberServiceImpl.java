@@ -5,6 +5,7 @@ import com.fridgerescuer.springboot.data.dto.CommentResponseDTO;
 import com.fridgerescuer.springboot.data.dto.IngredientDTO;
 import com.fridgerescuer.springboot.data.dto.MemberDTO;
 import com.fridgerescuer.springboot.data.dto.MemberResponseDTO;
+import com.fridgerescuer.springboot.data.entity.ExpirationData;
 import com.fridgerescuer.springboot.data.entity.Member;
 import com.fridgerescuer.springboot.data.mapper.CommentMapper;
 import com.fridgerescuer.springboot.data.mapper.IngredientMapper;
@@ -51,6 +52,11 @@ public class MemberServiceImpl implements MemberService {
     @Override
     public void addIngredientsToMemberByIngredientIds(String memberId, List<String> ingredientIds) {
         memberDao.addIngredientsToMemberByIngredientIds(memberId, ingredientIds);
+    }
+
+    @Override
+    public void addIngredientsAndExpirationDataToMember(String memberId, List<String> ingredientIds, List<ExpirationData> expirationDataList) {
+        memberDao.addIngredientAndExpirationDataToMember(memberId,ingredientIds,expirationDataList);
     }
 
     @Override

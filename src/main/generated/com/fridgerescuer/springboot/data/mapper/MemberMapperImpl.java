@@ -5,6 +5,7 @@ import com.fridgerescuer.springboot.data.dto.IngredientResponseDTO;
 import com.fridgerescuer.springboot.data.dto.MemberDTO;
 import com.fridgerescuer.springboot.data.dto.MemberResponseDTO;
 import com.fridgerescuer.springboot.data.dto.RecipeDTO;
+import com.fridgerescuer.springboot.data.entity.ExpirationData;
 import com.fridgerescuer.springboot.data.entity.Ingredient;
 import com.fridgerescuer.springboot.data.entity.Member;
 import com.fridgerescuer.springboot.data.entity.Recipe;
@@ -14,7 +15,7 @@ import javax.annotation.processing.Generated;
 
 @Generated(
     value = "org.mapstruct.ap.MappingProcessor",
-    date = "2022-08-29T16:43:07+0900",
+    date = "2022-08-31T09:26:22+0900",
     comments = "version: 1.5.2.Final, compiler: javac, environment: Java 11.0.13 (Oracle Corporation)"
 )
 public class MemberMapperImpl implements MemberMapper {
@@ -33,6 +34,10 @@ public class MemberMapperImpl implements MemberMapper {
         memberDTO.recipeDTOs( recipeMapper.recipeListToDTOList( member.getRecipes() ) );
         memberDTO.id( member.getId() );
         memberDTO.name( member.getName() );
+        List<ExpirationData> list2 = member.getExpirationDataList();
+        if ( list2 != null ) {
+            memberDTO.expirationDataList( new ArrayList<ExpirationData>( list2 ) );
+        }
 
         return memberDTO.build();
     }
@@ -49,6 +54,10 @@ public class MemberMapperImpl implements MemberMapper {
         member.recipes( recipeDTOListToRecipeList( memberDto.getRecipeDTOs() ) );
         member.id( memberDto.getId() );
         member.name( memberDto.getName() );
+        List<ExpirationData> list2 = memberDto.getExpirationDataList();
+        if ( list2 != null ) {
+            member.expirationDataList( new ArrayList<ExpirationData>( list2 ) );
+        }
 
         return member.build();
     }
@@ -65,6 +74,10 @@ public class MemberMapperImpl implements MemberMapper {
         memberResponseDTO.recipeResponseDTOs( recipeMapper.recipeListToResponseDTOList( member.getRecipes() ) );
         memberResponseDTO.id( member.getId() );
         memberResponseDTO.name( member.getName() );
+        List<ExpirationData> list2 = member.getExpirationDataList();
+        if ( list2 != null ) {
+            memberResponseDTO.expirationDataList( new ArrayList<ExpirationData>( list2 ) );
+        }
 
         return memberResponseDTO.build();
     }

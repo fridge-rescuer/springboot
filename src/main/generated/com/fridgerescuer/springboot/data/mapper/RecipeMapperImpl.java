@@ -10,7 +10,7 @@ import javax.annotation.processing.Generated;
 
 @Generated(
     value = "org.mapstruct.ap.MappingProcessor",
-    date = "2022-08-29T16:43:07+0900",
+    date = "2022-08-31T09:26:23+0900",
     comments = "version: 1.5.2.Final, compiler: javac, environment: Java 11.0.13 (Oracle Corporation)"
 )
 public class RecipeMapperImpl implements RecipeMapper {

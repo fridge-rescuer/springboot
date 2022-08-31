@@ -1,6 +1,8 @@
 package com.fridgerescuer.springboot.service;
 
 import com.fridgerescuer.springboot.data.dto.*;
+import com.fridgerescuer.springboot.data.entity.ExpirationData;
+import com.fridgerescuer.springboot.data.entity.Ingredient;
 import com.fridgerescuer.springboot.data.entity.Member;
 import com.fridgerescuer.springboot.data.entity.Recipe;
 import com.fridgerescuer.springboot.data.mapper.IngredientMapper;
@@ -16,6 +18,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.data.mongo.DataMongoTest;
 import org.springframework.context.annotation.ComponentScan;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -187,6 +190,40 @@ class MemberServiceTest {
         }
     }
 
+
+    @Test
+    void addIngredientsAndExpirationDataToMember(){
+        //given
+        MemberDTO memberDTO = MemberDTO.builder().name("bmx").build();
+
+        List<String> ingredientIds = new ArrayList<>();
+        IngredientResponseDTO garlic = ingredientService.saveIngredient(IngredientDTO.builder().name("마늘").build());
+        IngredientResponseDTO apple = ingredientService.saveIngredient(IngredientDTO.builder().name("사과").build());
+
+        ingredientIds.add(garlic.getId());
+        ingredientIds.add(apple.getId());
+
+        LocalDate now = LocalDate.now();
+
+        List<ExpirationData> expirationDataList = new ArrayList<>();
+        ExpirationData garlicData = ExpirationData.builder().ingredientId(ingredientIds.get(0)).expirationDate(now.plusDays(21)).isNoExpiration(false).build();
+        ExpirationData appleData = ExpirationData.builder().ingredientId(ingredientIds.get(1)).expirationDate(now.plusDays(14)).isNoExpiration(false).build();
+        expirationDataList.add(garlicData);
+        expirationDataList.add(appleData);
+
+        //when
+        MemberResponseDTO memberResponseDTO = memberService.saveMember(memberDTO);
+        memberService.addIngredientsAndExpirationDataToMember(memberResponseDTO.getId(), ingredientIds, expirationDataList);
+
+        MemberResponseDTO memberResponseDTO1 = memberService.findMemberById(memberResponseDTO.getId());
+        List<ExpirationData> expirationDataList1 = memberResponseDTO1.getExpirationDataList();
+
+        for (int i=0; i<expirationDataList1.size() ; ++i){
+            System.out.println(expirationDataList1.get(i));
+            assertThat(expirationDataList.get(i)).isEqualTo(expirationDataList1.get(i));
+        }
+
+    }
 
     @Test
     @DisplayName("멤버가 만든 레시피 등록, 레시피에는 만든 멤버를 등록")
