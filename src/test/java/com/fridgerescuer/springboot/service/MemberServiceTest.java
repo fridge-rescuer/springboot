@@ -1,15 +1,16 @@
 package com.fridgerescuer.springboot.service;
 
 import com.fridgerescuer.springboot.data.dto.*;
+import com.fridgerescuer.springboot.data.entity.ExpirationData;
+import com.fridgerescuer.springboot.data.entity.Ingredient;
+import com.fridgerescuer.springboot.data.entity.Member;
+import com.fridgerescuer.springboot.data.entity.Recipe;
 import com.fridgerescuer.springboot.data.mapper.IngredientMapper;
+import com.fridgerescuer.springboot.data.mapper.RecipeMapper;
 import com.fridgerescuer.springboot.data.repository.IngredientRepository;
 import com.fridgerescuer.springboot.data.repository.MemberRepository;
 import com.fridgerescuer.springboot.data.repository.RecipeRepository;
 import com.fridgerescuer.springboot.exception.data.repository.NoSuchMemberException;
-import com.fridgerescuer.springboot.service.IngredientService;
-import com.fridgerescuer.springboot.service.MemberService;
-import com.fridgerescuer.springboot.service.RecipeService;
-import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -17,10 +18,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.data.mongo.DataMongoTest;
 import org.springframework.context.annotation.ComponentScan;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.assertj.core.api.Assertions.*;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
@@ -33,6 +34,8 @@ class MemberServiceTest {
     private IngredientService ingredientService;
     @Autowired
     private RecipeService recipeService;
+    @Autowired
+    private CommentService commentService;
 
     @Autowired
     private MemberRepository memberRepository;
@@ -51,6 +54,30 @@ class MemberServiceTest {
     //given
     //when
     //then
+
+    @Test
+    void getCommentsOfMember(){
+        //given
+        MemberDTO member = MemberDTO.builder().name("모구모구").build();
+        RecipeDTO recipe = RecipeDTO.builder().name("보쌈").build();
+        CommentDTO comment1 = CommentDTO.builder().rating(1).build();
+        CommentDTO comment2 = CommentDTO.builder().rating(2).build();
+
+        //when
+        MemberResponseDTO memberResponseDTO = memberService.saveMember(member);
+        RecipeResponseDTO recipeResponseDTO = recipeService.saveRecipe(recipe);
+        List<CommentResponseDTO> commentResponseDTOs = new ArrayList<>();
+        commentResponseDTOs.add(commentService.saveComment(memberResponseDTO.getId(), recipeResponseDTO.getId(), comment1));
+        commentResponseDTOs.add(commentService.saveComment(memberResponseDTO.getId(), recipeResponseDTO.getId(), comment2));
+
+        //then
+        List<CommentResponseDTO> comments = memberService.getCommentsByMemberId(memberResponseDTO.getId());
+
+        for (int i = 0; i < comments.size(); i++) {
+            assertThat(comments.get(i).getId()).isEqualTo(commentResponseDTOs.get(i).getId());
+            assertThat(comments.get(i).getRating()).isEqualTo(commentResponseDTOs.get(i).getRating());
+        }
+    }
 
     @Test
     void deleteMember(){
@@ -124,11 +151,78 @@ class MemberServiceTest {
         MemberResponseDTO findMember = memberService.findMemberById(memberResponseDto.getId());
         System.out.println("findMember = " + findMember);
 
-        assertThat(findMember.getIngredientDTOs().size()).isEqualTo(responseDTOList.size());
+        assertThat(findMember.getIngredientResponseDTOs().size()).isEqualTo(responseDTOList.size());
 
-        for (IngredientDTO ingredientDTO: findMember.getIngredientDTOs() ) {
-            System.out.println("ingredientDTO = " + ingredientDTO);
+        for (IngredientResponseDTO ingredientResponseDTO: findMember.getIngredientResponseDTOs() ) {
+            System.out.println("ingredientDTO = " + ingredientResponseDTO);
         }
+    }
+
+    @Test
+    void addIngredientsToMemberByIngredientIds(){
+        //given
+        MemberDTO member = MemberDTO.builder().name("종원").build();
+        MemberResponseDTO memberResponseDto = memberService.saveMember(member);
+
+        IngredientResponseDTO ingredient1 = ingredientService.saveIngredient(IngredientDTO.builder().name("마늘").build());
+        IngredientResponseDTO ingredient2 = ingredientService.saveIngredient(IngredientDTO.builder().name("올리브유").build());
+        IngredientResponseDTO ingredient3 = ingredientService.saveIngredient(IngredientDTO.builder().name("김계란").build());
+        IngredientResponseDTO ingredient4 = ingredientService.saveIngredient(IngredientDTO.builder().name("고추").build());
+
+
+        //when
+        List<String> responseIds = new ArrayList<>();
+        responseIds.add(ingredient1.getId());
+        responseIds.add(ingredient2.getId());
+        responseIds.add(ingredient3.getId());
+        responseIds.add(ingredient4.getId());
+
+        memberService.addIngredientsToMemberByIngredientIds(memberResponseDto.getId(), responseIds);
+
+        //then
+        MemberResponseDTO findMember = memberService.findMemberById(memberResponseDto.getId());
+        System.out.println("findMember = " + findMember);
+
+        assertThat(findMember.getIngredientResponseDTOs().size()).isEqualTo(responseIds.size());
+
+        for (IngredientResponseDTO ingredientResponseDTO: findMember.getIngredientResponseDTOs() ) {
+            System.out.println("ingredientDTO = " + ingredientResponseDTO);
+        }
+    }
+
+
+    @Test
+    void addIngredientsAndExpirationDataToMember(){
+        //given
+        MemberDTO memberDTO = MemberDTO.builder().name("bmx").build();
+
+        List<String> ingredientIds = new ArrayList<>();
+        IngredientResponseDTO garlic = ingredientService.saveIngredient(IngredientDTO.builder().name("마늘").build());
+        IngredientResponseDTO apple = ingredientService.saveIngredient(IngredientDTO.builder().name("사과").build());
+
+        ingredientIds.add(garlic.getId());
+        ingredientIds.add(apple.getId());
+
+        LocalDate now = LocalDate.now();
+
+        List<ExpirationData> expirationDataList = new ArrayList<>();
+        ExpirationData garlicData = ExpirationData.builder().ingredientId(ingredientIds.get(0)).expirationDate(now.plusDays(21)).isNoExpiration(false).build();
+        ExpirationData appleData = ExpirationData.builder().ingredientId(ingredientIds.get(1)).expirationDate(now.plusDays(14)).isNoExpiration(false).build();
+        expirationDataList.add(garlicData);
+        expirationDataList.add(appleData);
+
+        //when
+        MemberResponseDTO memberResponseDTO = memberService.saveMember(memberDTO);
+        memberService.addIngredientsAndExpirationDataToMember(memberResponseDTO.getId(), ingredientIds, expirationDataList);
+
+        MemberResponseDTO memberResponseDTO1 = memberService.findMemberById(memberResponseDTO.getId());
+        List<ExpirationData> expirationDataList1 = memberResponseDTO1.getExpirationDataList();
+
+        for (int i=0; i<expirationDataList1.size() ; ++i){
+            System.out.println(expirationDataList1.get(i));
+            assertThat(expirationDataList.get(i)).isEqualTo(expirationDataList1.get(i));
+        }
+
     }
 
     @Test
@@ -145,13 +239,22 @@ class MemberServiceTest {
         RecipeResponseDTO recipeResponseDTO = recipeService.saveRecipeByMember(memberResponseDto.getId(), recipe);
 
         //then
-        List<RecipeDTO> recipeDTOs = memberService.findMemberById(memberResponseDto.getId()).getRecipeDTOs();
-        RecipeDTO referenceRecipe = recipeDTOs.get(0);
+        Recipe savedRecipe = recipeRepository.findById(recipeResponseDTO.getId()).get();
+        Member savedMember = memberRepository.findById(memberResponseDto.getId()).get();
+
+        List<Recipe> memberRecipes = savedMember.getRecipes();
+        for (RecipeResponseDTO responseDTO: RecipeMapper.INSTANCE.recipeListToResponseDTOList(memberRecipes)) {
+            System.out.println("  - responseMember : " + responseDTO);
+        }
+
+        List<RecipeResponseDTO> recipeResponseDTOs = memberService.findMemberById(memberResponseDto.getId()).getRecipeResponseDTOs();
+        RecipeResponseDTO referenceRecipe = recipeResponseDTOs.get(0);
 
         System.out.println("referenceRecipe = " + referenceRecipe);
 
+
         assertThat(referenceRecipe.getName()).isEqualTo("감자 튀김");
-        assertThat(referenceRecipe.getProducerMember().getId()).isEqualTo(memberResponseDto.getId());
+        assertThat(referenceRecipe.getProducerMemberId()).isEqualTo(memberResponseDto.getId());
 
         //존재하지 않는 id로 접근시
         assertThatThrownBy(() -> recipeService.saveRecipeByMember("123456", recipe))

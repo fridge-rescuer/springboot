@@ -6,14 +6,12 @@ import com.fridgerescuer.springboot.data.entity.Ingredient;
 import java.util.ArrayList;
 import java.util.List;
 import javax.annotation.processing.Generated;
-import org.springframework.stereotype.Component;
 
 @Generated(
     value = "org.mapstruct.ap.MappingProcessor",
-    date = "2022-08-20T16:31:20+0900",
-    comments = "version: 1.5.2.Final, compiler: javac, environment: Java 11.0.1 (Oracle Corporation)"
+    date = "2022-08-31T09:26:22+0900",
+    comments = "version: 1.5.2.Final, compiler: javac, environment: Java 11.0.13 (Oracle Corporation)"
 )
-@Component
 public class IngredientMapperImpl implements IngredientMapper {
 
     @Override

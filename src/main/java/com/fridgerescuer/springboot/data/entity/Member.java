@@ -6,6 +6,7 @@ import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.DocumentReference;
 
 import javax.persistence.GeneratedValue;
+import java.time.LocalDate;
 import java.util.List;
 
 @Document(collection = "member")
@@ -23,6 +24,8 @@ public class Member {
 
     @DocumentReference
     private List<Ingredient> ingredients;
+
+    private List<ExpirationData> expirationDataList;
 
     @DocumentReference
     private List<Recipe> recipes;

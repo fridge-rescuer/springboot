@@ -50,6 +50,7 @@ public class CommentDaoImpl implements CommentDao {
     // 추후 검토 후에 서비스 계층으로 변경 요망(서비스 계층이 할일이 너무 많이 지는 문제도 고려해야함)
     @Override
     public Comment save(String memberId, String recipeId, Comment comment){
+        comment.setRecipeId(recipeId);      //애초에 comment 내에 담겨 와야 할 필요성이 느껴짐
         Comment savedComment = commentRepository.save(comment);
 
         memberDao.addCommentToMember(memberId, comment);
@@ -88,14 +89,19 @@ public class CommentDaoImpl implements CommentDao {
     }
 
     @Override
-    public void updateComment(String commentId, Comment updateData) {
+    public void updateCommentById(String commentId, Comment updateData) {
         Comment originComment = this.findById(commentId);
 
         if(originComment.getRating() != updateData.getRating()){    //평점에 변동이 있는 경우만 반영
             recipeDao.updateRating(originComment.getRecipeId(),updateData.getRating(), originComment.getRating());
         }
 
-       Query query = new Query();
+        // 이미지가 변경되면 기존 이미지 DB에서 제거
+        if(updateData.getImageId() != null && updateData.getImageId() != originComment.getImageId()){
+            gridFsAO.deleteImageByGridFsId(originComment.getImageId());
+        }
+
+        Query query = new Query();
         query.addCriteria(Criteria.where("id").is(commentId));
         Update update = new Update().set("rating", updateData.getRating())
                 .set("body",  updateData.getBody())
@@ -108,7 +114,7 @@ public class CommentDaoImpl implements CommentDao {
     }
 
     @Override
-    public void deleteComment(String commentId) {
+    public void deleteCommentById(String commentId) {
         Comment comment = this.findById(commentId);
         recipeDao.deleteRating(comment.getRecipeId(), comment.getRating());
 

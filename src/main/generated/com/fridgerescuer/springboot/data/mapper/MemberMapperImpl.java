@@ -1,25 +1,26 @@
 package com.fridgerescuer.springboot.data.mapper;
 
 import com.fridgerescuer.springboot.data.dto.IngredientDTO;
+import com.fridgerescuer.springboot.data.dto.IngredientResponseDTO;
 import com.fridgerescuer.springboot.data.dto.MemberDTO;
 import com.fridgerescuer.springboot.data.dto.MemberResponseDTO;
 import com.fridgerescuer.springboot.data.dto.RecipeDTO;
+import com.fridgerescuer.springboot.data.entity.ExpirationData;
 import com.fridgerescuer.springboot.data.entity.Ingredient;
 import com.fridgerescuer.springboot.data.entity.Member;
 import com.fridgerescuer.springboot.data.entity.Recipe;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import javax.annotation.processing.Generated;
-import org.springframework.stereotype.Component;
 
 @Generated(
     value = "org.mapstruct.ap.MappingProcessor",
-    date = "2022-08-20T16:31:19+0900",
-    comments = "version: 1.5.2.Final, compiler: javac, environment: Java 11.0.1 (Oracle Corporation)"
+    date = "2022-08-31T09:26:22+0900",
+    comments = "version: 1.5.2.Final, compiler: javac, environment: Java 11.0.13 (Oracle Corporation)"
 )
-@Component
 public class MemberMapperImpl implements MemberMapper {
+
+    private final RecipeMapper recipeMapper = RecipeMapper.INSTANCE;
 
     @Override
     public MemberDTO memberToDto(Member member) {
@@ -29,8 +30,14 @@ public class MemberMapperImpl implements MemberMapper {
 
         MemberDTO.MemberDTOBuilder memberDTO = MemberDTO.builder();
 
+        memberDTO.ingredientDTOs( ingredientListToIngredientDTOList( member.getIngredients() ) );
+        memberDTO.recipeDTOs( recipeMapper.recipeListToDTOList( member.getRecipes() ) );
         memberDTO.id( member.getId() );
         memberDTO.name( member.getName() );
+        List<ExpirationData> list2 = member.getExpirationDataList();
+        if ( list2 != null ) {
+            memberDTO.expirationDataList( new ArrayList<ExpirationData>( list2 ) );
+        }
 
         return memberDTO.build();
     }
@@ -43,8 +50,14 @@ public class MemberMapperImpl implements MemberMapper {
 
         Member.MemberBuilder member = Member.builder();
 
+        member.ingredients( ingredientDTOListToIngredientList( memberDto.getIngredientDTOs() ) );
+        member.recipes( recipeDTOListToRecipeList( memberDto.getRecipeDTOs() ) );
         member.id( memberDto.getId() );
         member.name( memberDto.getName() );
+        List<ExpirationData> list2 = memberDto.getExpirationDataList();
+        if ( list2 != null ) {
+            member.expirationDataList( new ArrayList<ExpirationData>( list2 ) );
+        }
 
         return member.build();
     }
@@ -57,10 +70,14 @@ public class MemberMapperImpl implements MemberMapper {
 
         MemberResponseDTO.MemberResponseDTOBuilder memberResponseDTO = MemberResponseDTO.builder();
 
-        memberResponseDTO.ingredientDTOs( ingredientListToIngredientDTOList( member.getIngredients() ) );
-        memberResponseDTO.recipeDTOs( recipeListToRecipeDTOList( member.getRecipes() ) );
+        memberResponseDTO.ingredientResponseDTOs( ingredientListToIngredientResponseDTOList( member.getIngredients() ) );
+        memberResponseDTO.recipeResponseDTOs( recipeMapper.recipeListToResponseDTOList( member.getRecipes() ) );
         memberResponseDTO.id( member.getId() );
         memberResponseDTO.name( member.getName() );
+        List<ExpirationData> list2 = member.getExpirationDataList();
+        if ( list2 != null ) {
+            memberResponseDTO.expirationDataList( new ArrayList<ExpirationData>( list2 ) );
+        }
 
         return memberResponseDTO.build();
     }
@@ -91,32 +108,66 @@ public class MemberMapperImpl implements MemberMapper {
         return list1;
     }
 
-    protected RecipeDTO recipeToRecipeDTO(Recipe recipe) {
-        if ( recipe == null ) {
+    protected Ingredient ingredientDTOToIngredient(IngredientDTO ingredientDTO) {
+        if ( ingredientDTO == null ) {
             return null;
         }
 
-        RecipeDTO.RecipeDTOBuilder recipeDTO = RecipeDTO.builder();
+        Ingredient.IngredientBuilder ingredient = Ingredient.builder();
 
-        recipeDTO.name( recipe.getName() );
-        recipeDTO.type( recipe.getType() );
-        String[] ingredientNames = recipe.getIngredientNames();
-        if ( ingredientNames != null ) {
-            recipeDTO.ingredientNames( Arrays.copyOf( ingredientNames, ingredientNames.length ) );
-        }
-        recipeDTO.producerMember( memberToDto( recipe.getProducerMember() ) );
+        ingredient.id( ingredientDTO.getId() );
+        ingredient.name( ingredientDTO.getName() );
 
-        return recipeDTO.build();
+        return ingredient.build();
     }
 
-    protected List<RecipeDTO> recipeListToRecipeDTOList(List<Recipe> list) {
+    protected List<Ingredient> ingredientDTOListToIngredientList(List<IngredientDTO> list) {
         if ( list == null ) {
             return null;
         }
 
-        List<RecipeDTO> list1 = new ArrayList<RecipeDTO>( list.size() );
-        for ( Recipe recipe : list ) {
-            list1.add( recipeToRecipeDTO( recipe ) );
+        List<Ingredient> list1 = new ArrayList<Ingredient>( list.size() );
+        for ( IngredientDTO ingredientDTO : list ) {
+            list1.add( ingredientDTOToIngredient( ingredientDTO ) );
+        }
+
+        return list1;
+    }
+
+    protected List<Recipe> recipeDTOListToRecipeList(List<RecipeDTO> list) {
+        if ( list == null ) {
+            return null;
+        }
+
+        List<Recipe> list1 = new ArrayList<Recipe>( list.size() );
+        for ( RecipeDTO recipeDTO : list ) {
+            list1.add( recipeMapper.DTOtoRecipe( recipeDTO ) );
+        }
+
+        return list1;
+    }
+
+    protected IngredientResponseDTO ingredientToIngredientResponseDTO(Ingredient ingredient) {
+        if ( ingredient == null ) {
+            return null;
+        }
+
+        IngredientResponseDTO.IngredientResponseDTOBuilder ingredientResponseDTO = IngredientResponseDTO.builder();
+
+        ingredientResponseDTO.id( ingredient.getId() );
+        ingredientResponseDTO.name( ingredient.getName() );
+
+        return ingredientResponseDTO.build();
+    }
+
+    protected List<IngredientResponseDTO> ingredientListToIngredientResponseDTOList(List<Ingredient> list) {
+        if ( list == null ) {
+            return null;
+        }
+
+        List<IngredientResponseDTO> list1 = new ArrayList<IngredientResponseDTO>( list.size() );
+        for ( Ingredient ingredient : list ) {
+            list1.add( ingredientToIngredientResponseDTO( ingredient ) );
         }
 
         return list1;

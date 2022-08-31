@@ -1,5 +1,6 @@
 package com.fridgerescuer.springboot.data.dto;
 
+import com.fridgerescuer.springboot.data.entity.ExpirationData;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.ToString;
@@ -12,7 +13,8 @@ import java.util.List;
 public class MemberResponseDTO {
     private String id;
     private String name;
-    private List<IngredientDTO> ingredientDTOs;
-    private List<RecipeDTO> recipeDTOs;
+    private List<IngredientResponseDTO> ingredientResponseDTOs;
+    private List<RecipeResponseDTO> recipeResponseDTOs;
 
+    private List<ExpirationData> expirationDataList;
  }

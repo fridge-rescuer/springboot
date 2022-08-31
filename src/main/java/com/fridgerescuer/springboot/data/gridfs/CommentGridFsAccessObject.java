@@ -31,7 +31,7 @@ public class CommentGridFsAccessObject {
         return id.toString();
     }
 
-    public void deleteImageByGridFsId(String commentId){
-        gridFsTemplate.delete(new Query(Criteria.where("_id").is(commentId)));
+    public void deleteImageByGridFsId(String imageId){
+        gridFsTemplate.delete(new Query(Criteria.where("_id").is(imageId)));
     }
 }

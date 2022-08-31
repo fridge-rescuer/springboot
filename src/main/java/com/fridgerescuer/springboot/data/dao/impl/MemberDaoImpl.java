@@ -1,11 +1,9 @@
 package com.fridgerescuer.springboot.data.dao.impl;
 
+import com.fridgerescuer.springboot.data.dao.IngredientDao;
 import com.fridgerescuer.springboot.data.dao.MemberDao;
 import com.fridgerescuer.springboot.data.dto.MemberDTO;
-import com.fridgerescuer.springboot.data.entity.Comment;
-import com.fridgerescuer.springboot.data.entity.Ingredient;
-import com.fridgerescuer.springboot.data.entity.Member;
-import com.fridgerescuer.springboot.data.entity.Recipe;
+import com.fridgerescuer.springboot.data.entity.*;
 import com.fridgerescuer.springboot.data.repository.MemberRepository;
 import com.fridgerescuer.springboot.exception.data.repository.NoSuchIngredientException;
 import com.fridgerescuer.springboot.exception.data.repository.NoSuchMemberException;
@@ -20,6 +18,8 @@ import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -36,6 +36,9 @@ public class MemberDaoImpl implements MemberDao {
 
     @Autowired
     private final MongoTemplate template;
+
+    @Autowired
+    private final IngredientDao ingredientDao;
 
     @Override
     public Member saveMember(Member member) {
@@ -75,9 +78,45 @@ public class MemberDaoImpl implements MemberDao {
     }
 
     @Override
+    public void addIngredientsToMemberByIngredientIds(String memberId, List<String> ingredientIds) {
+        List<Ingredient> ingredients = new ArrayList<>();
+
+        for(String ingredientId : ingredientIds){
+            ingredients.add(ingredientDao.findById(ingredientId));
+        }
+
+        this.addIngredientsToMember(memberId,ingredients);  //파라미터 생성 후 대체 호출
+    }
+
+
+    @Override
+    public void addIngredientAndExpirationDataToMember(String memberId, List<String> ingredientIds, List<ExpirationData> expirationDataList) {
+        this.addIngredientsToMemberByIngredientIds(memberId, ingredientIds);    //reference 저장
+
+        for (int i = 0; i < expirationDataList.size(); i++) { //유통기한 저장
+            this.setExpirationDataList(memberId, expirationDataList.get(i));
+        }
+    }
+
+
+    private void setExpirationDataList(String memberId, ExpirationData expirationData){
+        Query query = new Query();
+        query.addCriteria(Criteria.where("id").is(memberId));
+
+        Update update = new Update();
+        update.push("expirationDataList",expirationData);
+
+
+        template.updateMulti(query, update, Member.class);
+        log.info("push Member Ingredient ExpirationData ={}, to MemberId ={}",expirationData ,memberId);
+    }
+
+    @Override
     public void addRecipeToMember(String memberId, Recipe recipe) {
         Query query = new Query();
         query.addCriteria(Criteria.where("id").is(memberId));
+
+        log.info("converted recipe ={}",recipe);
 
         Update update = new Update();
         update.push("recipes",recipe);

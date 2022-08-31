@@ -11,7 +11,7 @@ public interface CommentDao {
     Comment findById(String commentId);
 
     void addImage(String commentId, MultipartFile file) throws IOException;
-    void updateComment(String commentId, Comment updateData);
+    void updateCommentById(String commentId, Comment updateData);
 
-    void deleteComment(String commentId);
+    void deleteCommentById(String commentId);
 }

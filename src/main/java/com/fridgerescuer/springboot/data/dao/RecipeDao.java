@@ -15,11 +15,12 @@ public interface RecipeDao {
     Recipe findById(String id);
     Recipe findByName(String name);
     List<Recipe> findAllByContainName(String name);
+    List<Comment> getCommentsByRecipeId(String recipeId);
 
     void updateRecipeById(String targetId, Recipe updateData);
     void deleteById(String targetId);
 
-    void setProducerMemberOfRecipeById(String recipeId, Member producerMember);
+    void setProducerMemberIByRecipeId(String recipeId, String producerMemberId);
 
     void addImage(String targetId, MultipartFile file) throws IOException;
     void addCommentToRecipe(String recipeId, Comment comment);

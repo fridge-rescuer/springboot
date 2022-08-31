@@ -26,8 +26,7 @@ public class Recipe {
     private String type;
     private String[] ingredientNames;
 
-    @DocumentReference
-    private Member producerMember;
+    private String producerMemberId;
 
     @DocumentReference
     private List<Comment> comments;

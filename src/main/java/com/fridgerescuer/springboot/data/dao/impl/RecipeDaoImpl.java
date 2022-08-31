@@ -87,6 +87,13 @@ public class RecipeDaoImpl implements RecipeDao {
     }
 
     @Override
+    public List<Comment> getCommentsByRecipeId(String recipeId) {
+        Recipe foundRecipe = this.findById(recipeId);
+
+        return foundRecipe.getComments();
+    }
+
+    @Override
     public void updateRecipeById(String targetId, Recipe updateData) {
         Recipe targetRecipe = this.findById(targetId);  //존재하지 않는 id면 여기서 예외 처리됨
         deleteReferenceWithIngredients(targetRecipe);
@@ -107,14 +114,21 @@ public class RecipeDaoImpl implements RecipeDao {
 
     @Override
     public void deleteById(String targetId) {
+        Recipe targetRecipe = this.findById(targetId);
+
+        if(targetRecipe.getImageId() != null)   //이미지 부터 제거거
+           gridFsAO.deleteImageByGridFsId(targetRecipe.getImageId());
+
         repository.deleteById(targetId);
+
+        log.info("delete recipe, id={}", targetId);
     }
 
     @Override
-    public void setProducerMemberOfRecipeById(String recipeId, Member producerMember){
+    public void setProducerMemberIByRecipeId(String recipeId, String producerMemberId){
         template.update(Recipe.class)
                 .matching(where("id").is(recipeId))
-                .apply(new Update().set("producerMember", producerMember))
+                .apply(new Update().set("producerMemberId", producerMemberId))
                 .first();
     }
 

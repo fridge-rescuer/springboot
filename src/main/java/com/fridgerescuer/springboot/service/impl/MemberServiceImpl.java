@@ -1,10 +1,13 @@
 package com.fridgerescuer.springboot.service.impl;
 
 import com.fridgerescuer.springboot.data.dao.MemberDao;
+import com.fridgerescuer.springboot.data.dto.CommentResponseDTO;
 import com.fridgerescuer.springboot.data.dto.IngredientDTO;
 import com.fridgerescuer.springboot.data.dto.MemberDTO;
 import com.fridgerescuer.springboot.data.dto.MemberResponseDTO;
+import com.fridgerescuer.springboot.data.entity.ExpirationData;
 import com.fridgerescuer.springboot.data.entity.Member;
+import com.fridgerescuer.springboot.data.mapper.CommentMapper;
 import com.fridgerescuer.springboot.data.mapper.IngredientMapper;
 import com.fridgerescuer.springboot.data.mapper.MemberMapper;
 import com.fridgerescuer.springboot.service.MemberService;
@@ -35,8 +38,25 @@ public class MemberServiceImpl implements MemberService {
     }
 
     @Override
+    public List<CommentResponseDTO> getCommentsByMemberId(String memberId) {
+        Member member = memberDao.findById(memberId);
+
+        return CommentMapper.INSTANCE.commentListToResponseDTOList(member.getComments());
+    }
+
+    @Override
     public void addIngredientsToMember(String memberId, List<IngredientDTO> ingredientDTOs) {
         memberDao.addIngredientsToMember(memberId, IngredientMapper.INSTANCE.ingredientListToDTOList(ingredientDTOs));
+    }
+
+    @Override
+    public void addIngredientsToMemberByIngredientIds(String memberId, List<String> ingredientIds) {
+        memberDao.addIngredientsToMemberByIngredientIds(memberId, ingredientIds);
+    }
+
+    @Override
+    public void addIngredientsAndExpirationDataToMember(String memberId, List<String> ingredientIds, List<ExpirationData> expirationDataList) {
+        memberDao.addIngredientAndExpirationDataToMember(memberId,ingredientIds,expirationDataList);
     }
 
     @Override

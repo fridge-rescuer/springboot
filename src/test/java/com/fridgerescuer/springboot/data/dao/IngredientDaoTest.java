@@ -1,9 +1,10 @@
-package com.fridgerescuer.springboot.data.repository;
+package com.fridgerescuer.springboot.data.dao;
 
 import com.fridgerescuer.springboot.data.dao.IngredientDao;
 import com.fridgerescuer.springboot.data.entity.Component;
 import com.fridgerescuer.springboot.data.entity.DetailIngredient;
 import com.fridgerescuer.springboot.data.entity.Ingredient;
+import com.fridgerescuer.springboot.data.repository.IngredientRepository;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -18,7 +19,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 @ComponentScan(basePackages = "com.fridgerescuer.springboot")
 @DataMongoTest
-class IngredientRepositoryTest {
+class IngredientDaoTest {
     @Autowired
     private IngredientRepository repository;
 

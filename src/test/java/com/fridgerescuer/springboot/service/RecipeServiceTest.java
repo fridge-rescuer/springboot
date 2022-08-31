@@ -18,6 +18,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.data.mongo.DataMongoTest;
 import org.springframework.context.annotation.ComponentScan;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -37,6 +38,8 @@ class RecipeServiceTest {
     private IngredientService ingredientService;
     @Autowired
     private MemberService memberService;
+    @Autowired
+    private CommentService commentService;
 
 
     @BeforeEach
@@ -208,4 +211,28 @@ class RecipeServiceTest {
         assertThat(findRecipes.size()).isEqualTo(2);
     }
 
+    @Test
+    @DisplayName("레시피 후기들 레시피 id로 받아오기")
+    void getRecipeCommentsByRecipeId(){
+        //given
+        MemberDTO member = MemberDTO.builder().name("아사쿠사").build();
+        RecipeDTO recipe = RecipeDTO.builder().name("보쌈").build();
+        CommentDTO comment1 = CommentDTO.builder().rating(1).build();
+        CommentDTO comment2 = CommentDTO.builder().rating(2).build();
+
+        //when
+        MemberResponseDTO memberResponseDTO = memberService.saveMember(member);
+        RecipeResponseDTO recipeResponseDTO = recipeService.saveRecipe(recipe);
+        List<CommentResponseDTO> commentResponseDTOs = new ArrayList<>();
+        commentResponseDTOs.add(commentService.saveComment(memberResponseDTO.getId(), recipeResponseDTO.getId(), comment1));
+        commentResponseDTOs.add(commentService.saveComment(memberResponseDTO.getId(), recipeResponseDTO.getId(), comment2));
+
+        //then
+        List<CommentResponseDTO> comments = recipeService.getCommentsByRecipeId(recipeResponseDTO.getId());
+
+        for (int i = 0; i < comments.size(); i++) {
+            assertThat(comments.get(i).getId()).isEqualTo(commentResponseDTOs.get(i).getId());
+            assertThat(comments.get(i).getRating()).isEqualTo(commentResponseDTOs.get(i).getRating());
+        }
+    }
 }
