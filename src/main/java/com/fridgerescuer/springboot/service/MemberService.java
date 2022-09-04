@@ -9,9 +9,10 @@ import com.fridgerescuer.springboot.data.entity.ExpirationData;
 import java.util.List;
 
 public interface MemberService {
-    MemberResponseDTO saveMember(MemberDTO memberDto);
-
-    MemberResponseDTO findMemberById(String memberId);
+    void saveMember(MemberDTO memberDto);
+    MemberDTO findMemberById(String memberId);
+    MemberResponseDTO memberLogin(String loginId, String loginPassword);
+    MemberResponseDTO memberJoin(MemberDTO memberToJoin);
     List<CommentResponseDTO> getCommentsByMemberId(String memberId);
 
     void addIngredientsToMember(String memberId, List<IngredientDTO> ingredientDTOs);
@@ -20,4 +21,6 @@ public interface MemberService {
     void updateMemberById(String memberId, MemberDTO updateDataMemberDTO);
 
     void deleteMemberById(String id);
+
+    void memberDuplicateCheck(String id);
 }

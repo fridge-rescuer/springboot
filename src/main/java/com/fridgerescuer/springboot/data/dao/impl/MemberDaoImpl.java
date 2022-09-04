@@ -5,8 +5,9 @@ import com.fridgerescuer.springboot.data.dao.MemberDao;
 import com.fridgerescuer.springboot.data.dto.MemberDTO;
 import com.fridgerescuer.springboot.data.entity.*;
 import com.fridgerescuer.springboot.data.repository.MemberRepository;
-import com.fridgerescuer.springboot.exception.data.repository.NoSuchIngredientException;
-import com.fridgerescuer.springboot.exception.data.repository.NoSuchMemberException;
+import com.fridgerescuer.springboot.exception.errorcodeimpl.MemberError;
+import com.fridgerescuer.springboot.exception.exceptionimpl.NoSuchIngredientException;
+import com.fridgerescuer.springboot.exception.exceptionimpl.MemberException;
 import com.mongodb.client.result.UpdateResult;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -51,7 +52,7 @@ public class MemberDaoImpl implements MemberDao {
         Optional<Member> findMember = repository.findById(memberId);
 
         if(findMember.isEmpty()){
-            throw new NoSuchMemberException(new NullPointerException("no such member id in Repository, id=" + memberId));
+            throw new MemberException(MemberError.NOT_EXIST);
         }
 
         return findMember.get();
@@ -124,7 +125,7 @@ public class MemberDaoImpl implements MemberDao {
         UpdateResult updateResult = template.updateMulti(query, update, Member.class);
 
         if(updateResult.getModifiedCount() == 0){ //write 가 실패한 경우
-            throw new NoSuchMemberException(new NullPointerException("no such member id in Repository, id=" + memberId));
+     //       throw new MemberException(new NullPointerException("no such member id in Repository, id=" + memberId));
         }
 
         log.info("add recipe ={}, to member id={}", recipe,memberId);
@@ -155,7 +156,7 @@ public class MemberDaoImpl implements MemberDao {
         UpdateResult updateResult = template.updateMulti(query, update, Member.class);
 
         if(updateResult.getModifiedCount() == 0){ //write 가 실패한 경우
-            throw new NoSuchMemberException(new NullPointerException("no such member id in Repository, id=" + memberId));
+   //         throw new MemberException(new NullPointerException("no such member id in Repository, id=" + memberId));
         }
 
         log.info("updateDataMemberDTO ={}", updateDataMemberDTO);

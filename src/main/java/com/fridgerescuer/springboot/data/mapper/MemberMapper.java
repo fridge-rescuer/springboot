@@ -22,4 +22,6 @@ public interface MemberMapper {
     @Mapping(source = "ingredients", target = "ingredientResponseDTOs")
     @Mapping(source = "recipes", target = "recipeResponseDTOs")
     MemberResponseDTO memberToResponseDto(Member member);
+
+    MemberResponseDTO DtoToMemberResponseDto(MemberDTO memberDTO);
 }

@@ -1,4 +1,4 @@
-package com.fridgerescuer.springboot.exception.data.repository;
+package com.fridgerescuer.springboot.exception.exceptionimpl;
 
 public class NoSuchRecipeException extends RuntimeException{
     public NoSuchRecipeException() {

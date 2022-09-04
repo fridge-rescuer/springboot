@@ -22,6 +22,8 @@ public class Member {
 
     private String name;
 
+    private String password;
+
     @DocumentReference
     private List<Ingredient> ingredients;
 

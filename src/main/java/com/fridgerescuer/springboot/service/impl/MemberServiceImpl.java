@@ -10,6 +10,8 @@ import com.fridgerescuer.springboot.data.entity.Member;
 import com.fridgerescuer.springboot.data.mapper.CommentMapper;
 import com.fridgerescuer.springboot.data.mapper.IngredientMapper;
 import com.fridgerescuer.springboot.data.mapper.MemberMapper;
+import com.fridgerescuer.springboot.exception.errorcodeimpl.MemberError;
+import com.fridgerescuer.springboot.exception.exceptionimpl.MemberException;
 import com.fridgerescuer.springboot.service.MemberService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,17 +26,19 @@ public class MemberServiceImpl implements MemberService {
     @Autowired private final MemberDao memberDao;
 
     @Override
-    public MemberResponseDTO saveMember(MemberDTO memberDto) {
-        Member savedMember = memberDao.saveMember(MemberMapper.INSTANCE.DtoToMember(memberDto));
-        return MemberMapper.INSTANCE.memberToResponseDto(savedMember);
+    public void saveMember(MemberDTO memberDto) {
+        memberDao.saveMember(MemberMapper.INSTANCE.DtoToMember(memberDto));
     }
 
     @Override
-    public MemberResponseDTO findMemberById(String memberId) {
-        Member findMember = memberDao.findById(memberId);
+    public MemberDTO findMemberById(String memberId) {
+        MemberDTO memberDTO =  MemberMapper.INSTANCE.memberToDto(memberDao.findById(memberId));
+        if(memberDTO.getIngredientDTOs().isEmpty())
+            memberDTO.setIngredientDTOs(null);
+        if(memberDTO.getRecipeDTOs().isEmpty())
+            memberDTO.setRecipeDTOs(null);
 
-        MemberResponseDTO memberResponseDto = MemberMapper.INSTANCE.memberToResponseDto(findMember);  //재료 리스트는 타입을 변환해 주입해줘
-        return memberResponseDto;
+        return memberDTO;
     }
 
     @Override
@@ -67,5 +71,48 @@ public class MemberServiceImpl implements MemberService {
     @Override
     public void deleteMemberById(String id) {
         memberDao.deleteMemberById(id);
+    }
+
+    /**
+     *
+     * @param loginId
+     * @param loginPassword
+     * @return MemberResponseDTO if (loginId, loginPassword) is found
+     * @exception MemberException if not found
+     */
+    @Override
+    public MemberResponseDTO memberLogin(String loginId, String loginPassword) {
+        MemberDTO tryLoginMember = findMemberById(loginId);
+
+        if(!tryLoginMember.getPassword().equals(loginPassword)) {
+            throw new MemberException(MemberError.INCORRECT_PASSWORD);
+        }
+
+        return MemberMapper.INSTANCE.DtoToMemberResponseDto(tryLoginMember);
+    }
+
+    /**
+     * 중복 아이디를 검사하고, 중복된 데이터가 아니라면 DB에 저장
+     * @param memberToJoin
+     * @return
+     */
+    @Override
+    public MemberResponseDTO memberJoin(MemberDTO memberToJoin) {
+
+        memberDuplicateCheck(memberToJoin.getId());
+
+        saveMember(memberToJoin);
+
+        return MemberMapper.INSTANCE.DtoToMemberResponseDto(findMemberById(memberToJoin.getId()));
+    }
+
+    @Override
+    public void memberDuplicateCheck(String id) {
+        try {
+            findMemberById(id);
+            throw new MemberException(MemberError.DUPLICATE_ID);
+        } catch (MemberException e) {
+            return;
+        }
     }
 }
