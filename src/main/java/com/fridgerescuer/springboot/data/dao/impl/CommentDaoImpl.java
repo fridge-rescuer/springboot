@@ -6,7 +6,6 @@ import com.fridgerescuer.springboot.data.dao.RecipeDao;
 import com.fridgerescuer.springboot.data.entity.Comment;
 import com.fridgerescuer.springboot.data.gridfs.CommentGridFsAccessObject;
 import com.fridgerescuer.springboot.data.repository.CommentRepository;
-import com.fridgerescuer.springboot.exception.data.repository.NoSuchCommentException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -65,7 +64,7 @@ public class CommentDaoImpl implements CommentDao {
         Optional<Comment> foundComment = commentRepository.findById(commentId);
 
         if (foundComment.isEmpty()){
-            throw new NoSuchCommentException(new NullPointerException("no such comment id =" + commentId));
+//            throw new NoSuchCommentException(new NullPointerException("no such comment id =" + commentId));
         }
 
         return foundComment.get();

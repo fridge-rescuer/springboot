@@ -4,7 +4,7 @@ import com.fridgerescuer.springboot.data.dto.IngredientDTO;
 import com.fridgerescuer.springboot.data.dto.IngredientResponseDTO;
 import com.fridgerescuer.springboot.data.entity.Ingredient;
 import com.fridgerescuer.springboot.data.repository.IngredientRepository;
-import com.fridgerescuer.springboot.exception.data.repository.NoSuchIngredientException;
+import com.fridgerescuer.springboot.exception.exceptionimpl.NoSuchIngredientException;
 import com.fridgerescuer.springboot.service.IngredientService;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.AfterEach;

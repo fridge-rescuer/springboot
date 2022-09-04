@@ -5,6 +5,7 @@ import com.fridgerescuer.springboot.data.dao.MemberDao;
 import com.fridgerescuer.springboot.data.dto.MemberDTO;
 import com.fridgerescuer.springboot.data.entity.*;
 import com.fridgerescuer.springboot.data.repository.MemberRepository;
+import com.fridgerescuer.springboot.exception.ErrorCode;
 import com.fridgerescuer.springboot.exception.errorcodeimpl.MemberError;
 import com.fridgerescuer.springboot.exception.exceptionimpl.NoSuchIngredientException;
 import com.fridgerescuer.springboot.exception.exceptionimpl.MemberException;
@@ -139,7 +140,7 @@ public class MemberDaoImpl implements MemberDao {
                 .first();
 
         if(updateResult.getModifiedCount() == 0){ //write 가 실패한 경우
-            throw new NoSuchMemberException(new NullPointerException("no such member id in Repository, id=" + memberId));
+            throw new MemberException(MemberError.NOT_EXIST);
         }
 
         log.info("addCommentToMember memberId={}", memberId);

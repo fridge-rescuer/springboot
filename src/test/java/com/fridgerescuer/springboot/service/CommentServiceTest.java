@@ -24,62 +24,62 @@ class CommentServiceTest {
     //when
     //then
 
-    @Test
-    void saveComment(){
-        CommentDTO commentDTO = CommentDTO.builder().rating(4.5).body("정말 맛있어요!! ㅋㅋ큐ㅋ").build();
-        RecipeDTO recipeDTO = RecipeDTO.builder().name("중력").build();
-        MemberDTO memberDTO = MemberDTO.builder().name("브레드 피트").build();
+//    @Test
+//    void saveComment(){
+//        CommentDTO commentDTO = CommentDTO.builder().rating(4.5).body("정말 맛있어요!! ㅋㅋ큐ㅋ").build();
+//        RecipeDTO recipeDTO = RecipeDTO.builder().name("중력").build();
+//        MemberDTO memberDTO = MemberDTO.builder().name("브레드 피트").build();
+//
+//        MemberResponseDTO memberResponseDTO = memberService.saveMember(memberDTO);
+//        RecipeResponseDTO recipeResponseDTO = recipeService.saveRecipeByMember(memberResponseDTO.getId(), recipeDTO);
+//
+//
+//        CommentResponseDTO commentResponseDTO = commentService.saveComment(memberResponseDTO.getId(), recipeResponseDTO.getId(), commentDTO);
+//
+//        System.out.println(commentResponseDTO.toString());
+//
+//        assertThat(commentResponseDTO.getBody()).isEqualTo(commentDTO.getBody());
+//        assertThat(commentResponseDTO.getRecipeId()).isEqualTo(recipeResponseDTO.getId());
+//    }
 
-        MemberResponseDTO memberResponseDTO = memberService.saveMember(memberDTO);
-        RecipeResponseDTO recipeResponseDTO = recipeService.saveRecipeByMember(memberResponseDTO.getId(), recipeDTO);
-
-
-        CommentResponseDTO commentResponseDTO = commentService.saveComment(memberResponseDTO.getId(), recipeResponseDTO.getId(), commentDTO);
-
-        System.out.println(commentResponseDTO.toString());
-
-        assertThat(commentResponseDTO.getBody()).isEqualTo(commentDTO.getBody());
-        assertThat(commentResponseDTO.getRecipeId()).isEqualTo(recipeResponseDTO.getId());
-    }
-
-    @Test
-    void findCommentByMemberAndRecipe(){
-        //given
-        CommentDTO commentDTO = CommentDTO.builder().rating(4.5).body("맛남").build();
-        RecipeDTO recipeDTO = RecipeDTO.builder().name("마라탕").build();
-        MemberDTO memberDTO = MemberDTO.builder().name("브레드 피트").build();
-
-        //when
-        MemberResponseDTO memberResponseDTO = memberService.saveMember(memberDTO);
-        RecipeResponseDTO recipeResponseDTO = recipeService.saveRecipeByMember(memberResponseDTO.getId(), recipeDTO);
-
-        //then
-
-
-    }
-
-    @Test
-    void updateCommentById(){
-        //given
-        CommentDTO commentDTO = CommentDTO.builder().rating(4.5).body("기대되는 맛~").build();
-        RecipeDTO recipeDTO = RecipeDTO.builder().name("마라탕").build();
-        MemberDTO memberDTO = MemberDTO.builder().name("브레드 피트").build();
-
-        //when
-        MemberResponseDTO memberResponseDTO = memberService.saveMember(memberDTO);
-        RecipeResponseDTO recipeResponseDTO = recipeService.saveRecipeByMember(memberResponseDTO.getId(), recipeDTO);
-
-        CommentResponseDTO commentResponseDTO = commentService.saveComment(memberResponseDTO.getId(), recipeResponseDTO.getId(), commentDTO);
-        CommentDTO updateCommentDTO = CommentDTO.builder().rating(2.5).body("별로임").build();
-
-        commentService.updateCommentById(commentResponseDTO.getId(), updateCommentDTO); //업데이트 진행
-
-        //then
-        assertThat(commentService.findCommentById(commentResponseDTO.getId()).getBody()).isEqualTo(updateCommentDTO.getBody());
-        assertThat(recipeService.findById(recipeResponseDTO.getId()).getRatingAvg()).isEqualTo(2.5);
-
-        commentService.deleteCommentById(commentResponseDTO.getId());   //삭제 진행
-        assertThat(recipeService.getCommentsByRecipeId(recipeResponseDTO.getId()).size()).isEqualTo(0); //평점 존재x
-        assertThat(recipeService.findById(recipeResponseDTO.getId()).getRatingAvg()).isEqualTo(0);  //삭제 시, 평점 변동
-    }
+//    @Test
+//    void findCommentByMemberAndRecipe(){
+//        //given
+//        CommentDTO commentDTO = CommentDTO.builder().rating(4.5).body("맛남").build();
+//        RecipeDTO recipeDTO = RecipeDTO.builder().name("마라탕").build();
+//        MemberDTO memberDTO = MemberDTO.builder().name("브레드 피트").build();
+//
+//        //when
+//        MemberResponseDTO memberResponseDTO = memberService.saveMember(memberDTO);
+//        RecipeResponseDTO recipeResponseDTO = recipeService.saveRecipeByMember(memberResponseDTO.getId(), recipeDTO);
+//
+//        //then
+//
+//
+//    }
+//
+//    @Test
+//    void updateCommentById(){
+//        //given
+//        CommentDTO commentDTO = CommentDTO.builder().rating(4.5).body("기대되는 맛~").build();
+//        RecipeDTO recipeDTO = RecipeDTO.builder().name("마라탕").build();
+//        MemberDTO memberDTO = MemberDTO.builder().name("브레드 피트").build();
+//
+//        //when
+//        MemberResponseDTO memberResponseDTO = memberService.saveMember(memberDTO);
+//        RecipeResponseDTO recipeResponseDTO = recipeService.saveRecipeByMember(memberResponseDTO.getId(), recipeDTO);
+//
+//        CommentResponseDTO commentResponseDTO = commentService.saveComment(memberResponseDTO.getId(), recipeResponseDTO.getId(), commentDTO);
+//        CommentDTO updateCommentDTO = CommentDTO.builder().rating(2.5).body("별로임").build();
+//
+//        commentService.updateCommentById(commentResponseDTO.getId(), updateCommentDTO); //업데이트 진행
+//
+//        //then
+//        assertThat(commentService.findCommentById(commentResponseDTO.getId()).getBody()).isEqualTo(updateCommentDTO.getBody());
+//        assertThat(recipeService.findById(recipeResponseDTO.getId()).getRatingAvg()).isEqualTo(2.5);
+//
+//        commentService.deleteCommentById(commentResponseDTO.getId());   //삭제 진행
+//        assertThat(recipeService.getCommentsByRecipeId(recipeResponseDTO.getId()).size()).isEqualTo(0); //평점 존재x
+//        assertThat(recipeService.findById(recipeResponseDTO.getId()).getRatingAvg()).isEqualTo(0);  //삭제 시, 평점 변동
+//    }
 }
