@@ -1,6 +1,7 @@
 package com.fridgerescuer.springboot.exception;
 
 import com.fridgerescuer.springboot.exception.errorcodeimpl.CommonError;
+import com.fridgerescuer.springboot.exception.exceptionimpl.IngredientException;
 import com.fridgerescuer.springboot.exception.exceptionimpl.MemberException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpHeaders;
@@ -28,11 +29,17 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
      */
     @ExceptionHandler(MemberException.class)
     public ResponseEntity<Object> handleMemberException(MemberException memberException) {
-        log.info("invalid member");
+        log.info("MemberException thrown : " + memberException.getErrorCode().getMessage());
         ErrorCode error = memberException.getErrorCode();
         return createErrorResponse(error);
     }
 
+    @ExceptionHandler(IngredientException.class)
+    public ResponseEntity<Object> handleIngredientException(IngredientException ingredientException) {
+        log.info("IngredientException thrown : " + ingredientException.getErrorCode().getMessage());
+        ErrorCode error = ingredientException.getErrorCode();
+        return createErrorResponse(error);
+    }
     /**
      * invalid parameter 관련 예외처리
      * @param e
