@@ -1,22 +1,23 @@
 package com.fridgerescuer.springboot.data.dao;
 
+import com.fridgerescuer.springboot.data.dto.CommentDTO;
+import com.fridgerescuer.springboot.data.dto.ExpirationDataDTO;
 import com.fridgerescuer.springboot.data.dto.MemberDTO;
+import com.fridgerescuer.springboot.data.dto.RecipeDTO;
 import com.fridgerescuer.springboot.data.entity.*;
 
 import java.time.LocalDate;
 import java.util.List;
 
 public interface MemberDao {
-    Member saveMember(Member member);
-    Member findById(String memberId);
+    MemberDTO saveMember(MemberDTO memberDTO);
+    MemberDTO findById(String memberId);
+    void addExpirationDataToMember(String memberId, List<ExpirationDataDTO> expirationDataDTOList);
+    void addPrivateExpirationDataToMember(String memberId, List<ExpirationDataDTO> expirationDataDTOList);
 
-    void addIngredientsToMember(String memberId, List<Ingredient> ingredients);
-    void addIngredientsToMemberByIngredientIds(String memberId, List<String> ingredientIds);
-    void addIngredientAndExpirationDataToMember(String memberId, List<String> ingredientIds, List<ExpirationData> expirationDataList);
+    void addRecipeToMember(String memberId, RecipeDTO recipeDTO);
 
-    void addRecipeToMember(String memberId, Recipe recipe);
-
-    void addCommentToMember(String memberId, Comment comment);
+    void addCommentToMember(String memberId, CommentDTO commentDTO);
 
     void updateMemberById(String memberId, MemberDTO updateDataMemberDTO);
 

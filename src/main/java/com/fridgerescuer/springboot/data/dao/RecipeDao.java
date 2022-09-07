@@ -1,5 +1,7 @@
 package com.fridgerescuer.springboot.data.dao;
 
+import com.fridgerescuer.springboot.data.dto.CommentDTO;
+import com.fridgerescuer.springboot.data.dto.RecipeDTO;
 import com.fridgerescuer.springboot.data.entity.Comment;
 import com.fridgerescuer.springboot.data.entity.Member;
 import com.fridgerescuer.springboot.data.entity.Recipe;
@@ -10,12 +12,12 @@ import java.util.List;
 
 public interface RecipeDao {
 
-    Recipe save(Recipe recipe);
+    RecipeDTO save(RecipeDTO recipeDTO);
 
-    Recipe findById(String id);
-    Recipe findByName(String name);
-    List<Recipe> findAllByContainName(String name);
-    List<Comment> getCommentsByRecipeId(String recipeId);
+    RecipeDTO findById(String id);
+    RecipeDTO findByName(String name);
+    List<RecipeDTO> findAllByContainName(String name);
+    List<CommentDTO> getCommentsByRecipeId(String recipeId);
 
     void updateRecipeById(String targetId, Recipe updateData);
     void deleteById(String targetId);
@@ -23,7 +25,7 @@ public interface RecipeDao {
     void setProducerMemberIByRecipeId(String recipeId, String producerMemberId);
 
     void addImage(String targetId, MultipartFile file) throws IOException;
-    void addCommentToRecipe(String recipeId, Comment comment);
+    void addCommentToRecipe(String recipeId, CommentDTO commentDTO);
     void updateRating(String recipeId, double newRating, double originRating);
     void deleteRating(String recipeId, double rating);
 }

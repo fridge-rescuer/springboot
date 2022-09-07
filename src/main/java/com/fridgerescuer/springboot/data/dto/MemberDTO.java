@@ -1,5 +1,6 @@
 package com.fridgerescuer.springboot.data.dto;
 
+import com.fridgerescuer.springboot.data.entity.PrivateExpirationData;
 import lombok.*;
 import com.fridgerescuer.springboot.data.entity.ExpirationData;
 
@@ -26,8 +27,8 @@ public class MemberDTO {
     @NotBlank
     private String password;
 
-    private List<IngredientDTO> ingredientDTOs;
-    private List<RecipeDTO> recipeDTOs;
+    private List<ExpirationDataDTO> expirationDataDTOList;
+    private List<ExpirationDataDTO> privateExpirationDataDTOList;
 
-    private List<ExpirationData> expirationDataList;
+    private List<RecipeDTO> recipeDTOs;
 }

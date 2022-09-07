@@ -22,10 +22,8 @@ public class Member {
 
     private String name;
 
-    @DocumentReference
-    private List<Ingredient> ingredients;
-
     private List<ExpirationData> expirationDataList;
+    private List<PrivateExpirationData> privateExpirationDataList;
 
     @DocumentReference
     private List<Recipe> recipes;

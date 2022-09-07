@@ -6,9 +6,6 @@ import com.fridgerescuer.springboot.data.mapper.RecipeMapper;
 import com.fridgerescuer.springboot.data.repository.IngredientRepository;
 import com.fridgerescuer.springboot.data.repository.RecipeRepository;
 import com.fridgerescuer.springboot.exception.exceptionimpl.NoSuchRecipeException;
-import com.fridgerescuer.springboot.service.IngredientService;
-import com.fridgerescuer.springboot.service.MemberService;
-import com.fridgerescuer.springboot.service.RecipeService;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -25,20 +22,15 @@ import static org.assertj.core.api.Assertions.*;
 
 @ComponentScan(basePackages = "com.fridgerescuer.springboot")
 @DataMongoTest
-class RecipeServiceTest {
+class RecipeDaoTest {
     @Autowired
     private RecipeRepository recipeRepository;
     @Autowired
     private IngredientRepository ingredientRepository;
 
     @Autowired
-    private RecipeService recipeService;
-    @Autowired
-    private IngredientService ingredientService;
-    @Autowired
-    private MemberService memberService;
-    @Autowired
-    private CommentService commentService;
+    private RecipeDao recipeDao;
+
 
 
     @BeforeEach
@@ -50,7 +42,7 @@ class RecipeServiceTest {
     //given
     //when
     //then
-
+/*
     @Test
     void deleteRecipeById(){
         //given
@@ -106,6 +98,8 @@ class RecipeServiceTest {
 
         System.out.println("updatedRecipe = " + updatedRecipe);
     }
+    */
+
 
     @Test
     @DisplayName("해당 이름을 포함하는 모든 레시피 찾기")
@@ -116,22 +110,22 @@ class RecipeServiceTest {
         RecipeDTO recipe3 = RecipeDTO.builder().name("병아리 튀김").type("튀김").ingredientNames(new String[]{}).build();
 
         //when
-        recipeService.saveRecipe(recipe1);
-        recipeService.saveRecipe(recipe2);
-        recipeService.saveRecipe(recipe3);
+        recipeDao.save(recipe1);
+        recipeDao.save(recipe2);
+        recipeDao.save(recipe3);
 
         //then
-        List<RecipeResponseDTO> fryRecipes = recipeService.findAllRecipesByContainName("튀김");
+        List<RecipeDTO> fryRecipes = recipeDao.findAllByContainName("튀김");
         assertThat(fryRecipes.size()).isEqualTo(3);
 
-        for (RecipeResponseDTO recipe: fryRecipes ) {
+        for (RecipeDTO recipe: fryRecipes ) {
             System.out.println("recipe = " + recipe);
         }
 
-        List<RecipeResponseDTO> shrimpRecipes = recipeService.findAllRecipesByContainName("새우");
+        List<RecipeDTO> shrimpRecipes = recipeDao.findAllByContainName("새우");
         assertThat(shrimpRecipes.get(0).getName()).contains("새우");
     }
-
+/*
     @Test
     @DisplayName("여러 재료로 여러 레시피 검색")
     void findRecipesByMultipleIngredients(){
@@ -210,28 +204,30 @@ class RecipeServiceTest {
         assertThat(findRecipes.size()).isEqualTo(2);
     }
 
-//    @Test
-//    @DisplayName("레시피 후기들 레시피 id로 받아오기")
-//    void getRecipeCommentsByRecipeId(){
-//        //given
-//        MemberDTO member = MemberDTO.builder().name("아사쿠사").build();
-//        RecipeDTO recipe = RecipeDTO.builder().name("보쌈").build();
-//        CommentDTO comment1 = CommentDTO.builder().rating(1).build();
-//        CommentDTO comment2 = CommentDTO.builder().rating(2).build();
-//
-//        //when
-//        MemberResponseDTO memberResponseDTO = memberService.saveMember(member);
-//        RecipeResponseDTO recipeResponseDTO = recipeService.saveRecipe(recipe);
-//        List<CommentResponseDTO> commentResponseDTOs = new ArrayList<>();
-//        commentResponseDTOs.add(commentService.saveComment(memberResponseDTO.getId(), recipeResponseDTO.getId(), comment1));
-//        commentResponseDTOs.add(commentService.saveComment(memberResponseDTO.getId(), recipeResponseDTO.getId(), comment2));
-//
-//        //then
-//        List<CommentResponseDTO> comments = recipeService.getCommentsByRecipeId(recipeResponseDTO.getId());
-//
-//        for (int i = 0; i < comments.size(); i++) {
-//            assertThat(comments.get(i).getId()).isEqualTo(commentResponseDTOs.get(i).getId());
-//            assertThat(comments.get(i).getRating()).isEqualTo(commentResponseDTOs.get(i).getRating());
-//        }
-//    }
+
+
+    @Test
+    @DisplayName("레시피 후기들 레시피 id로 받아오기")
+    void getRecipeCommentsByRecipeId(){
+        //given
+        MemberDTO member = MemberDTO.builder().name("아사쿠사").build();
+        RecipeDTO recipe = RecipeDTO.builder().name("보쌈").build();
+        CommentDTO comment1 = CommentDTO.builder().rating(1).build();
+        CommentDTO comment2 = CommentDTO.builder().rating(2).build();
+
+        //when
+        MemberResponseDTO memberResponseDTO = memberService.saveMember(member);
+        RecipeResponseDTO recipeResponseDTO = recipeService.saveRecipe(recipe);
+        List<CommentResponseDTO> commentResponseDTOs = new ArrayList<>();
+        commentResponseDTOs.add(commentService.saveComment(memberResponseDTO.getId(), recipeResponseDTO.getId(), comment1));
+        commentResponseDTOs.add(commentService.saveComment(memberResponseDTO.getId(), recipeResponseDTO.getId(), comment2));
+
+        //then
+        List<CommentResponseDTO> comments = recipeService.getCommentsByRecipeId(recipeResponseDTO.getId());
+
+        for (int i = 0; i < comments.size(); i++) {
+            assertThat(comments.get(i).getId()).isEqualTo(commentResponseDTOs.get(i).getId());
+            assertThat(comments.get(i).getRating()).isEqualTo(commentResponseDTOs.get(i).getRating());
+        }
+    }*/
 }

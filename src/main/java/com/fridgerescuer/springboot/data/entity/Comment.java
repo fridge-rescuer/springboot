@@ -25,7 +25,4 @@ public class Comment {
 
     private String recipeId;
 
-    public void setRecipeId(String recipeId) {
-        this.recipeId = recipeId;
-    }
 }

@@ -1,6 +1,7 @@
 package com.fridgerescuer.springboot.data.dto;
 
 import lombok.Builder;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.ToString;
 
@@ -17,4 +18,8 @@ public class CommentDTO {
     private String date;
 
     private String recipeId;
+
+    public void setRecipeId(String recipeId) {
+        this.recipeId = recipeId;
+    }
 }
