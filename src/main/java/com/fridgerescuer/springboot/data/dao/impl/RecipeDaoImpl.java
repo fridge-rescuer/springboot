@@ -1,11 +1,15 @@
 package com.fridgerescuer.springboot.data.dao.impl;
 
 import com.fridgerescuer.springboot.data.dao.RecipeDao;
+import com.fridgerescuer.springboot.data.dto.CommentDTO;
+import com.fridgerescuer.springboot.data.dto.RecipeDTO;
 import com.fridgerescuer.springboot.data.entity.Comment;
 import com.fridgerescuer.springboot.data.entity.Ingredient;
 import com.fridgerescuer.springboot.data.entity.Member;
 import com.fridgerescuer.springboot.data.entity.Recipe;
 import com.fridgerescuer.springboot.data.gridfs.RecipeGridFsAccessObject;
+import com.fridgerescuer.springboot.data.mapper.CommentMapper;
+import com.fridgerescuer.springboot.data.mapper.RecipeMapper;
 import com.fridgerescuer.springboot.data.repository.RecipeRepository;
 import com.fridgerescuer.springboot.exception.exceptionimpl.NoSuchRecipeException;
 import com.mongodb.client.result.UpdateResult;
@@ -41,16 +45,17 @@ public class RecipeDaoImpl implements RecipeDao {
     @Autowired
     private final RecipeGridFsAccessObject gridFsAO;
 
+    private final RecipeMapper recipeMapper = RecipeMapper.INSTANCE;
+
     @Override
-    public Recipe save(Recipe recipe) {
-        Recipe savedRecipe = repository.save(recipe);
+    public RecipeDTO save(RecipeDTO recipeDTO) {
+        Recipe savedRecipe = repository.save(recipeMapper.DTOtoRecipe(recipeDTO));
         setReferenceWithIngredientsByName(savedRecipe.getIngredientNames(), savedRecipe);
 
-        return savedRecipe;
+        return recipeMapper.recipeToDTO(savedRecipe);
     }
 
-    @Override
-    public Recipe findById(String id) {
+    private Recipe getRecipeById(String id){
         Optional<Recipe> foundRecipe = repository.findById(id);
 
         if (foundRecipe.isEmpty()){
@@ -61,17 +66,22 @@ public class RecipeDaoImpl implements RecipeDao {
     }
 
     @Override
-    public Recipe findByName(String name) {
-        Recipe findRecipe = repository.findByName(name);
-        if(findRecipe == null){
-            throw new NoSuchRecipeException(new NullPointerException("no such recipe name in Repository, name=" + name));
-        }
-
-        return findRecipe;
+    public RecipeDTO findById(String id) {
+        return recipeMapper.recipeToDTO(this.getRecipeById(id));
     }
 
     @Override
-    public List<Recipe> findAllByContainName(String name) {
+    public RecipeDTO findByName(String name) {
+        Recipe foundRecipe = repository.findByName(name);
+        if(foundRecipe == null){
+            throw new NoSuchRecipeException(new NullPointerException("no such recipe name in Repository, name=" + name));
+        }
+
+        return recipeMapper.recipeToDTO(foundRecipe);
+    }
+
+    @Override
+    public List<RecipeDTO> findAllByContainName(String name) {
         Query query = new Query();
         query.addCriteria(Criteria.where("name").regex(".*" + name + ".*"));    //name이 포함된 모든 이름에 대해 검색
 
@@ -81,19 +91,19 @@ public class RecipeDaoImpl implements RecipeDao {
             throw new NoSuchRecipeException(new NullPointerException("no such recipe contain name in Repository, name=" + name));
          }
 
-        return foundRecipes;
+        return recipeMapper.recipeListToDTOList(foundRecipes);
     }
 
     @Override
-    public List<Comment> getCommentsByRecipeId(String recipeId) {
-        Recipe foundRecipe = this.findById(recipeId);
+    public List<CommentDTO> getCommentsByRecipeId(String recipeId) {
+        Recipe foundRecipe = this.getRecipeById(recipeId);
 
-        return foundRecipe.getComments();
+        return CommentMapper.INSTANCE.commentListToDTOList(foundRecipe.getComments());
     }
 
     @Override
     public void updateRecipeById(String targetId, Recipe updateData) {
-        Recipe targetRecipe = this.findById(targetId);  //존재하지 않는 id면 여기서 예외 처리됨
+        Recipe targetRecipe = this.getRecipeById(targetId);  //존재하지 않는 id면 여기서 예외 처리됨
         deleteReferenceWithIngredients(targetRecipe);
 
         Query query = new Query();
@@ -112,7 +122,7 @@ public class RecipeDaoImpl implements RecipeDao {
 
     @Override
     public void deleteById(String targetId) {
-        Recipe targetRecipe = this.findById(targetId);
+        Recipe targetRecipe = this.getRecipeById(targetId);
 
         if(targetRecipe.getImageId() != null)   //이미지 부터 제거거
            gridFsAO.deleteImageByGridFsId(targetRecipe.getImageId());
@@ -132,7 +142,7 @@ public class RecipeDaoImpl implements RecipeDao {
 
     @Override
     public void addImage(String targetId, MultipartFile file) throws IOException {
-        Recipe foundRecipe = this.findById(targetId);   //존재하지 않는 id는 여기서 예외 처리됨
+        Recipe foundRecipe = this.getRecipeById(targetId);   //존재하지 않는 id는 여기서 예외 처리됨
 
         String imageId = gridFsAO.saveImageByGridFs(-1, foundRecipe, file.getInputStream());
 
@@ -144,7 +154,7 @@ public class RecipeDaoImpl implements RecipeDao {
 
     @Override
     public void addCommentToRecipe(String recipeId, Comment comment) {
-        Recipe recipe = this.findById(recipeId);
+        Recipe recipe = this.getRecipeById(recipeId);
 
         double ratingTotalSum = comment.getRating();
         double finalRatingAvg = ratingTotalSum;
@@ -167,7 +177,7 @@ public class RecipeDaoImpl implements RecipeDao {
 
     @Override
     public void updateRating(String recipeId, double newRating, double originRating) {
-        Recipe recipe = this.findById(recipeId);
+        Recipe recipe = this.getRecipeById(recipeId);
         double totalSum = recipe.getRatingTotalSum() - originRating + newRating;
         double updatedRatingAvg = totalSum/ recipe.getComments().size();
 
@@ -183,7 +193,7 @@ public class RecipeDaoImpl implements RecipeDao {
 
     @Override
     public void deleteRating(String recipeId, double rating) {
-        Recipe recipe = this.findById(recipeId);
+        Recipe recipe = this.getRecipeById(recipeId);
 
         double totalSum = 0;
         double updatedRatingAvg = 0;

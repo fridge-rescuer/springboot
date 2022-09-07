@@ -16,12 +16,12 @@ public interface RecipeMapper {
     RecipeMapper INSTANCE = Mappers.getMapper(RecipeMapper.class);
 
     Recipe DTOtoRecipe(RecipeDTO recipe);
-    Recipe responseDTOtoRecipe(RecipeResponseDTO recipe);
+    //Recipe responseDTOtoRecipe(RecipeResponseDTO recipe);
 
     RecipeDTO recipeToDTO(Recipe recipe);
 
-    RecipeResponseDTO recipeToResponseDTO(Recipe recipe);
+    //RecipeResponseDTO recipeToResponseDTO(Recipe recipe);
 
     List<RecipeDTO> recipeListToDTOList(List<Recipe> recipes);
-    List<RecipeResponseDTO> recipeListToResponseDTOList(List<Recipe> recipes);
+    //List<RecipeResponseDTO> recipeListToResponseDTOList(List<Recipe> recipes);
 }
