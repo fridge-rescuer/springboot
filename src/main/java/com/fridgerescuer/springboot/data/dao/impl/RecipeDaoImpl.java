@@ -153,7 +153,9 @@ public class RecipeDaoImpl implements RecipeDao {
     }
 
     @Override
-    public void addCommentToRecipe(String recipeId, Comment comment) {
+    public void addCommentToRecipe(String recipeId, CommentDTO commentDTO) {
+        Comment comment = CommentMapper.INSTANCE.DTOtoComment(commentDTO);
+
         Recipe recipe = this.getRecipeById(recipeId);
 
         double ratingTotalSum = comment.getRating();

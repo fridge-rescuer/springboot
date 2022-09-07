@@ -55,9 +55,10 @@ public class CommentDaoImpl implements CommentDao {
     public CommentDTO save(String memberId, String recipeId, CommentDTO commentDTO){
         commentDTO.setRecipeId(recipeId);      //애초에 comment 내에 담겨 와야 할 필요성이 느껴짐
         Comment savedComment = commentRepository.save(commentMapper.DTOtoComment(commentDTO));
+        CommentDTO savedCommentDTO = commentMapper.commentToDTO(savedComment);
 
-        memberDao.addCommentToMember(memberId, savedComment);
-        recipeDao.addCommentToRecipe(recipeId, savedComment);
+        memberDao.addCommentToMember(memberId, savedCommentDTO);
+        recipeDao.addCommentToRecipe(recipeId, savedCommentDTO);
 
         log.info("save Comment ={}", savedComment);
         return commentMapper.commentToDTO(savedComment);
