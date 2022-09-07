@@ -1,6 +1,7 @@
 package com.fridgerescuer.springboot.data.dao;
 
 import com.fridgerescuer.springboot.data.dao.CommentDao;
+import com.fridgerescuer.springboot.data.dto.CommentDTO;
 import com.fridgerescuer.springboot.data.entity.Comment;
 import com.fridgerescuer.springboot.data.entity.Member;
 import com.fridgerescuer.springboot.data.entity.Recipe;
@@ -55,8 +56,8 @@ class CommentDaoTest {
         Comment comment2 = Comment.builder().rating(3.0).date(LocalDate.now().toString()).recipeId(recipe.getId()).build();
 
         //when
-        Comment savedComment1 = commentDao.save(member.getId(), recipe.getId(), comment1);
-        Comment savedComment2 = commentDao.save(member.getId(), recipe.getId(), comment2);
+        CommentDTO savedComment1 = commentDao.save(member.getId(), recipe.getId(), comment1);
+        CommentDTO savedComment2 = commentDao.save(member.getId(), recipe.getId(), comment2);
 
 
         //then
@@ -93,14 +94,14 @@ class CommentDaoTest {
         //when
         commentDao.save(member.getId(), recipe.getId(), comment1);
         commentDao.save(member.getId(), recipe.getId(), comment2);
-        Comment targetComment = commentDao.save(member.getId(), recipe.getId(), comment3);
+        CommentDTO targetComment = commentDao.save(member.getId(), recipe.getId(), comment3);
 
         Recipe foundRecipe = recipeRepository.findById(recipe.getId()).get();
         double ratingTotalSum = foundRecipe.getRatingTotalSum();
 
         //then
         commentDao.updateCommentById(targetComment.getId(), updateComment);
-        Comment updatedComment = commentDao.findById(targetComment.getId());
+        CommentDTO updatedComment = commentDao.findById(targetComment.getId());
 
         double expectTotalSum = ratingTotalSum + (-4.5 + 1.0);
         double expectAvg = expectTotalSum / 3;
@@ -119,7 +120,7 @@ class CommentDaoTest {
         Comment comment = Comment.builder().rating(3.5).body("조금 어려웠습니다.").date(LocalDate.now().toString()).recipeId(recipe.getId()).build();
 
         //when
-        Comment savedComment = commentDao.save(member.getId(), recipe.getId(), comment);
+        CommentDTO savedComment = commentDao.save(member.getId(), recipe.getId(), comment);
 
         //then
         Comment commentInRecipe = recipeRepository.findByName("피자").getComments().get(0);

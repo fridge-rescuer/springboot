@@ -3,8 +3,10 @@ package com.fridgerescuer.springboot.data.dao.impl;
 import com.fridgerescuer.springboot.data.dao.CommentDao;
 import com.fridgerescuer.springboot.data.dao.MemberDao;
 import com.fridgerescuer.springboot.data.dao.RecipeDao;
+import com.fridgerescuer.springboot.data.dto.CommentDTO;
 import com.fridgerescuer.springboot.data.entity.Comment;
 import com.fridgerescuer.springboot.data.gridfs.CommentGridFsAccessObject;
+import com.fridgerescuer.springboot.data.mapper.CommentMapper;
 import com.fridgerescuer.springboot.data.repository.CommentRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -48,7 +50,7 @@ public class CommentDaoImpl implements CommentDao {
     //다른 dao를 접근해 처리하는건 일종의 월권행위로 판단되지만, 일단 dao 파트에 작성
     // 추후 검토 후에 서비스 계층으로 변경 요망(서비스 계층이 할일이 너무 많이 지는 문제도 고려해야함)
     @Override
-    public Comment save(String memberId, String recipeId, Comment comment){
+    public CommentDTO save(String memberId, String recipeId, Comment comment){
         comment.setRecipeId(recipeId);      //애초에 comment 내에 담겨 와야 할 필요성이 느껴짐
         Comment savedComment = commentRepository.save(comment);
 
@@ -56,11 +58,10 @@ public class CommentDaoImpl implements CommentDao {
         recipeDao.addCommentToRecipe(recipeId, comment);
 
         log.info("save Comment ={}", savedComment);
-        return savedComment;
+        return CommentMapper.INSTANCE.commentToDTO(savedComment);
     }
 
-    @Override
-    public Comment findById(String commentId) {
+    private Comment getCommentById(String commentId){
         Optional<Comment> foundComment = commentRepository.findById(commentId);
 
         if (foundComment.isEmpty()){
@@ -71,8 +72,15 @@ public class CommentDaoImpl implements CommentDao {
     }
 
     @Override
+    public CommentDTO findById(String commentId) {
+        Comment foundComment = this.getCommentById(commentId);
+
+        return CommentMapper.INSTANCE.commentToDTO(foundComment);
+    }
+
+    @Override
     public void addImage(String commentId, MultipartFile file) throws IOException {
-        Comment comment = this.findById(commentId);
+        Comment comment = this.getCommentById(commentId);
 
         String originImageId = comment.getImageId();            //존재하던 이미지가 있었다면 삭제
         if(originImageId == null || originImageId.equals("")){
@@ -89,7 +97,7 @@ public class CommentDaoImpl implements CommentDao {
 
     @Override
     public void updateCommentById(String commentId, Comment updateData) {
-        Comment originComment = this.findById(commentId);
+        Comment originComment = this.getCommentById(commentId);
 
         if(originComment.getRating() != updateData.getRating()){    //평점에 변동이 있는 경우만 반영
             recipeDao.updateRating(originComment.getRecipeId(),updateData.getRating(), originComment.getRating());
@@ -114,7 +122,7 @@ public class CommentDaoImpl implements CommentDao {
 
     @Override
     public void deleteCommentById(String commentId) {
-        Comment comment = this.findById(commentId);
+        Comment comment = this.getCommentById(commentId);
         recipeDao.deleteRating(comment.getRecipeId(), comment.getRating());
 
         commentRepository.deleteById(commentId);

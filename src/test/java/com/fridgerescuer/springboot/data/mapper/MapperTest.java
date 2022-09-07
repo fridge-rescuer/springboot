@@ -1,10 +1,9 @@
 package com.fridgerescuer.springboot.data.mapper;
 
-import com.fridgerescuer.springboot.data.dto.CommentResponseDTO;
+import com.fridgerescuer.springboot.data.dto.CommentDTO;
 import com.fridgerescuer.springboot.data.dto.RecipeDTO;
 import com.fridgerescuer.springboot.data.entity.Comment;
 import com.fridgerescuer.springboot.data.entity.Recipe;
-import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
@@ -29,7 +28,7 @@ class MapperTest {
         comments.add(Comment.builder().body("2").build());
         comments.add(Comment.builder().body("3").build());
 
-        List<CommentResponseDTO> responses = CommentMapper.INSTANCE.commentListToResponseDTOList(comments);
+        List<CommentDTO> responses = CommentMapper.INSTANCE.commentListToDTOList(comments);
         for (int i = 0; i < responses.size() ; i++) {
             assertThat(responses.get(i).getBody()).isEqualTo(comments.get(i).getBody());
         }
