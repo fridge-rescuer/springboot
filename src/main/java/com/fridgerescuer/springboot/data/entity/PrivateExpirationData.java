@@ -11,9 +11,7 @@ import java.time.LocalDate;
 @EqualsAndHashCode
 @Getter
 @ToString
-public class ExpirationData {
-
-    @DocumentReference
+public class PrivateExpirationData {    //멤버 전용 냉장고 재료, 존재하는 식재료를 참조하지 않음
     private Ingredient ingredient;
 
     private LocalDate expirationDate;

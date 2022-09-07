@@ -1,7 +1,6 @@
-package com.fridgerescuer.springboot.data.entity;
+package com.fridgerescuer.springboot.data.dto;
 
 import lombok.*;
-import org.springframework.data.mongodb.core.mapping.DocumentReference;
 
 import java.time.LocalDate;
 
@@ -11,10 +10,9 @@ import java.time.LocalDate;
 @EqualsAndHashCode
 @Getter
 @ToString
-public class ExpirationData {
+public class ExpirationDataDTO {
 
-    @DocumentReference
-    private Ingredient ingredient;
+    private IngredientDTO ingredientDTO;
 
     private LocalDate expirationDate;
     private boolean isNoExpiration;     //유통기한이 없는 식재료의 경우 true
