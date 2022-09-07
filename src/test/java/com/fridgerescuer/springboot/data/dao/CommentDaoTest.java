@@ -52,8 +52,8 @@ class CommentDaoTest {
         Recipe recipe = recipeRepository.save(Recipe.builder().name("피자").build());
         Member member = memberRepository.save(Member.builder().name("taka").build());
 
-        Comment comment1 = Comment.builder().rating(3.5).date(LocalDate.now().toString()).recipeId(recipe.getId()).build();
-        Comment comment2 = Comment.builder().rating(3.0).date(LocalDate.now().toString()).recipeId(recipe.getId()).build();
+        CommentDTO comment1 = CommentDTO.builder().rating(3.5).date(LocalDate.now().toString()).recipeId(recipe.getId()).build();
+        CommentDTO comment2 = CommentDTO.builder().rating(3.0).date(LocalDate.now().toString()).recipeId(recipe.getId()).build();
 
         //when
         CommentDTO savedComment1 = commentDao.save(member.getId(), recipe.getId(), comment1);
@@ -85,11 +85,11 @@ class CommentDaoTest {
         Recipe recipe = recipeRepository.save(Recipe.builder().name("피자").build());
         Member member = memberRepository.save(Member.builder().name("taka").build());
 
-        Comment comment1 = Comment.builder().rating(3.5).date(LocalDate.now().toString()).recipeId(recipe.getId()).build();
-        Comment comment2 = Comment.builder().rating(3.0).date(LocalDate.now().toString()).recipeId(recipe.getId()).build();
-        Comment comment3 = Comment.builder().rating(4.5).date(LocalDate.now().toString()).recipeId(recipe.getId()).build();
+        CommentDTO comment1 = CommentDTO.builder().rating(3.5).date(LocalDate.now().toString()).recipeId(recipe.getId()).build();
+        CommentDTO comment2 = CommentDTO.builder().rating(3.0).date(LocalDate.now().toString()).recipeId(recipe.getId()).build();
+        CommentDTO comment3 = CommentDTO.builder().rating(4.5).date(LocalDate.now().toString()).recipeId(recipe.getId()).build();
 
-        Comment updateComment = Comment.builder().rating(1.0).date(LocalDate.now().toString()).build();
+        CommentDTO updateComment = CommentDTO.builder().rating(1.0).date(LocalDate.now().toString()).build();
 
         //when
         commentDao.save(member.getId(), recipe.getId(), comment1);
@@ -117,7 +117,7 @@ class CommentDaoTest {
         Recipe recipe = recipeRepository.save(Recipe.builder().name("피자").build());
         Member member = memberRepository.save(Member.builder().name("taka").build());
 
-        Comment comment = Comment.builder().rating(3.5).body("조금 어려웠습니다.").date(LocalDate.now().toString()).recipeId(recipe.getId()).build();
+        CommentDTO comment = CommentDTO.builder().rating(3.5).body("조금 어려웠습니다.").date(LocalDate.now().toString()).recipeId(recipe.getId()).build();
 
         //when
         CommentDTO savedComment = commentDao.save(member.getId(), recipe.getId(), comment);
@@ -135,9 +135,9 @@ class CommentDaoTest {
     @DisplayName("평점 적용 테스트")
     void checkRecipeRatingSystem(){
         //given
-        Comment comment1 = Comment.builder().rating(3.5).date(LocalDate.now().toString()).build();
-        Comment comment2 = Comment.builder().rating(3.0).date(LocalDate.now().toString()).build();
-        Comment comment3 = Comment.builder().rating(4.5).date(LocalDate.now().toString()).build();
+        CommentDTO comment1 = CommentDTO.builder().rating(3.5).date(LocalDate.now().toString()).build();
+        CommentDTO comment2 = CommentDTO.builder().rating(3.0).date(LocalDate.now().toString()).build();
+        CommentDTO comment3 = CommentDTO.builder().rating(4.5).date(LocalDate.now().toString()).build();
 
         //when
         Recipe recipe = recipeRepository.save(Recipe.builder().name("피자").build());
