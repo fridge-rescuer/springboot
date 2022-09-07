@@ -4,6 +4,7 @@ import com.fridgerescuer.springboot.data.dao.IngredientDao;
 import com.fridgerescuer.springboot.data.dao.MemberDao;
 import com.fridgerescuer.springboot.data.dto.MemberDTO;
 import com.fridgerescuer.springboot.data.entity.*;
+import com.fridgerescuer.springboot.data.mapper.IngredientMapper;
 import com.fridgerescuer.springboot.data.repository.MemberRepository;
 import com.fridgerescuer.springboot.exception.ErrorCode;
 import com.fridgerescuer.springboot.exception.errorcodeimpl.MemberError;
@@ -84,7 +85,7 @@ public class MemberDaoImpl implements MemberDao {
         List<Ingredient> ingredients = new ArrayList<>();
 
         for(String ingredientId : ingredientIds){
-            ingredients.add(ingredientDao.findById(ingredientId));
+            ingredients.add(IngredientMapper.INSTANCE.DTOtoIngredient(ingredientDao.findById(ingredientId)));
         }
 
         this.addIngredientsToMember(memberId,ingredients);  //파라미터 생성 후 대체 호출

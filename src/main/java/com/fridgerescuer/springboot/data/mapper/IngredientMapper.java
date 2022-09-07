@@ -15,9 +15,9 @@ public interface IngredientMapper {
 
     IngredientDTO ingredientToDTO(Ingredient ingredient);
     Ingredient DTOtoIngredient(IngredientDTO ingredientDTO);
-    IngredientResponseDTO ingredientToResponseDTO(Ingredient ingredient);
+    //IngredientResponseDTO ingredientToResponseDTO(Ingredient ingredient);
     List<Ingredient> ingredientListToDTOList(List<IngredientDTO> ingredientDTOs);
     List<IngredientDTO> ingredientListToDtoList(List<Ingredient> ingredients);
-    List<IngredientDTO> responseDTOListToDTOList(List<IngredientResponseDTO> ingredientResponseDTOs);
-    List<IngredientResponseDTO> dtoListToResponseDtoList(List<Ingredient> ingredients);
+    //List<IngredientDTO> responseDTOListToDTOList(List<IngredientResponseDTO> ingredientResponseDTOs);
+    //List<IngredientResponseDTO> dtoListToResponseDtoList(List<Ingredient> ingredients);
 }

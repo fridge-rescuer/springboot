@@ -1,5 +1,6 @@
 package com.fridgerescuer.springboot.data.dao;
 
+import com.fridgerescuer.springboot.data.dto.IngredientDTO;
 import com.fridgerescuer.springboot.data.entity.ExpirationData;
 import com.fridgerescuer.springboot.data.entity.Ingredient;
 import com.fridgerescuer.springboot.data.entity.Member;
@@ -30,8 +31,8 @@ class MemberDaoTest {
         Member member = Member.builder().name("야생마").build();
 
         List<String> ingredientIds = new ArrayList<>();
-        ingredientIds.add(ingredientDao.save(Ingredient.builder().name("마늘").build()).getId());
-        ingredientIds.add(ingredientDao.save(Ingredient.builder().name("사과").build()).getId());
+        ingredientIds.add(ingredientDao.save(IngredientDTO.builder().name("마늘").build()).getId());
+        ingredientIds.add(ingredientDao.save(IngredientDTO.builder().name("사과").build()).getId());
 
         LocalDate now = LocalDate.now();
 
