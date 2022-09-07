@@ -7,9 +7,6 @@ import com.fridgerescuer.springboot.data.entity.Ingredient;
 import com.fridgerescuer.springboot.data.entity.Recipe;
 import com.fridgerescuer.springboot.data.repository.IngredientRepository;
 import com.fridgerescuer.springboot.data.repository.RecipeRepository;
-import com.fridgerescuer.springboot.service.IngredientService;
-import com.fridgerescuer.springboot.service.MemberService;
-import com.fridgerescuer.springboot.service.RecipeService;
 import com.mongodb.BasicDBObject;
 import com.mongodb.client.MongoClient;
 import com.mongodb.client.MongoCollection;
@@ -45,16 +42,9 @@ import static org.springframework.data.mongodb.core.query.Criteria.where;
 @Import(Config.class)
 @org.springframework.stereotype.Component
 public class DBConverter {
-    
-    @Autowired
-    private MemberService memberService;
 
     @Autowired
-    private IngredientService ingredientService;
-    @Autowired
     private IngredientRepository ingredientRepository;
-    @Autowired
-    private RecipeService recipeService;
     @Autowired
     private RecipeRepository recipeRepository;
 

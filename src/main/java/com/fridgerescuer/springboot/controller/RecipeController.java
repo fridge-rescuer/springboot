@@ -6,8 +6,6 @@ import com.fridgerescuer.springboot.data.dto.RecipeDTO;
 import com.fridgerescuer.springboot.data.dto.RecipeResponseDTO;
 import com.fridgerescuer.springboot.data.entity.Recipe;
 import com.fridgerescuer.springboot.data.repository.RecipeRepository;
-import com.fridgerescuer.springboot.service.IngredientService;
-import com.fridgerescuer.springboot.service.RecipeService;
 import com.mongodb.client.gridfs.model.GridFSFile;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -37,7 +35,7 @@ import java.util.Optional;
 @Controller
 @RequestMapping("/recipe")
 public class RecipeController { //사진 등록 테스트용 컨트롤러, 테스트용이라 전부 삭제해도됨
-
+/*
     @Autowired
     private final RecipeService recipeService;
     @Autowired
@@ -58,14 +56,14 @@ public class RecipeController { //사진 등록 테스트용 컨트롤러, 테�
         log.info("saved = {}", foundRecipe);
         return "redirect:/recipe/" + savedId;
     }
-/*
+
     @GetMapping("/{id}")
     public String getImage(@PathVariable String id, Model model){
         RecipeResponseDTO foundRecipe = recipeService.findById(id);
         model.addAttribute("name", foundRecipe.getName());
         model.addAttribute("image", Base64.getEncoder().encodeToString(foundRecipe.getImage().getData()));
         return "recipe";
-    }*/
+    }
 
     @GetMapping("/{id}")
     public String getImage(@PathVariable String id, Model model) {
@@ -96,4 +94,5 @@ public class RecipeController { //사진 등록 테스트용 컨트롤러, 테�
         InputStream in = resource.getInputStream();
         return in.readAllBytes();
     }
+    */
 }

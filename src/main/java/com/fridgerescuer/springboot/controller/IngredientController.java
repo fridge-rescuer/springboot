@@ -3,7 +3,6 @@ package com.fridgerescuer.springboot.controller;
 import com.fridgerescuer.springboot.data.dto.IngredientDTO;
 import com.fridgerescuer.springboot.data.dto.IngredientResponseDTO;
 import com.fridgerescuer.springboot.data.entity.Ingredient;
-import com.fridgerescuer.springboot.service.IngredientService;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,7 +14,7 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequestMapping("/ingredient")
 public class IngredientController {
-
+/*
     @Autowired
     private final IngredientService ingredientService;
 
@@ -26,4 +25,5 @@ public class IngredientController {
 
         return ResponseEntity.status(HttpStatus.OK).body(ingredientResponseDTO);
     }
+    */
 }

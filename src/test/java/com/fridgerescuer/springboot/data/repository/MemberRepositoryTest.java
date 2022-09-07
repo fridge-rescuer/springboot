@@ -5,9 +5,6 @@ import com.fridgerescuer.springboot.data.entity.Member;
 import com.fridgerescuer.springboot.data.mapper.IngredientMapper;
 import com.fridgerescuer.springboot.data.mapper.MemberMapper;
 import com.fridgerescuer.springboot.exception.exceptionimpl.MemberException;
-import com.fridgerescuer.springboot.service.IngredientService;
-import com.fridgerescuer.springboot.service.MemberService;
-import com.fridgerescuer.springboot.service.RecipeService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -23,13 +20,14 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 @ComponentScan(basePackages = "com.fridgerescuer.springboot")
 @DataMongoTest
-class MemberRepositoryTest {
+class MemberRepositoryTest {    //Repository Test에서 서비스 계층 쓰면 안됨
+    /*
     @Autowired
     private MemberService memberService;
     @Autowired
     private IngredientService ingredientService;
     @Autowired
-    private RecipeService recipeService;
+    private RecipeService recipeService;*/
 
     @Autowired
     private MemberRepository memberRepository;
@@ -82,7 +80,7 @@ class MemberRepositoryTest {
 //        //then
 //        assertThat(memberService.findMemberById(memberResponseDto.getId()).getName()).isEqualTo("메시");
 //    }
-
+/*
     @Test
     void memberJoin() throws Exception{
         //given
@@ -111,7 +109,7 @@ class MemberRepositoryTest {
         //then
         assertThat(memberResponseDTO).isEqualTo(givenResponse);
 
-    }
+    }*/
 //
 //    @Test
 //    void addIngredientsToMember(){
