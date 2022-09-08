@@ -2,9 +2,11 @@ package com.fridgerescuer.springboot.data.dao.impl;
 
 import com.fridgerescuer.springboot.data.dao.IngredientDao;
 import com.fridgerescuer.springboot.data.dto.IngredientDTO;
+import com.fridgerescuer.springboot.data.dto.RecipeDTO;
 import com.fridgerescuer.springboot.data.entity.Ingredient;
 import com.fridgerescuer.springboot.data.entity.Recipe;
 import com.fridgerescuer.springboot.data.mapper.IngredientMapper;
+import com.fridgerescuer.springboot.data.mapper.RecipeMapper;
 import com.fridgerescuer.springboot.data.repository.IngredientRepository;
 import com.fridgerescuer.springboot.exception.exceptionimpl.NoSuchIngredientException;
 import com.mongodb.client.result.UpdateResult;
@@ -33,6 +35,7 @@ public class IngredientDaoImpl implements IngredientDao {
     private final MongoTemplate template;
 
     private final IngredientMapper ingredientMapper = IngredientMapper.INSTANCE;
+    private final RecipeMapper recipeMapper = RecipeMapper.INSTANCE;
 
     @Override
     public IngredientDTO save(IngredientDTO ingredientDTO) {
@@ -82,6 +85,15 @@ public class IngredientDaoImpl implements IngredientDao {
         }
 
         return ingredientMapper.ingredientListToDtoList(foundIngredients);
+    }
+
+    @Override
+    public List<RecipeDTO> getAllRecipesInIngredientByIngredientId(String ingredientId) {
+        Ingredient ingredient = this.getIngredientById(ingredientId);
+
+        List<Recipe> recipes = ingredient.getRecipes();
+
+        return recipeMapper.recipeListToDTOList(recipes);
     }
 
     /* db문제로 배제, 현제 식재료 DB를 얻을 수 있을지도 불안정한 상태
