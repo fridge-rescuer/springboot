@@ -6,8 +6,9 @@ import com.fridgerescuer.springboot.data.dto.MemberDTO;
 import com.fridgerescuer.springboot.data.entity.*;
 import com.fridgerescuer.springboot.data.repository.MemberRepository;
 import com.fridgerescuer.springboot.exception.ErrorCode;
+import com.fridgerescuer.springboot.exception.errorcodeimpl.IngredientError;
 import com.fridgerescuer.springboot.exception.errorcodeimpl.MemberError;
-import com.fridgerescuer.springboot.exception.exceptionimpl.NoSuchIngredientException;
+import com.fridgerescuer.springboot.exception.exceptionimpl.IngredientException;
 import com.fridgerescuer.springboot.exception.exceptionimpl.MemberException;
 import com.mongodb.client.result.UpdateResult;
 import lombok.RequiredArgsConstructor;
@@ -68,7 +69,7 @@ public class MemberDaoImpl implements MemberDao {
         }
 
         if(ingredients.get(0).getId() == null){ //재료의 id가 존재하지 않는 경우
-            throw new NoSuchIngredientException(new NullPointerException("no such ingredient id"));
+            throw new IngredientException(IngredientError.NOT_EXIST);
         }
 
         template.update(Member.class)

@@ -4,7 +4,8 @@ import com.fridgerescuer.springboot.data.dao.IngredientDao;
 import com.fridgerescuer.springboot.data.entity.Ingredient;
 import com.fridgerescuer.springboot.data.entity.Recipe;
 import com.fridgerescuer.springboot.data.repository.IngredientRepository;
-import com.fridgerescuer.springboot.exception.exceptionimpl.NoSuchIngredientException;
+import com.fridgerescuer.springboot.exception.errorcodeimpl.IngredientError;
+import com.fridgerescuer.springboot.exception.exceptionimpl.IngredientException;
 import com.mongodb.client.result.UpdateResult;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -45,7 +46,7 @@ public class IngredientDaoImpl implements IngredientDao {
     public Ingredient findByName(String name) {
         Ingredient findIngredient = repository.findByName(name);
         if(findIngredient ==null){
-            throw new NoSuchIngredientException( new NullPointerException("no such ingredient name in Repository, name=" + name));
+            throw new IngredientException(IngredientError.NOT_EXIST);
         }
 
         return repository.findByName(name);
@@ -56,7 +57,7 @@ public class IngredientDaoImpl implements IngredientDao {
         Optional<Ingredient> findIngredient = repository.findById(id);
 
         if(findIngredient.isEmpty()){
-            throw new NoSuchIngredientException( new NullPointerException("no such ingredient id in Repository, id=" + id));
+            throw new IngredientException(IngredientError.NOT_EXIST);
         }
 
         return findIngredient.get();
@@ -89,7 +90,7 @@ public class IngredientDaoImpl implements IngredientDao {
         log.info("update id={} to ingredient ={}", targetId,ingredient);
 
         if (updateResult.getModifiedCount() ==0){   //아무것도 변경되지 않은 경우, 해당 id가 존재하지 않는 것
-            throw new NoSuchIngredientException( new NullPointerException("no such ingredient id in Repository id=" + targetId));
+            throw new IngredientException(IngredientError.NOT_EXIST);
         }
 
     }
@@ -103,7 +104,7 @@ public class IngredientDaoImpl implements IngredientDao {
         log.info("delete ingredient ={}", removedIngredient);
 
         if(removedIngredient ==null){
-            throw new NoSuchIngredientException( new NullPointerException("no such ingredient name in Repository, id=" + targetId));
+            throw new IngredientException(IngredientError.NOT_EXIST);
         }
 
     }
