@@ -11,7 +11,7 @@ public interface IngredientDao {
 
     IngredientDTO findByName(String name);
     IngredientDTO findById(String id);
-    //List<Ingredient> findAllByCategory(String category);
+    List<IngredientDTO> findAllByContainName(String containName);
 
     void updateById(String targetId, IngredientDTO ingredientDTO);
     void deleteById(String targetId);

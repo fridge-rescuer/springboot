@@ -70,6 +70,20 @@ public class IngredientDaoImpl implements IngredientDao {
         return ingredientMapper.ingredientToDTO(foundIngredient);
     }
 
+    @Override
+    public List<IngredientDTO> findAllByContainName(String containName) {
+        Query query = new Query();
+        query.addCriteria(Criteria.where("name").regex(".*" + containName + ".*"));    //name이 포함된 모든 이름에 대해 검색
+
+        List<Ingredient> foundIngredients = template.find(query, Ingredient.class);
+
+        if(foundIngredients.isEmpty()){
+            throw new NoSuchIngredientException( new NullPointerException("no such ingredient containName in Repository, containName=" + containName));
+        }
+
+        return ingredientMapper.ingredientListToDtoList(foundIngredients);
+    }
+
     /* db문제로 배제, 현제 식재료 DB를 얻을 수 있을지도 불안정한 상태
     @Override
     public List<Ingredient> findAllByCategory(String category) {
