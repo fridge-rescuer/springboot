@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+<meta http-equiv="x-ua-compatible" content="IE=edge"/>
+<title>Test results - MemberDaoTest</title>
+<link href="../css/base-style.css" rel="stylesheet" type="text/css"/>
+<link href="../css/style.css" rel="stylesheet" type="text/css"/>
+<script src="../js/report.js" type="text/javascript"></script>
+</head>
+<body>
+<div id="content">
+<h1>MemberDaoTest</h1>
+<div class="breadcrumbs">
+<a href="../index.html">all</a> &gt; 
+<a href="../packages/com.fridgerescuer.springboot.data.dao.html">com.fridgerescuer.springboot.data.dao</a> &gt; MemberDaoTest</div>
+<div id="summary">
+<table>
+<tr>
+<td>
+<div class="summaryGroup">
+<table>
+<tr>
+<td>
+<div class="infoBox" id="tests">
+<div class="counter">1</div>
+<p>tests</p>
+</div>
+</td>
+<td>
+<div class="infoBox" id="failures">
+<div class="counter">0</div>
+<p>failures</p>
+</div>
+</td>
+<td>
+<div class="infoBox" id="ignored">
+<div class="counter">0</div>
+<p>ignored</p>
+</div>
+</td>
+<td>
+<div class="infoBox" id="duration">
+<div class="counter">0.220s</div>
+<p>duration</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+</td>
+<td>
+<div class="infoBox success" id="successRate">
+<div class="percent">100%</div>
+<p>successful</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+<div id="tabs">
+<ul class="tabLinks">
+<li>
+<a href="#tab0">Tests</a>
+</li>
+<li>
+<a href="#tab1">Standard output</a>
+</li>
+</ul>
+<div id="tab0" class="tab">
+<h2>Tests</h2>
+<table>
+<thead>
+<tr>
+<th>Test</th>
+<th>Duration</th>
+<th>Result</th>
+</tr>
+</thead>
+<tr>
+<td class="success">addIngredientsAndExpirationDateToMemberByIngredientId()</td>
+<td class="success">0.220s</td>
+<td class="success">passed</td>
+</tr>
+</table>
+</div>
+<div id="tab1" class="tab">
+<h2>Standard output</h2>
+<span class="code">
+<pre>2022-09-04 21:44:04.374  INFO 4996 --- [    Test worker] t.a.d.m.DataMongoTestContextBootstrapper : Neither @ContextConfiguration nor @ContextHierarchy found for test class [com.fridgerescuer.springboot.data.dao.MemberDaoTest], using SpringBootContextLoader
+2022-09-04 21:44:04.375  INFO 4996 --- [    Test worker] o.s.t.c.support.AbstractContextLoader    : Could not detect default resource locations for test class [com.fridgerescuer.springboot.data.dao.MemberDaoTest]: no resource found for suffixes {-context.xml, Context.groovy}.
+2022-09-04 21:44:04.376  INFO 4996 --- [    Test worker] t.c.s.AnnotationConfigContextLoaderUtils : Could not detect default configuration classes for test class [com.fridgerescuer.springboot.data.dao.MemberDaoTest]: MemberDaoTest does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
+2022-09-04 21:44:04.383  INFO 4996 --- [    Test worker] .b.t.c.SpringBootTestContextBootstrapper : Found @SpringBootConfiguration com.fridgerescuer.springboot.SpringbootApplication for test class com.fridgerescuer.springboot.data.dao.MemberDaoTest
+2022-09-04 21:44:04.384  INFO 4996 --- [    Test worker] t.a.d.m.DataMongoTestContextBootstrapper : Loaded default TestExecutionListener class names from location [META-INF/spring.factories]: [org.springframework.boot.test.autoconfigure.restdocs.RestDocsTestExecutionListener, org.springframework.boot.test.autoconfigure.web.client.MockRestServiceServerResetTestExecutionListener, org.springframework.boot.test.autoconfigure.web.servlet.MockMvcPrintOnlyOnFailureTestExecutionListener, org.springframework.boot.test.autoconfigure.web.servlet.WebDriverTestExecutionListener, org.springframework.boot.test.autoconfigure.webservices.client.MockWebServiceServerTestExecutionListener, org.springframework.boot.test.mock.mockito.MockitoTestExecutionListener, org.springframework.boot.test.mock.mockito.ResetMocksTestExecutionListener, org.springframework.test.context.web.ServletTestExecutionListener, org.springframework.test.context.support.DirtiesContextBeforeModesTestExecutionListener, org.springframework.test.context.event.ApplicationEventsTestExecutionListener, org.springframework.test.context.support.DependencyInjectionTestExecutionListener, org.springframework.test.context.support.DirtiesContextTestExecutionListener, org.springframework.test.context.transaction.TransactionalTestExecutionListener, org.springframework.test.context.jdbc.SqlScriptsTestExecutionListener, org.springframework.test.context.event.EventPublishingTestExecutionListener]
+2022-09-04 21:44:04.385  INFO 4996 --- [    Test worker] t.a.d.m.DataMongoTestContextBootstrapper : Using TestExecutionListeners: [org.springframework.test.context.web.ServletTestExecutionListener@70df41f9, org.springframework.test.context.support.DirtiesContextBeforeModesTestExecutionListener@64a7ad02, org.springframework.test.context.event.ApplicationEventsTestExecutionListener@46590dd0, org.springframework.boot.test.mock.mockito.MockitoTestExecutionListener@6c737fdb, org.springframework.boot.test.autoconfigure.SpringBootDependencyInjectionTestExecutionListener@66a93b25, org.springframework.test.context.support.DirtiesContextTestExecutionListener@3f3f554f, org.springframework.test.context.transaction.TransactionalTestExecutionListener@3186f8f5, org.springframework.test.context.jdbc.SqlScriptsTestExecutionListener@467cd4b9, org.springframework.test.context.event.EventPublishingTestExecutionListener@69a3bf40, org.springframework.boot.test.autoconfigure.restdocs.RestDocsTestExecutionListener@2c731a16, org.springframework.boot.test.autoconfigure.web.client.MockRestServiceServerResetTestExecutionListener@2a341e3d, org.springframework.boot.test.autoconfigure.web.servlet.MockMvcPrintOnlyOnFailureTestExecutionListener@a4dcede, org.springframework.boot.test.autoconfigure.web.servlet.WebDriverTestExecutionListener@7ee02968, org.springframework.boot.test.autoconfigure.webservices.client.MockWebServiceServerTestExecutionListener@4a773f08, org.springframework.boot.test.mock.mockito.ResetMocksTestExecutionListener@40b8158d]
+2022-09-04 21:44:04.396  INFO 4996 --- [    Test worker] c.f.s.data.dao.impl.IngredientDaoImpl    : save ingredient =Ingredient(id=null, name=마늘, recipes=null)
+2022-09-04 21:44:04.443  INFO 4996 --- [       Thread-4] o.s.b.a.mongo.embedded.EmbeddedMongo     : {&quot;t&quot;:{&quot;$date&quot;:&quot;2022-09-04T21:44:04.443+09:00&quot;},&quot;s&quot;:&quot;I&quot;,  &quot;c&quot;:&quot;STORAGE&quot;,  &quot;id&quot;:20320,   &quot;ctx&quot;:&quot;conn5&quot;,&quot;msg&quot;:&quot;createCollection&quot;,&quot;attr&quot;:{&quot;namespace&quot;:&quot;test.ingredient&quot;,&quot;uuidDisposition&quot;:&quot;generated&quot;,&quot;uuid&quot;:{&quot;uuid&quot;:{&quot;$uuid&quot;:&quot;4d64bb57-6c81-40c9-a48f-cb1f424bb5a5&quot;}},&quot;options&quot;:{}}}
+2022-09-04 21:44:04.481  INFO 4996 --- [       Thread-4] o.s.b.a.mongo.embedded.EmbeddedMongo     : {&quot;t&quot;:{&quot;$date&quot;:&quot;2022-09-04T21:44:04.481+09:00&quot;},&quot;s&quot;:&quot;I&quot;,  &quot;c&quot;:&quot;INDEX&quot;,    &quot;id&quot;:20345,   &quot;ctx&quot;:&quot;conn5&quot;,&quot;msg&quot;:&quot;Index build: done building&quot;,&quot;attr&quot;:{&quot;buildUUID&quot;:null,&quot;namespace&quot;:&quot;test.ingredient&quot;,&quot;index&quot;:&quot;_id_&quot;,&quot;commitTimestamp&quot;:null}}
+2022-09-04 21:44:04.483  INFO 4996 --- [    Test worker] c.f.s.data.dao.impl.IngredientDaoImpl    : save ingredient =Ingredient(id=null, name=사과, recipes=null)
+2022-09-04 21:44:04.486  INFO 4996 --- [    Test worker] c.f.s.data.dao.impl.MemberDaoImpl        : save Member =Member(id=null, password=null, name=야생마, ingredients=null, expirationDataList=null, recipes=null, comments=null)
+2022-09-04 21:44:04.553  INFO 4996 --- [    Test worker] c.f.s.data.dao.impl.MemberDaoImpl        : add ingredient size=2, to member id=63149d9433f5e33dedf29f4c
+2022-09-04 21:44:04.563  INFO 4996 --- [    Test worker] c.f.s.data.dao.impl.MemberDaoImpl        : push Member Ingredient ExpirationData =ExpirationData(ingredientId=63149d9433f5e33dedf29f4a, expirationDate=2022-09-25, isNoExpiration=false), to MemberId =63149d9433f5e33dedf29f4c
+2022-09-04 21:44:04.581  INFO 4996 --- [    Test worker] c.f.s.data.dao.impl.MemberDaoImpl        : push Member Ingredient ExpirationData =ExpirationData(ingredientId=63149d9433f5e33dedf29f4b, expirationDate=2022-09-18, isNoExpiration=false), to MemberId =63149d9433f5e33dedf29f4c
+</pre>
+</span>
+</div>
+</div>
+<div id="footer">
+<p>
+<div>
+<label class="hidden" id="label-for-line-wrapping-toggle" for="line-wrapping-toggle">Wrap lines
+<input id="line-wrapping-toggle" type="checkbox" autocomplete="off"/>
+</label>
+</div>Generated by 
+<a href="http://www.gradle.org">Gradle 7.5</a> at 2022. 9. 4. 오후 9:44:06</p>
+</div>
+</div>
+</body>
+</html>

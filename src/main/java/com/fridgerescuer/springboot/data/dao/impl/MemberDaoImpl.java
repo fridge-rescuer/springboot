@@ -2,13 +2,16 @@ package com.fridgerescuer.springboot.data.dao.impl;
 
 import com.fridgerescuer.springboot.data.dao.IngredientDao;
 import com.fridgerescuer.springboot.data.dao.MemberDao;
+import com.fridgerescuer.springboot.data.dto.CommentDTO;
+import com.fridgerescuer.springboot.data.dto.ExpirationDataDTO;
 import com.fridgerescuer.springboot.data.dto.MemberDTO;
+import com.fridgerescuer.springboot.data.dto.RecipeDTO;
 import com.fridgerescuer.springboot.data.entity.*;
+import com.fridgerescuer.springboot.data.mapper.*;
 import com.fridgerescuer.springboot.data.repository.MemberRepository;
 import com.fridgerescuer.springboot.exception.ErrorCode;
-import com.fridgerescuer.springboot.exception.errorcodeimpl.IngredientError;
 import com.fridgerescuer.springboot.exception.errorcodeimpl.MemberError;
-import com.fridgerescuer.springboot.exception.exceptionimpl.IngredientException;
+import com.fridgerescuer.springboot.exception.exceptionimpl.NoSuchIngredientException;
 import com.fridgerescuer.springboot.exception.exceptionimpl.MemberException;
 import com.mongodb.client.result.UpdateResult;
 import lombok.RequiredArgsConstructor;
@@ -43,14 +46,19 @@ public class MemberDaoImpl implements MemberDao {
     @Autowired
     private final IngredientDao ingredientDao;
 
-    @Override
-    public Member saveMember(Member member) {
-        log.info("save Member ={}", member);
-        return repository.save(member);
-    }
+    private final MemberMapper memberMapper = MemberMapper.INSTANCE;
+    private final ExpirationDataMapper expirationDataMapper = ExpirationDataMapper.INSTANCE;
+    private final RecipeMapper recipeMapper = RecipeMapper.INSTANCE;
+    private final CommentMapper commentMapper = CommentMapper.INSTANCE;
 
     @Override
-    public Member findById(String memberId) {
+    public MemberDTO saveMember(MemberDTO memberDTO) {
+        Member savedMember = repository.save(memberMapper.DtoToMember(memberDTO));
+        log.info("save Member ={}", savedMember);
+        return memberMapper.memberToDto(savedMember);
+    }
+
+    private Member getMemberById(String memberId){
         Optional<Member> findMember = repository.findById(memberId);
 
         if(findMember.isEmpty()){
@@ -61,46 +69,27 @@ public class MemberDaoImpl implements MemberDao {
     }
 
     @Override
-    public void addIngredientsToMember(String memberId, List<Ingredient> ingredients) {
+    public MemberDTO findById(String memberId) {
+        Member foundMember = getMemberById(memberId);
 
-        if(ingredients.size() == 0){    //추가하는 재료가 비어있는 경우
-            log.debug("ingredients param size ={}", ingredients.size());
+        return memberMapper.memberToDto(foundMember);
+    }
+
+    @Override
+    public void addExpirationDataToMember(String memberId, List<ExpirationDataDTO> expirationDataDTOList) {
+        this.getMemberById(memberId);   //존재하는 멤버인지 확인
+
+        if(expirationDataDTOList.size() ==0){
+            log.debug("No Data in ExpirationDataList");
             return;
         }
 
-        if(ingredients.get(0).getId() == null){ //재료의 id가 존재하지 않는 경우
-            throw new IngredientException(IngredientError.NOT_EXIST);
+        List<ExpirationData> expirationDataList = expirationDataMapper.DTOListToDataList(expirationDataDTOList);
+        for (ExpirationData expData: expirationDataList) {
+            setExpirationDataList(memberId, expData);
         }
 
-        template.update(Member.class)
-                .matching(where("id").is(memberId))
-                .apply(new Update().set("ingredients",ingredients))
-                .first();
-
-        log.info("add ingredient size={}, to member id={}", ingredients.size(),memberId);
     }
-
-    @Override
-    public void addIngredientsToMemberByIngredientIds(String memberId, List<String> ingredientIds) {
-        List<Ingredient> ingredients = new ArrayList<>();
-
-        for(String ingredientId : ingredientIds){
-            ingredients.add(ingredientDao.findById(ingredientId));
-        }
-
-        this.addIngredientsToMember(memberId,ingredients);  //파라미터 생성 후 대체 호출
-    }
-
-
-    @Override
-    public void addIngredientAndExpirationDataToMember(String memberId, List<String> ingredientIds, List<ExpirationData> expirationDataList) {
-        this.addIngredientsToMemberByIngredientIds(memberId, ingredientIds);    //reference 저장
-
-        for (int i = 0; i < expirationDataList.size(); i++) { //유통기한 저장
-            this.setExpirationDataList(memberId, expirationDataList.get(i));
-        }
-    }
-
 
     private void setExpirationDataList(String memberId, ExpirationData expirationData){
         Query query = new Query();
@@ -109,13 +98,42 @@ public class MemberDaoImpl implements MemberDao {
         Update update = new Update();
         update.push("expirationDataList",expirationData);
 
-
         template.updateMulti(query, update, Member.class);
-        log.info("push Member Ingredient ExpirationData ={}, to MemberId ={}",expirationData ,memberId);
+        log.info("push Member ExpirationData ={}, to MemberId ={}",expirationData ,memberId);
     }
 
     @Override
-    public void addRecipeToMember(String memberId, Recipe recipe) {
+    public void addPrivateExpirationDataToMember(String memberId, List<ExpirationDataDTO> expirationDataDTOList) {
+        this.getMemberById(memberId);   //존재하는 멤버인지 확인
+
+        if(expirationDataDTOList.size() ==0){
+            log.debug("No Data in ExpirationDataList");
+            return;
+        }
+
+        List<PrivateExpirationData> privateExpirationDataList = expirationDataMapper.DTOListToPrivateDataList(expirationDataDTOList);
+        for (PrivateExpirationData privateData: privateExpirationDataList) {
+            setPrivateExpirationDataList(memberId, privateData);
+        }
+
+    }
+
+    private void setPrivateExpirationDataList(String memberId, PrivateExpirationData expirationData){
+        Query query = new Query();
+        query.addCriteria(Criteria.where("id").is(memberId));
+
+        Update update = new Update();
+        update.push("privateExpirationDataList",expirationData);
+
+        template.updateMulti(query, update, Member.class);
+        log.info("push Member PrivateExpirationData ={}, to MemberId ={}",expirationData ,memberId);
+    }
+
+
+    @Override
+    public void addRecipeToMember(String memberId, RecipeDTO recipeDTO) {
+        Recipe recipe = recipeMapper.DTOtoRecipe(recipeDTO);
+
         Query query = new Query();
         query.addCriteria(Criteria.where("id").is(memberId));
 
@@ -134,7 +152,9 @@ public class MemberDaoImpl implements MemberDao {
     }
 
     @Override
-    public void addCommentToMember(String memberId, Comment comment) {
+    public void addCommentToMember(String memberId,  CommentDTO commentDTO) {
+        Comment comment = commentMapper.DTOtoComment(commentDTO);
+
         UpdateResult updateResult = template.update(Member.class)
                 .matching(where("id").is(memberId))
                 .apply(new Update().push("comments", comment))
@@ -166,7 +186,7 @@ public class MemberDaoImpl implements MemberDao {
 
     @Override
     public void deleteMemberById(String memberId) {
-        this.findById(memberId);    //존재하지 않는 id의 경우 예외 발생
+        this.getMemberById(memberId);    //존재하지 않는 id의 경우 예외 발생
 
         repository.deleteById(memberId);
         log.info("delete Member id ={}", memberId);

@@ -1,11 +1,8 @@
 package com.fridgerescuer.springboot.data.dao;
 
-import com.fridgerescuer.springboot.data.dao.IngredientDao;
-import com.fridgerescuer.springboot.data.entity.Component;
-import com.fridgerescuer.springboot.data.entity.DetailIngredient;
-import com.fridgerescuer.springboot.data.entity.Ingredient;
+import com.fridgerescuer.springboot.data.dto.IngredientDTO;
 import com.fridgerescuer.springboot.data.repository.IngredientRepository;
-import org.assertj.core.api.Assertions;
+import com.fridgerescuer.springboot.exception.exceptionimpl.NoSuchIngredientException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -15,7 +12,6 @@ import org.springframework.context.annotation.ComponentScan;
 import org.springframework.data.mongodb.core.MongoTemplate;
 
 import static org.assertj.core.api.Assertions.*;
-import static org.junit.jupiter.api.Assertions.*;
 
 @ComponentScan(basePackages = "com.fridgerescuer.springboot")
 @DataMongoTest
@@ -37,7 +33,66 @@ class IngredientDaoTest {
     //given
     //when
     //then
-/*
+
+    @Test
+    void deleteIngredient(){
+        //given
+        IngredientDTO ingredientDTO = IngredientDTO.builder().name("마늘").build();
+
+        //when
+        IngredientDTO savedIngredient = ingredientDao.save(ingredientDTO);
+
+        //then
+        ingredientDao.deleteById(savedIngredient.getId());
+        assertThatThrownBy(() -> ingredientDao.findById(savedIngredient.getId()))
+                .isInstanceOf(NoSuchIngredientException.class);
+
+        //존재하지 않는 id를 삭제하는 경우
+        assertThatThrownBy(() -> ingredientDao.deleteById("1234560"))
+                .isInstanceOf(NoSuchIngredientException.class);
+
+    }
+
+    @Test
+    @DisplayName("재료의 id를 통해 재료 update")
+    void updateIngredientById(){
+        IngredientDTO ingredientDTO = IngredientDTO.builder().name("마늘").build();
+        IngredientDTO updateIngredientDTO = IngredientDTO.builder().name("삼겹살").build();
+
+        IngredientDTO savedIngredient = ingredientDao.save(ingredientDTO);
+        ingredientDao.updateById(savedIngredient.getId(), updateIngredientDTO);
+
+        IngredientDTO updatedResponseDTO = ingredientDao.findById(savedIngredient.getId());
+
+        assertThat(savedIngredient.getId()).isEqualTo(updatedResponseDTO.getId());  //update된 document가 여전히 같은 id인지 확인
+        assertThat(updatedResponseDTO.getName()).isEqualTo(updateIngredientDTO.getName());
+
+        System.out.println("updatedResponseDTO = " + updatedResponseDTO);
+    }
+
+    @Test
+    @DisplayName("이름으로 재료 id 찾기")
+    void findIngredientIdByName(){
+        IngredientDTO ingredientDTO = IngredientDTO.builder().name("마늘").build();
+
+        IngredientDTO savedIngredient = ingredientDao.save(ingredientDTO);
+        IngredientDTO findIngredient = ingredientDao.findByName(ingredientDTO.getName());
+
+        assertThat(findIngredient.getId()).isEqualTo(savedIngredient.getId());
+    }
+
+
+    @Test
+    @DisplayName("없는 재료명으로 인한 런타임 예외 처리 확인, NoSuchIngredientException")
+    void occurExceptionByNoSameName(){
+        IngredientDTO ingredientDTO = IngredientDTO.builder().name("마늘").build();
+
+        ingredientDao.save(ingredientDTO);
+        assertThatThrownBy(() ->ingredientDao.findByName("양파"))
+                .isInstanceOf(NoSuchIngredientException.class);
+    }
+
+    /*
     @Test
     void findByCategories(){
         //given

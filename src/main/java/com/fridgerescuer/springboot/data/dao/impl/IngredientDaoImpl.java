@@ -1,11 +1,12 @@
 package com.fridgerescuer.springboot.data.dao.impl;
 
 import com.fridgerescuer.springboot.data.dao.IngredientDao;
+import com.fridgerescuer.springboot.data.dto.IngredientDTO;
 import com.fridgerescuer.springboot.data.entity.Ingredient;
 import com.fridgerescuer.springboot.data.entity.Recipe;
+import com.fridgerescuer.springboot.data.mapper.IngredientMapper;
 import com.fridgerescuer.springboot.data.repository.IngredientRepository;
-import com.fridgerescuer.springboot.exception.errorcodeimpl.IngredientError;
-import com.fridgerescuer.springboot.exception.exceptionimpl.IngredientException;
+import com.fridgerescuer.springboot.exception.exceptionimpl.NoSuchIngredientException;
 import com.mongodb.client.result.UpdateResult;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -31,38 +32,45 @@ public class IngredientDaoImpl implements IngredientDao {
     @Autowired
     private final MongoTemplate template;
 
-    @Override
-    public Ingredient save(Ingredient ingredient) {
-        log.info("save ingredient ={}",ingredient);
-        return repository.save(ingredient);
-    }
+    private final IngredientMapper ingredientMapper = IngredientMapper.INSTANCE;
 
     @Override
-    public Ingredient find(Ingredient ingredient) { //이름으로 찾기
-        return repository.findByName(ingredient.getName());
+    public IngredientDTO save(IngredientDTO ingredientDTO) {
+        Ingredient savedIngredient = repository.save(ingredientMapper.DTOtoIngredient(ingredientDTO));
+
+        log.info("save ingredient ={}",savedIngredient);
+        return ingredientMapper.ingredientToDTO(savedIngredient);
     }
 
+
     @Override
-    public Ingredient findByName(String name) {
-        Ingredient findIngredient = repository.findByName(name);
-        if(findIngredient ==null){
-            throw new IngredientException(IngredientError.NOT_EXIST);
+    public IngredientDTO findByName(String name) {
+        Ingredient foundIngredient = repository.findByName(name);
+        if(foundIngredient ==null){
+            throw new NoSuchIngredientException( new NullPointerException("no such ingredient name in Repository, name=" + name));
         }
 
-        return repository.findByName(name);
+        return ingredientMapper.ingredientToDTO(foundIngredient);
+    }
+
+    private Ingredient getIngredientById(String id){
+        Optional<Ingredient> foundIngredient = repository.findById(id);
+
+        if(foundIngredient.isEmpty()){
+            throw new NoSuchIngredientException( new NullPointerException("no such ingredient id in Repository, id=" + id));
+        }
+
+        return foundIngredient.get();
     }
 
     @Override
-    public Ingredient findById(String id) {
-        Optional<Ingredient> findIngredient = repository.findById(id);
+    public IngredientDTO findById(String id) {
+        Ingredient foundIngredient = getIngredientById(id);
 
-        if(findIngredient.isEmpty()){
-            throw new IngredientException(IngredientError.NOT_EXIST);
-        }
-
-        return findIngredient.get();
+        return ingredientMapper.ingredientToDTO(foundIngredient);
     }
-    /* db문제로 배제
+
+    /* db문제로 배제, 현제 식재료 DB를 얻을 수 있을지도 불안정한 상태
     @Override
     public List<Ingredient> findAllByCategory(String category) {
         Query query = new Query();
@@ -78,25 +86,25 @@ public class IngredientDaoImpl implements IngredientDao {
     } */
 
     @Override
-    public void update(String targetId, Ingredient ingredient) {
+    public void updateById(String targetId, IngredientDTO ingredientDTO) {
         Query query = new Query();
         query.addCriteria(Criteria.where("id").is(targetId));
 
         Update update = new Update();
-        update.set("name", ingredient.getName());
+        update.set("name", ingredientDTO.getName());
         //update.set("type", ingredient.getType());
         UpdateResult updateResult = template.updateMulti(query, update, Ingredient.class);
 
-        log.info("update id={} to ingredient ={}", targetId,ingredient);
+        log.info("update id={} to ingredient ={}", targetId,ingredientDTO);
 
         if (updateResult.getModifiedCount() ==0){   //아무것도 변경되지 않은 경우, 해당 id가 존재하지 않는 것
-            throw new IngredientException(IngredientError.NOT_EXIST);
+            throw new NoSuchIngredientException( new NullPointerException("no such ingredient id in Repository id=" + targetId));
         }
 
     }
 
     @Override
-    public void delete(String targetId) {
+    public void deleteById(String targetId) {
         Query query = new Query();
         query.addCriteria(Criteria.where("id").is(targetId));
 
@@ -104,7 +112,7 @@ public class IngredientDaoImpl implements IngredientDao {
         log.info("delete ingredient ={}", removedIngredient);
 
         if(removedIngredient ==null){
-            throw new IngredientException(IngredientError.NOT_EXIST);
+            throw new NoSuchIngredientException( new NullPointerException("no such ingredient name in Repository, id=" + targetId));
         }
 
     }

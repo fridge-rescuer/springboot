@@ -1,18 +1,18 @@
 package com.fridgerescuer.springboot.data.dao;
 
+import com.fridgerescuer.springboot.data.dto.IngredientDTO;
 import com.fridgerescuer.springboot.data.entity.Ingredient;
 
 import java.util.List;
 
 public interface IngredientDao {
 
-    Ingredient save(Ingredient ingredient);
+    IngredientDTO save(IngredientDTO ingredientDTO);
 
-    Ingredient find(Ingredient ingredient);
-    Ingredient findByName(String name);
-    Ingredient findById(String id);
+    IngredientDTO findByName(String name);
+    IngredientDTO findById(String id);
     //List<Ingredient> findAllByCategory(String category);
 
-    void update(String targetId, Ingredient ingredient);
-    void delete(String targetId);
+    void updateById(String targetId, IngredientDTO ingredientDTO);
+    void deleteById(String targetId);
 }
