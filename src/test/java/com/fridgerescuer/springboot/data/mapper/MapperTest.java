@@ -1,10 +1,8 @@
 package com.fridgerescuer.springboot.data.mapper;
 
-import com.fridgerescuer.springboot.data.dto.CommentDTO;
-import com.fridgerescuer.springboot.data.dto.ExpirationDataDTO;
-import com.fridgerescuer.springboot.data.dto.MemberDTO;
-import com.fridgerescuer.springboot.data.dto.RecipeDTO;
+import com.fridgerescuer.springboot.data.dto.*;
 import com.fridgerescuer.springboot.data.entity.*;
+import io.swagger.models.auth.In;
 import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
@@ -13,6 +11,29 @@ import java.util.List;
 import static org.assertj.core.api.Assertions.*;
 
 class MapperTest {
+    private final IngredientMapper ingredientMapper = IngredientMapper.INSTANCE;
+    private final MemberMapper memberMapper = MemberMapper.INSTANCE;
+    private final ExpirationDataMapper expirationDataMapper = ExpirationDataMapper.INSTANCE;
+    private final RecipeMapper recipeMapper = RecipeMapper.INSTANCE;
+    private final CommentMapper commentMapper = CommentMapper.INSTANCE;
+
+    @Test
+    void ingredientWithInnerRecipeMapper(){
+        //given
+        List<RecipeDTO> recipeDTOList = new ArrayList<>();
+        recipeDTOList.add(RecipeDTO.builder().name("고구마 전").build());
+        recipeDTOList.add(RecipeDTO.builder().name("고구마 죽").build());
+
+        IngredientDTO sweetDTO = IngredientDTO.builder().name("고구마").recipeDTOs(recipeDTOList).build();
+
+        //when
+        Ingredient ingredient = ingredientMapper.DTOtoIngredient(sweetDTO);
+
+        //then
+        assertThat(ingredient.getRecipes().size()).isEqualTo(2);
+        assertThat(ingredient.getRecipes().get(0).getName()).isEqualTo("고구마 전");
+    }
+
     @Test
     void builderWithMapperTest(){
         RecipeDTO recipeDTO = RecipeDTO.builder().name("pizza").type("instance")
