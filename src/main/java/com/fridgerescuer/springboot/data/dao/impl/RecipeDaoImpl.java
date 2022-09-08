@@ -102,7 +102,7 @@ public class RecipeDaoImpl implements RecipeDao {
     }
 
     @Override
-    public void updateRecipeById(String targetId, Recipe updateData) {
+    public void updateRecipeById(String targetId, RecipeDTO updateDataDTO) {
         Recipe targetRecipe = this.getRecipeById(targetId);  //존재하지 않는 id면 여기서 예외 처리됨
         deleteReferenceWithIngredients(targetRecipe);
 
@@ -110,14 +110,14 @@ public class RecipeDaoImpl implements RecipeDao {
         query.addCriteria(Criteria.where("id").is(targetId));
 
         Update update = new Update();
-        update.set("name", updateData.getName());
-        update.set("type", updateData.getType());
-        update.set("ingredientNames", updateData.getIngredientNames());
+        update.set("name", updateDataDTO.getName());
+        update.set("type", updateDataDTO.getType());
+        update.set("ingredientNames", updateDataDTO.getIngredientNames());
         template.updateMulti(query, update, Recipe.class);
 
-        setReferenceWithIngredientsByName(updateData.getIngredientNames(), targetRecipe);   //연관 관계 다시 맵핑
+        setReferenceWithIngredientsByName(updateDataDTO.getIngredientNames(), targetRecipe);   //연관 관계 다시 맵핑
 
-        log.info("update id={} to recipe data ={}", targetId, updateData);
+        log.info("update id={} to recipe data ={}", targetId, updateDataDTO);
     }
 
     @Override

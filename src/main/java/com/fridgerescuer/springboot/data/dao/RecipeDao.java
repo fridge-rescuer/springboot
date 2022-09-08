@@ -19,7 +19,7 @@ public interface RecipeDao {
     List<RecipeDTO> findAllByContainName(String name);
     List<CommentDTO> getCommentsByRecipeId(String recipeId);
 
-    void updateRecipeById(String targetId, Recipe updateData);
+    void updateRecipeById(String targetId, RecipeDTO updateDataDTO);
     void deleteById(String targetId);
 
     void setProducerMemberIByRecipeId(String recipeId, String producerMemberId);
