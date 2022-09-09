@@ -83,6 +83,21 @@ class MapperTest {
     }
 
     @Test
+    void mappingExpirationDTOListToPrivateList(){
+        IngredientDTO ingredient = IngredientDTO.builder().name("엿").build();
+        ExpirationDataDTO expirationData = ExpirationDataDTO.builder().ingredientDTO(ingredient).build();
+
+        List<ExpirationDataDTO> expirationDataDTOS = new ArrayList<>();
+        expirationDataDTOS.add(expirationData);
+        expirationDataDTOS.add(expirationData);
+        expirationDataDTOS.add(expirationData);
+
+        List<PrivateExpirationData> privateExpirationDataList = ExpirationDataMapper.INSTANCE.DTOListToPrivateDataList(expirationDataDTOS);
+        assertThat(privateExpirationDataList.size()).isEqualTo(3);
+        assertThat(privateExpirationDataList.get(0).getIngredient().getName()).isEqualTo(ingredient.getName());
+    }
+
+    @Test
     void MemberWithExpirationListToDTOList(){
         Ingredient ingredient = Ingredient.builder().name("엿").build();
         ExpirationData expirationData = ExpirationData.builder().ingredient(ingredient).build();
