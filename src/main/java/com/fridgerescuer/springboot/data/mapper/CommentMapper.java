@@ -12,9 +12,11 @@ public interface CommentMapper {
 
     CommentMapper INSTANCE = Mappers.getMapper(CommentMapper.class);
 
-    CommentDTO commentToDTO(Comment comment);
 
     Comment DTOtoComment(CommentDTO commentDTO);
+    List<Comment> DTOListToCommentList(List<CommentDTO> commentDTOs);
 
+    CommentDTO commentToDTO(Comment comment);
     List<CommentDTO> commentListToDTOList(List<Comment> comments);
+
 }

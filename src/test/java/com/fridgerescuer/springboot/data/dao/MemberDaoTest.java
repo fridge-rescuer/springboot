@@ -1,9 +1,6 @@
 package com.fridgerescuer.springboot.data.dao;
 
-import com.fridgerescuer.springboot.data.dto.ExpirationDataDTO;
-import com.fridgerescuer.springboot.data.dto.IngredientDTO;
-import com.fridgerescuer.springboot.data.dto.MemberDTO;
-import com.fridgerescuer.springboot.data.dto.RecipeDTO;
+import com.fridgerescuer.springboot.data.dto.*;
 import com.fridgerescuer.springboot.data.entity.ExpirationData;
 import com.fridgerescuer.springboot.data.entity.Ingredient;
 import com.fridgerescuer.springboot.data.entity.Member;
@@ -99,7 +96,7 @@ class MemberDaoTest {
     }
 
 
-/*
+
      @Test
     void getCommentsOfMember(){
         //given
@@ -109,21 +106,23 @@ class MemberDaoTest {
         CommentDTO comment2 = CommentDTO.builder().rating(2).build();
 
         //when
-        MemberResponseDTO memberResponseDTO = memberService.saveMember(member);
-        RecipeResponseDTO recipeResponseDTO = recipeService.saveRecipe(recipe);
-        List<CommentResponseDTO> commentResponseDTOs = new ArrayList<>();
-        commentResponseDTOs.add(commentService.saveComment(memberResponseDTO.getId(), recipeResponseDTO.getId(), comment1));
-        commentResponseDTOs.add(commentService.saveComment(memberResponseDTO.getId(), recipeResponseDTO.getId(), comment2));
+        MemberDTO memberResponseDTO = memberDao.saveMember(member);
+        RecipeDTO recipeResponseDTO = recipeDao.save(recipe);
+
+        List<CommentDTO> commentResponseDTOs = new ArrayList<>();
+        commentResponseDTOs.add(commentDao.save(memberResponseDTO.getId(), recipeResponseDTO.getId(), comment1));
+        commentResponseDTOs.add(commentDao.save(memberResponseDTO.getId(), recipeResponseDTO.getId(), comment2));
 
         //then
-        List<CommentResponseDTO> comments = memberService.getCommentsByMemberId(memberResponseDTO.getId());
+         MemberDTO foundMember = memberDao.findById(memberResponseDTO.getId());
+         List<CommentDTO> comments = foundMember.getCommentDTOs();
 
-        for (int i = 0; i < comments.size(); i++) {
+         for (int i = 0; i < comments.size(); i++) {
             assertThat(comments.get(i).getId()).isEqualTo(commentResponseDTOs.get(i).getId());
             assertThat(comments.get(i).getRating()).isEqualTo(commentResponseDTOs.get(i).getRating());
-        }
+         }
     }
-*/
+
     @Test
     void deleteMember(){
         //given
@@ -169,106 +168,8 @@ class MemberDaoTest {
         assertThat(memberResponseDto.getName()).isEqualTo("종원");
         System.out.println("memberResponseDto = " + memberResponseDto);
     }
-/*
-    @Test
-    void addIngredientsToMember(){
-        //given
-        MemberDTO member = MemberDTO.builder().name("종원").build();
-        MemberResponseDTO memberResponseDto = memberService.saveMember(member);
-
-        IngredientDTO ingredient1 = IngredientDTO.builder().name("마늘").build();
-        IngredientDTO ingredient2 = IngredientDTO.builder().name("올리브유").build();
-        IngredientDTO ingredient3 = IngredientDTO.builder().name("계란").build();
-        IngredientDTO ingredient4 = IngredientDTO.builder().name("고추").build();
 
 
-        //when
-        List<IngredientResponseDTO> responseDTOList = new ArrayList<>();
-        responseDTOList.add(ingredientService.saveIngredient(ingredient1));
-        responseDTOList.add(ingredientService.saveIngredient(ingredient2));
-        responseDTOList.add(ingredientService.saveIngredient(ingredient3));
-        responseDTOList.add(ingredientService.saveIngredient(ingredient4));
-
-        memberService.addIngredientsToMember(memberResponseDto.getId(), IngredientMapper.INSTANCE.responseDTOListToDTOList(responseDTOList));
-
-        //then
-        MemberResponseDTO findMember = memberService.findMemberById(memberResponseDto.getId());
-        System.out.println("findMember = " + findMember);
-
-        assertThat(findMember.getIngredientResponseDTOs().size()).isEqualTo(responseDTOList.size());
-
-        for (IngredientResponseDTO ingredientResponseDTO: findMember.getIngredientResponseDTOs() ) {
-            System.out.println("ingredientDTO = " + ingredientResponseDTO);
-        }
-    }
-
-    @Test
-    void addIngredientsToMemberByIngredientIds(){
-        //given
-        MemberDTO member = MemberDTO.builder().name("종원").build();
-        MemberResponseDTO memberResponseDto = memberService.saveMember(member);
-
-        IngredientResponseDTO ingredient1 = ingredientService.saveIngredient(IngredientDTO.builder().name("마늘").build());
-        IngredientResponseDTO ingredient2 = ingredientService.saveIngredient(IngredientDTO.builder().name("올리브유").build());
-        IngredientResponseDTO ingredient3 = ingredientService.saveIngredient(IngredientDTO.builder().name("김계란").build());
-        IngredientResponseDTO ingredient4 = ingredientService.saveIngredient(IngredientDTO.builder().name("고추").build());
-
-
-        //when
-        List<String> responseIds = new ArrayList<>();
-        responseIds.add(ingredient1.getId());
-        responseIds.add(ingredient2.getId());
-        responseIds.add(ingredient3.getId());
-        responseIds.add(ingredient4.getId());
-
-        memberService.addIngredientsToMemberByIngredientIds(memberResponseDto.getId(), responseIds);
-
-        //then
-        MemberResponseDTO findMember = memberService.findMemberById(memberResponseDto.getId());
-        System.out.println("findMember = " + findMember);
-
-        assertThat(findMember.getIngredientResponseDTOs().size()).isEqualTo(responseIds.size());
-
-        for (IngredientResponseDTO ingredientResponseDTO: findMember.getIngredientResponseDTOs() ) {
-            System.out.println("ingredientDTO = " + ingredientResponseDTO);
-        }
-    }
-
-
-    @Test
-    void addIngredientsAndExpirationDataToMember(){
-        //given
-        MemberDTO memberDTO = MemberDTO.builder().name("bmx").build();
-
-        List<String> ingredientIds = new ArrayList<>();
-        IngredientResponseDTO garlic = ingredientService.saveIngredient(IngredientDTO.builder().name("마늘").build());
-        IngredientResponseDTO apple = ingredientService.saveIngredient(IngredientDTO.builder().name("사과").build());
-
-        ingredientIds.add(garlic.getId());
-        ingredientIds.add(apple.getId());
-
-        LocalDate now = LocalDate.now();
-
-        List<ExpirationData> expirationDataList = new ArrayList<>();
-        ExpirationData garlicData = ExpirationData.builder().ingredientId(ingredientIds.get(0)).expirationDate(now.plusDays(21)).isNoExpiration(false).build();
-        ExpirationData appleData = ExpirationData.builder().ingredientId(ingredientIds.get(1)).expirationDate(now.plusDays(14)).isNoExpiration(false).build();
-        expirationDataList.add(garlicData);
-        expirationDataList.add(appleData);
-
-        //when
-        MemberResponseDTO memberResponseDTO = memberService.saveMember(memberDTO);
-        memberService.addIngredientsAndExpirationDataToMember(memberResponseDTO.getId(), ingredientIds, expirationDataList);
-
-        MemberResponseDTO memberResponseDTO1 = memberService.findMemberById(memberResponseDTO.getId());
-        List<ExpirationData> expirationDataList1 = memberResponseDTO1.getExpirationDataList();
-
-        for (int i=0; i<expirationDataList1.size() ; ++i){
-            System.out.println(expirationDataList1.get(i));
-            assertThat(expirationDataList.get(i)).isEqualTo(expirationDataList1.get(i));
-        }
-
-    }
-*/
     @Test
     @DisplayName("멤버가 만든 레시피 등록, 레시피에는 만든 멤버를 등록")
     void saveRecipeByMember(){
