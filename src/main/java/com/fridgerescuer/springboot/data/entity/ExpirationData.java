@@ -8,7 +8,6 @@ import java.time.LocalDate;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-@EqualsAndHashCode
 @Getter
 @ToString
 public class ExpirationData {
