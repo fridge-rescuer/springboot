@@ -13,6 +13,7 @@ import java.util.List;
 public interface RecipeDao {
 
     RecipeDTO save(RecipeDTO recipeDTO);
+    RecipeDTO saveRecipeByMemberId(String memberId, RecipeDTO recipeDTO);
 
     RecipeDTO findById(String id);
     RecipeDTO findByName(String name);
