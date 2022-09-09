@@ -8,7 +8,6 @@ import java.time.LocalDate;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-@EqualsAndHashCode
 @Getter
 @ToString
 public class PrivateExpirationData {    //멤버 전용 냉장고 재료, 존재하는 식재료를 참조하지 않음

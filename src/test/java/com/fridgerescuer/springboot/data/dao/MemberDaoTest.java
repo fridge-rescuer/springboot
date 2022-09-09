@@ -1,5 +1,6 @@
 package com.fridgerescuer.springboot.data.dao;
 
+import com.fridgerescuer.springboot.data.dto.ExpirationDataDTO;
 import com.fridgerescuer.springboot.data.dto.IngredientDTO;
 import com.fridgerescuer.springboot.data.dto.MemberDTO;
 import com.fridgerescuer.springboot.data.dto.RecipeDTO;
@@ -34,38 +35,71 @@ class MemberDaoTest {
     private RecipeDao recipeDao;
     @Autowired
     private CommentDao commentDao;
-/*
+
     @Test
-    void addIngredientsAndExpirationDateToMemberByIngredientId(){
+    void addExpirationDataToMember(){
         //given
         MemberDTO member = MemberDTO.builder().name("야생마").build();
 
-        List<String> ingredientIds = new ArrayList<>();
-        ingredientIds.add(ingredientDao.save(IngredientDTO.builder().name("마늘").build()).getId());
-        ingredientIds.add(ingredientDao.save(IngredientDTO.builder().name("사과").build()).getId());
+        IngredientDTO ingredientDTO1 =  ingredientDao.save(IngredientDTO.builder().name("마늘").build());
+        IngredientDTO ingredientDTO2 =  ingredientDao.save(IngredientDTO.builder().name("사과").build());
 
         LocalDate now = LocalDate.now();
 
-        List<ExpirationData> expirationDataList = new ArrayList<>();
-        ExpirationData garlicData = ExpirationData.builder().ingredientId(ingredientIds.get(0)).expirationDate(now.plusDays(21)).isNoExpiration(false).build();
-        ExpirationData appleData = ExpirationData.builder().ingredientId(ingredientIds.get(1)).expirationDate(now.plusDays(14)).isNoExpiration(false).build();
-        expirationDataList.add(garlicData);
-        expirationDataList.add(appleData);
+        List<ExpirationDataDTO> expirationDataDTOList = new ArrayList<>();
+        ExpirationDataDTO garlicData = ExpirationDataDTO.builder().ingredientDTO(ingredientDTO1).expirationDate(now.plusDays(21)).isNoExpiration(false).build();
+        ExpirationDataDTO appleData = ExpirationDataDTO.builder().ingredientDTO(ingredientDTO2).expirationDate(now.plusDays(14)).isNoExpiration(false).build();
+        expirationDataDTOList.add(garlicData);
+        expirationDataDTOList.add(appleData);
 
         //when
         MemberDTO saveMember = memberDao.saveMember(member);
-        memberDao.addIngredientAndExpirationDataToMember(saveMember.getId(), ingredientIds, expirationDataList);
+        memberDao.addExpirationDataToMember(saveMember.getId(), expirationDataDTOList);
 
         //then
         MemberDTO foundMember = memberDao.findById(saveMember.getId());
-        List<ExpirationData> memberExpirationDataList = foundMember.getExpirationDataList();
+        List<ExpirationDataDTO> responseExpirationDataList = foundMember.getExpirationDataDTOList();
 
-        for (int i=0; i<expirationDataList.size() ; ++i ){
-            assertThat(memberExpirationDataList.get(i).getExpirationDate()).isEqualTo(memberExpirationDataList.get(i).getExpirationDate());
-            assertThat(memberExpirationDataList.get(i).getIngredientId()).isEqualTo(memberExpirationDataList.get(i).getIngredientId());
+        for (int i=0; i<responseExpirationDataList.size() ; ++i ){
+            assertThat(responseExpirationDataList.get(i).getIngredientDTO().getName()).isEqualTo(expirationDataDTOList.get(i).getIngredientDTO().getName());
+            assertThat(responseExpirationDataList.get(i).getExpirationDate()).isEqualTo(expirationDataDTOList.get(i).getExpirationDate());
+        }
+    }
+    @Test
+    void addPrivateExpirationDataToMember(){
+        //given
+        MemberDTO member = MemberDTO.builder().name("야생마").build();
+
+        IngredientDTO ingredientDTO1 =  IngredientDTO.builder().name("마늘").build();
+        IngredientDTO ingredientDTO2 =  IngredientDTO.builder().name("사과").build();
+
+        LocalDate now = LocalDate.now();
+
+        List<ExpirationDataDTO> expirationDataDTOList = new ArrayList<>();
+        ExpirationDataDTO garlicData = ExpirationDataDTO.builder().ingredientDTO(ingredientDTO1).expirationDate(now.plusDays(21)).isNoExpiration(false).build();
+        ExpirationDataDTO appleData = ExpirationDataDTO.builder().ingredientDTO(ingredientDTO2).expirationDate(now.plusDays(14)).isNoExpiration(false).build();
+        expirationDataDTOList.add(garlicData);
+        expirationDataDTOList.add(appleData);
+
+        //when
+        MemberDTO saveMember = memberDao.saveMember(member);
+        memberDao.addPrivateExpirationDataToMember(saveMember.getId(), expirationDataDTOList);
+
+        //then
+        MemberDTO foundMember = memberDao.findById(saveMember.getId());
+        List<ExpirationDataDTO> responseExpirationDataList = foundMember.getPrivateExpirationDataDTOList();
+
+        System.out.println("size= " + responseExpirationDataList.size());
+        for (int i=0; i<responseExpirationDataList.size() ; ++i ){
+            System.out.println(" " + responseExpirationDataList.get(i));
+            assertThat(responseExpirationDataList.get(i).getIngredientDTO().getName()).isEqualTo(expirationDataDTOList.get(i).getIngredientDTO().getName());
+            assertThat(responseExpirationDataList.get(i).getIngredientDTO().getId()).isEqualTo(null);   //private는 id없음
+            assertThat(responseExpirationDataList.get(i).getExpirationDate()).isEqualTo(expirationDataDTOList.get(i).getExpirationDate());
         }
     }
 
+
+/*
      @Test
     void getCommentsOfMember(){
         //given
