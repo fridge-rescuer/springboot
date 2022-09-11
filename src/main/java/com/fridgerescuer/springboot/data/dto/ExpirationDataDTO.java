@@ -10,6 +10,7 @@ import java.time.LocalDate;
 @Getter
 @ToString
 public class ExpirationDataDTO {
+    private String id;
 
     private IngredientDTO ingredientDTO;
 
