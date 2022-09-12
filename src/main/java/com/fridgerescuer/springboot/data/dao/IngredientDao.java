@@ -8,6 +8,8 @@ import java.util.List;
 
 public interface IngredientDao {
 
+    void checkExistingIngredientId(String ingredientId);
+
     IngredientDTO save(IngredientDTO ingredientDTO);
 
     IngredientDTO findByName(String name);
