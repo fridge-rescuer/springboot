@@ -108,22 +108,23 @@ public class MemberDaoImpl implements MemberDao {
             return;
         }
 
-        List<PrivateExpirationData> privateExpirationDataList = expirationDataMapper.DTOListToPrivateDataList(expirationDataDTOList);
-        for (PrivateExpirationData privateData: privateExpirationDataList) {
-            setPrivateExpirationDataList(memberId, privateData);
+        for (ExpirationDataDTO expData: expirationDataDTOList) {
+            saveAndPushPrivateExpirationDataDTO(memberId, expData);
         }
 
     }
 
-    private void setPrivateExpirationDataList(String memberId, PrivateExpirationData expirationData){
+    private void saveAndPushPrivateExpirationDataDTO(String memberId, ExpirationDataDTO expirationDataDTO){
+        PrivateExpirationData savePrivateData = expirationDataDao.savePrivateExpirationData(expirationDataDTO);
+
         Query query = new Query();
         query.addCriteria(Criteria.where("id").is(memberId));
 
         Update update = new Update();
-        update.push("privateExpirationDataList",expirationData);
+        update.push("privateExpirationDataList",savePrivateData);
 
         template.updateMulti(query, update, Member.class);
-        log.info("push Member PrivateExpirationData ={}, to MemberId ={}",expirationData ,memberId);
+        log.info("push Member PrivateExpirationData ={}, to MemberId ={}",savePrivateData ,memberId);
     }
 
 

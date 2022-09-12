@@ -111,6 +111,49 @@ class MemberDaoTest {
     }
 
     @Test
+    void deletePrivateExpirationDataFromMember(){
+        //given
+        MemberDTO member = MemberDTO.builder().name("야생마").build();
+
+        IngredientDTO ingredientDTO1 =  ingredientDao.save(IngredientDTO.builder().name("마늘").build());
+        IngredientDTO ingredientDTO2 =  ingredientDao.save(IngredientDTO.builder().name("사과").build());
+
+        LocalDate now = LocalDate.now();
+
+        List<ExpirationDataDTO> expirationDataDTOList = new ArrayList<>();
+        ExpirationDataDTO garlicData = ExpirationDataDTO.builder().ingredientDTO(ingredientDTO1).expirationDate(now.plusDays(21)).isNoExpiration(false).build();
+        ExpirationDataDTO appleData = ExpirationDataDTO.builder().ingredientDTO(ingredientDTO2).expirationDate(now.plusDays(14)).isNoExpiration(false).build();
+        expirationDataDTOList.add(garlicData);
+        expirationDataDTOList.add(appleData);
+
+        //when
+        MemberDTO saveMember = memberDao.saveMember(member);
+        memberDao.addPrivateExpirationDataToMember(saveMember.getId(), expirationDataDTOList);
+
+        //then
+        MemberDTO foundMember = memberDao.findById(saveMember.getId());
+        List<ExpirationDataDTO> responseExpirationDataList = foundMember.getPrivateExpirationDataDTOList();
+
+        for (int i=0; i<responseExpirationDataList.size() ; ++i ){
+            System.out.println(responseExpirationDataList.get(i));
+        }
+
+        ExpirationDataDTO targetExpirationDataDTO = responseExpirationDataList.get(0);
+        expirationDataDao.deletePrivateExpirationDataById(targetExpirationDataDTO.getId());
+
+        //반영 확인을 위해 다시 불러오기
+        foundMember = memberDao.findById(saveMember.getId());
+        responseExpirationDataList = foundMember.getPrivateExpirationDataDTOList();
+
+        System.out.println("size: " + responseExpirationDataList.size());
+        //제거 됨을 확인
+        for (int i=0; i<responseExpirationDataList.size() ; ++i ){
+            assertThat(responseExpirationDataList.get(i).getId()).isNotEqualTo(targetExpirationDataDTO.getId());
+        }
+
+    }
+
+    @Test
     void addPrivateExpirationDataToMember(){
         //given
         MemberDTO member = MemberDTO.builder().name("야생마").build();
