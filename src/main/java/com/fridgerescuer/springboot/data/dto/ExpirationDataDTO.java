@@ -16,4 +16,8 @@ public class ExpirationDataDTO {
 
     private LocalDate expirationDate;
     private boolean isNoExpiration;     //유통기한이 없는 식재료의 경우 true
+
+    public boolean getIsNoExpiration(){
+        return isNoExpiration;
+    }
 }

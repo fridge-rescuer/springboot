@@ -38,6 +38,15 @@ public class IngredientDaoImpl implements IngredientDao {
     private final RecipeMapper recipeMapper = RecipeMapper.INSTANCE;
 
     @Override
+    public void checkExistingIngredientId(String ingredientId) {
+        Optional<Ingredient> foundIngredient = repository.findById(ingredientId);
+
+        if(foundIngredient.isEmpty()){
+            throw new NoSuchIngredientException( new NullPointerException("no such ingredient id in Repository, id=" + ingredientId));
+        }
+    }
+
+    @Override
     public IngredientDTO save(IngredientDTO ingredientDTO) {
         Ingredient savedIngredient = repository.save(ingredientMapper.DTOtoIngredient(ingredientDTO));
 
