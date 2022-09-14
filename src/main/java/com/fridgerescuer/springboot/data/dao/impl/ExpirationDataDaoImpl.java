@@ -9,6 +9,8 @@ import com.fridgerescuer.springboot.data.entity.PrivateExpirationData;
 import com.fridgerescuer.springboot.data.mapper.ExpirationDataMapper;
 import com.fridgerescuer.springboot.data.repository.ExpirationDataRepository;
 import com.fridgerescuer.springboot.data.repository.PrivateExpirationDataRepository;
+import com.fridgerescuer.springboot.exception.exceptionimpl.NoSuchExpirationDataException;
+import com.fridgerescuer.springboot.exception.exceptionimpl.NoSuchPrivateExpirationDataException;
 import com.mongodb.client.result.UpdateResult;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -45,7 +47,7 @@ public class ExpirationDataDaoImpl implements ExpirationDataDao {
         Optional<ExpirationData> foundData = expirationRepository.findById(id);
 
         if(foundData.isEmpty()){
-            // 예외
+            throw new NoSuchExpirationDataException(new NullPointerException("no such ExpirationData id =" + id));
         }
     }
 
@@ -53,7 +55,25 @@ public class ExpirationDataDaoImpl implements ExpirationDataDao {
         Optional<ExpirationData> foundData = expirationRepository.findById(id);
 
         if(foundData.isEmpty()){
-            // 예외
+            throw new NoSuchExpirationDataException(new NullPointerException("no such ExpirationData id =" + id));
+        }
+
+        return foundData.get();
+    }
+
+    private void checkPrivateExistExpirationId(String id){
+        Optional<PrivateExpirationData> foundData = privateExpirationRepository.findById(id);
+
+        if(foundData.isEmpty()){
+            throw new NoSuchPrivateExpirationDataException(new NullPointerException("no such PrivateExpirationData id =" + id));
+        }
+    }
+
+    private PrivateExpirationData getPrivateExpirationDataById(String id){
+        Optional<PrivateExpirationData> foundData = privateExpirationRepository.findById(id);
+
+        if(foundData.isEmpty()){
+            throw new NoSuchPrivateExpirationDataException(new NullPointerException("no such PrivateExpirationData id =" + id));
         }
 
         return foundData.get();
@@ -77,6 +97,8 @@ public class ExpirationDataDaoImpl implements ExpirationDataDao {
     public void updateExpirationDataById(String targetExpirationId, ExpirationDataDTO updateDataDTO) {
         ExpirationData expirationData = expirationDataMapper.DTOtoData(updateDataDTO);
         ingredientDao.checkExistingIngredientId(expirationData.getIngredient().getId());    //존재 여부 확인인
+
+        checkExistExpirationId(targetExpirationId); // 해당 id가 존재하는지 확인
 
         Query query = new Query();
         query.addCriteria(Criteria.where("id").is(targetExpirationId));
@@ -118,6 +140,8 @@ public class ExpirationDataDaoImpl implements ExpirationDataDao {
         PrivateExpirationData privateExpirationData = expirationDataMapper.DTOtoPrivateData(updateDataDTO);
         //private는 데이터 베이스 식재료가 아니므로 id 체크 x
 
+        checkPrivateExistExpirationId(targetPrivateExpirationId);   //존재 id인지 확인
+
         Query query = new Query();
         query.addCriteria(Criteria.where("id").is(targetPrivateExpirationId));
 
@@ -133,7 +157,7 @@ public class ExpirationDataDaoImpl implements ExpirationDataDao {
 
     @Override
     public void deletePrivateExpirationDataById(String targetPrivateExpirationId) {
-        //checkExistExpirationId(targetExpirationId);
+        checkPrivateExistExpirationId(targetPrivateExpirationId);
 
         privateExpirationRepository.deleteById(targetPrivateExpirationId);
         log.info("delete PrivateExpirationData id ={}", targetPrivateExpirationId);
