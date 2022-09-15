@@ -9,9 +9,7 @@ import com.fridgerescuer.springboot.data.dto.RecipeDTO;
 import com.fridgerescuer.springboot.data.entity.*;
 import com.fridgerescuer.springboot.data.mapper.*;
 import com.fridgerescuer.springboot.data.repository.MemberRepository;
-import com.fridgerescuer.springboot.exception.ErrorCode;
 import com.fridgerescuer.springboot.exception.errorcodeimpl.MemberError;
-import com.fridgerescuer.springboot.exception.exceptionimpl.NoSuchIngredientException;
 import com.fridgerescuer.springboot.exception.exceptionimpl.MemberException;
 import com.mongodb.client.result.UpdateResult;
 import lombok.RequiredArgsConstructor;
@@ -24,8 +22,6 @@ import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
