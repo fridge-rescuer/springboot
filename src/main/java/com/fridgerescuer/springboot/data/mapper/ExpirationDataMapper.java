@@ -3,6 +3,7 @@ package com.fridgerescuer.springboot.data.mapper;
 import com.fridgerescuer.springboot.data.dto.ExpirationDataDTO;
 import com.fridgerescuer.springboot.data.entity.ExpirationData;
 import com.fridgerescuer.springboot.data.entity.PrivateExpirationData;
+import com.fridgerescuer.springboot.data.vo.ExpirationDataVO;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.factory.Mappers;
@@ -25,4 +26,6 @@ public interface ExpirationDataMapper {
     @Mapping(source = "ingredient", target = "ingredientDTO")
     ExpirationDataDTO dataToDTO(ExpirationData expirationData);
     List<ExpirationDataDTO> dataListToDTOList(List<ExpirationData> expirationDataList);
+
+    ExpirationDataVO DTOtoVO(ExpirationDataDTO expirationDataDTO);
 }
