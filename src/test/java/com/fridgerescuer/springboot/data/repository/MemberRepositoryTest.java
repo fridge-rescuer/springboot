@@ -80,36 +80,8 @@ class MemberRepositoryTest {    //Repository Test에서 서비스 계층 쓰면 
 //        //then
 //        assertThat(memberService.findMemberById(memberResponseDto.getId()).getName()).isEqualTo("메시");
 //    }
-/*
-    @Test
-    void memberJoin() throws Exception{
-        //given
-        MemberDTO memberDTO = MemberDTO.builder().id("tank3a").name("김종원").password("abcd1234").build();
-        Member member = MemberMapper.INSTANCE.DtoToMember(memberDTO);
-        MemberResponseDTO givenResponse = MemberMapper.INSTANCE.memberToResponseDto(member);
 
-        //when
-        MemberResponseDTO memberResponseDTO = memberService.memberJoin(memberDTO);
-
-        //then
-        assertThat(givenResponse).isEqualTo(memberResponseDTO);
-    }
-
-    @Test
-    void memberLogin() {
-        //given
-        MemberDTO memberDTO = MemberDTO.builder().id("tank3a").name("김종원").password("abcd1234").build();
-        Member member = MemberMapper.INSTANCE.DtoToMember(memberDTO);
-        MemberResponseDTO givenResponse = MemberMapper.INSTANCE.memberToResponseDto(member);
-        memberService.saveMember(memberDTO);
-
-        //when
-        MemberResponseDTO memberResponseDTO = memberService.memberLogin("tank3a", "abcd1234");
-
-        //then
-        assertThat(memberResponseDTO).isEqualTo(givenResponse);
-
-    }*/
+//
 //
 //    @Test
 //    void addIngredientsToMember(){
