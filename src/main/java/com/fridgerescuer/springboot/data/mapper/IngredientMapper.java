@@ -9,18 +9,19 @@ import org.mapstruct.factory.Mappers;
 
 import java.util.List;
 
-@Mapper//(componentModel = "spring", uses = {})
+@Mapper( uses = {RecipeMapper.class})
 public interface IngredientMapper {
 
     IngredientMapper INSTANCE = Mappers.getMapper(IngredientMapper.class);
 
-    IngredientDTO ingredientToDTO(Ingredient ingredient);
+    @Mapping(source = "recipeDTOs", target = "recipes")
     Ingredient DTOtoIngredient(IngredientDTO ingredientDTO);
 
     IngredientVO DtoToIngredientVO(IngredientDTO ingredientDTO);
 
-//    public Set<IngredientResponseDTO> loadAllIngredients();
-
     List<Ingredient> ingredientListToDTOList(List<IngredientDTO> ingredientDTOs);
+
+    @Mapping(source = "recipes", target = "recipeDTOs")
+    IngredientDTO ingredientToDTO(Ingredient ingredient);
     List<IngredientDTO> ingredientListToDtoList(List<Ingredient> ingredients);
 }

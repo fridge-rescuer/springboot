@@ -1,6 +1,6 @@
 package com.fridgerescuer.springboot.data.dao.impl;
 
-import com.fridgerescuer.springboot.data.dao.IngredientDao;
+import com.fridgerescuer.springboot.data.dao.ExpirationDataDao;
 import com.fridgerescuer.springboot.data.dao.MemberDao;
 import com.fridgerescuer.springboot.data.dto.CommentDTO;
 import com.fridgerescuer.springboot.data.dto.ExpirationDataDTO;
@@ -40,7 +40,7 @@ public class MemberDaoImpl implements MemberDao {
     private final MongoTemplate template;
 
     @Autowired
-    private final IngredientDao ingredientDao;
+    private final ExpirationDataDao expirationDataDao;
 
     private final MemberMapper memberMapper = MemberMapper.INSTANCE;
     private final ExpirationDataMapper expirationDataMapper = ExpirationDataMapper.INSTANCE;
@@ -80,22 +80,23 @@ public class MemberDaoImpl implements MemberDao {
             return;
         }
 
-        List<ExpirationData> expirationDataList = expirationDataMapper.DTOListToDataList(expirationDataDTOList);
-        for (ExpirationData expData: expirationDataList) {
-            setExpirationDataList(memberId, expData);
+        for (ExpirationDataDTO expData: expirationDataDTOList) {
+            saveAndPushExpirationDataDTO(memberId, expData);
         }
 
     }
 
-    private void setExpirationDataList(String memberId, ExpirationData expirationData){
+    private void saveAndPushExpirationDataDTO(String memberId, ExpirationDataDTO expirationDataDTO){
+        ExpirationData savedData = expirationDataDao.saveExpirationData(expirationDataDTO);
+
         Query query = new Query();
         query.addCriteria(Criteria.where("id").is(memberId));
 
         Update update = new Update();
-        update.push("expirationDataList",expirationData);
+        update.push("expirationDataList",savedData);
 
         template.updateMulti(query, update, Member.class);
-        log.info("push Member ExpirationData ={}, to MemberId ={}",expirationData ,memberId);
+        log.info("push Member ExpirationData ={}, to MemberId ={}",savedData ,memberId);
     }
 
     @Override
@@ -107,22 +108,23 @@ public class MemberDaoImpl implements MemberDao {
             return;
         }
 
-        List<PrivateExpirationData> privateExpirationDataList = expirationDataMapper.DTOListToPrivateDataList(expirationDataDTOList);
-        for (PrivateExpirationData privateData: privateExpirationDataList) {
-            setPrivateExpirationDataList(memberId, privateData);
+        for (ExpirationDataDTO expData: expirationDataDTOList) {
+            saveAndPushPrivateExpirationDataDTO(memberId, expData);
         }
 
     }
 
-    private void setPrivateExpirationDataList(String memberId, PrivateExpirationData expirationData){
+    private void saveAndPushPrivateExpirationDataDTO(String memberId, ExpirationDataDTO expirationDataDTO){
+        PrivateExpirationData savePrivateData = expirationDataDao.savePrivateExpirationData(expirationDataDTO);
+
         Query query = new Query();
         query.addCriteria(Criteria.where("id").is(memberId));
 
         Update update = new Update();
-        update.push("privateExpirationDataList",expirationData);
+        update.push("privateExpirationDataList",savePrivateData);
 
         template.updateMulti(query, update, Member.class);
-        log.info("push Member PrivateExpirationData ={}, to MemberId ={}",expirationData ,memberId);
+        log.info("push Member PrivateExpirationData ={}, to MemberId ={}",savePrivateData ,memberId);
     }
 
 

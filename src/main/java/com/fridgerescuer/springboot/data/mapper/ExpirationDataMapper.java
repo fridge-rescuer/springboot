@@ -27,5 +27,9 @@ public interface ExpirationDataMapper {
     ExpirationDataDTO dataToDTO(ExpirationData expirationData);
     List<ExpirationDataDTO> dataListToDTOList(List<ExpirationData> expirationDataList);
 
+    @Mapping(source = "ingredient", target = "ingredientDTO")
+    ExpirationDataDTO privateDataToDTO(PrivateExpirationData privateExpirationData);
+    List<ExpirationDataDTO> privateDataListToDTOList(List<PrivateExpirationData> privateExpirationDataList);
+
     ExpirationDataVO DTOtoVO(ExpirationDataDTO expirationDataDTO);
 }

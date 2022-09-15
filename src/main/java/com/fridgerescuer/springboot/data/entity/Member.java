@@ -22,7 +22,9 @@ public class Member {
     private String password;
     private String name;
 
+    @DocumentReference
     private List<ExpirationData> expirationDataList;
+    @DocumentReference
     private List<PrivateExpirationData> privateExpirationDataList;
 
     @DocumentReference

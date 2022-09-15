@@ -11,6 +11,8 @@ import org.springframework.boot.test.autoconfigure.data.mongo.DataMongoTest;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.data.mongodb.core.MongoTemplate;
 
+import java.util.List;
+
 import static org.assertj.core.api.Assertions.*;
 
 @ComponentScan(basePackages = "com.fridgerescuer.springboot")
@@ -92,7 +94,28 @@ class IngredientDaoTest {
                 .isInstanceOf(IngredientException.class);
     }
 
-    /*
+    @Test
+    void findIngredientContainName(){
+        //given
+        IngredientDTO ingredientDTO1 = IngredientDTO.builder().name("새우").build();
+        IngredientDTO ingredientDTO2 = IngredientDTO.builder().name("꽃새우").build();
+        IngredientDTO ingredientDTO3 = IngredientDTO.builder().name("꽃개").build();
+        String targetContainName = "새우";
+
+        //when
+        ingredientDao.save(ingredientDTO1);
+        ingredientDao.save(ingredientDTO2);
+        ingredientDao.save(ingredientDTO3);
+
+        //then
+        List<IngredientDTO> allIngredientDTOs = ingredientDao.findAllByContainName(targetContainName);
+
+        for (IngredientDTO ingreDTO: allIngredientDTOs ) {
+            ingreDTO.getName().contains(targetContainName);
+        }
+    }
+
+    /*  //db 문제로 배제
     @Test
     void findByCategories(){
         //given

@@ -1,7 +1,9 @@
 package com.fridgerescuer.springboot.data.dao.impl;
 
+import com.fridgerescuer.springboot.data.dao.MemberDao;
 import com.fridgerescuer.springboot.data.dao.RecipeDao;
 import com.fridgerescuer.springboot.data.dto.CommentDTO;
+import com.fridgerescuer.springboot.data.dto.MemberDTO;
 import com.fridgerescuer.springboot.data.dto.RecipeDTO;
 import com.fridgerescuer.springboot.data.entity.Comment;
 import com.fridgerescuer.springboot.data.entity.Ingredient;
@@ -43,16 +45,32 @@ public class RecipeDaoImpl implements RecipeDao {
     private final MongoTemplate template;
 
     @Autowired
+    private final MemberDao memberDao;
+
+    @Autowired
     private final RecipeGridFsAccessObject gridFsAO;
 
     private final RecipeMapper recipeMapper = RecipeMapper.INSTANCE;
 
     @Override
-    public RecipeDTO save(RecipeDTO recipeDTO) {
+    public RecipeDTO save(RecipeDTO recipeDTO) {        //member 없이 저장
         Recipe savedRecipe = repository.save(recipeMapper.DTOtoRecipe(recipeDTO));
         setReferenceWithIngredientsByName(savedRecipe.getIngredientNames(), savedRecipe);
 
         return recipeMapper.recipeToDTO(savedRecipe);
+    }
+
+    @Override
+    public RecipeDTO saveRecipeByMemberId(String memberId, RecipeDTO recipeDTO) {   //제작한 멤버id를 명시하여 저장
+        memberDao.findById(memberId);   //존재 x 멤버는 예외 발생
+
+        RecipeDTO savedRecipeDTO = this.save(recipeDTO);
+        this.setProducerMemberIByRecipeId(savedRecipeDTO.getId(), memberId);
+
+        memberDao.addRecipeToMember(memberId,savedRecipeDTO);
+
+        log.info("saveRecipeByMemberId ={}",this.findById(savedRecipeDTO.getId()));
+        return this.findById(savedRecipeDTO.getId());
     }
 
     private Recipe getRecipeById(String id){
@@ -102,7 +120,7 @@ public class RecipeDaoImpl implements RecipeDao {
     }
 
     @Override
-    public void updateRecipeById(String targetId, Recipe updateData) {
+    public void updateRecipeById(String targetId, RecipeDTO updateDataDTO) {
         Recipe targetRecipe = this.getRecipeById(targetId);  //존재하지 않는 id면 여기서 예외 처리됨
         deleteReferenceWithIngredients(targetRecipe);
 
@@ -110,14 +128,14 @@ public class RecipeDaoImpl implements RecipeDao {
         query.addCriteria(Criteria.where("id").is(targetId));
 
         Update update = new Update();
-        update.set("name", updateData.getName());
-        update.set("type", updateData.getType());
-        update.set("ingredientNames", updateData.getIngredientNames());
+        update.set("name", updateDataDTO.getName());
+        update.set("type", updateDataDTO.getType());
+        update.set("ingredientNames", updateDataDTO.getIngredientNames());
         template.updateMulti(query, update, Recipe.class);
 
-        setReferenceWithIngredientsByName(updateData.getIngredientNames(), targetRecipe);   //연관 관계 다시 맵핑
+        setReferenceWithIngredientsByName(updateDataDTO.getIngredientNames(), targetRecipe);   //연관 관계 다시 맵핑
 
-        log.info("update id={} to recipe data ={}", targetId, updateData);
+        log.info("update id={} to recipe data ={}", targetId, updateDataDTO);
     }
 
     @Override
