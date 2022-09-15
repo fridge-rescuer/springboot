@@ -9,6 +9,7 @@ import java.time.LocalDate;
 @Builder
 @EqualsAndHashCode
 @Getter
+@Setter
 @ToString
 public class ExpirationDataDTO {
 
