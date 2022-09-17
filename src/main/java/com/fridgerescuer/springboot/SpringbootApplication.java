@@ -1,6 +1,7 @@
 package com.fridgerescuer.springboot;
 
 import com.fridgerescuer.springboot.config.Config;
+import com.fridgerescuer.springboot.secu.InitDataSet;
 import lombok.extern.slf4j.Slf4j;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,6 +17,8 @@ public class SpringbootApplication implements CommandLineRunner {
 
 	@Autowired
 	private  DBConverter dbConverter;
+	@Autowired
+	private InitDataSet initDataSet;
 
 	public static void main(String[] args) {
 		SpringApplication.run(SpringbootApplication.class, args);
@@ -30,7 +33,7 @@ public class SpringbootApplication implements CommandLineRunner {
 		//convertRecipeJsonToDocument();
 
 		//dbConverter.injectRecipeToIngredient();
-
+		//initDataSet.setData();
 
 		log.info("==서버 초기 동작 끝~==");
 	}
