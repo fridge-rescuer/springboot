@@ -6,8 +6,8 @@ import com.fridgerescuer.springboot.data.entity.ExpirationData;
 import com.fridgerescuer.springboot.data.entity.PrivateExpirationData;
 import com.fridgerescuer.springboot.data.repository.ExpirationDataRepository;
 import com.fridgerescuer.springboot.data.repository.PrivateExpirationDataRepository;
+import com.fridgerescuer.springboot.exception.exceptionimpl.IngredientException;
 import com.fridgerescuer.springboot.exception.exceptionimpl.NoSuchExpirationDataException;
-import com.fridgerescuer.springboot.exception.exceptionimpl.NoSuchIngredientException;
 import com.fridgerescuer.springboot.exception.exceptionimpl.NoSuchPrivateExpirationDataException;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -51,7 +51,7 @@ class ExpirationDataDaoTest {
         //존재하지 않는 식재료를 넘긴경우
         IngredientDTO noExistIngredientDTO = IngredientDTO.builder().id("1212").name("목살구이").build();
         assertThatThrownBy(() -> expirationDataDao.updateExpirationDataById("1234", ExpirationDataDTO.builder().ingredientDTO(noExistIngredientDTO).build()))
-                .isInstanceOf(NoSuchIngredientException.class);
+                .isInstanceOf(IngredientException.class);
     }
 
     @Test
