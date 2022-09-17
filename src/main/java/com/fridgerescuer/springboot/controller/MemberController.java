@@ -1,26 +1,27 @@
 package com.fridgerescuer.springboot.controller;
 
+import com.fridgerescuer.springboot.data.vo.ExpirationDataVO;
+import com.fridgerescuer.springboot.data.vo.IngredientVO;
+import com.fridgerescuer.springboot.service.MemberService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
 @Slf4j
+@RequestMapping("/members")
 public class MemberController {
-/*
+
     @Autowired
     private final MemberService memberService;
 
-    @PostMapping("/join")
-    public String memberJoin(@RequestBody @Valid MemberDTO memberToJoin) {
-        memberService.memberJoin(memberToJoin);
-        return "redirect:/login";
+    @PostMapping("/{memberId}/ingredients")
+    public List<ExpirationDataVO> loadMemberIngredients(@PathVariable("memberId") String memberId) {
+        return memberService.loadMemberIngredients(memberId);
     }
 
-    @PostMapping("/login")
-    public MemberResponseDTO memberLogin(@Valid @ModelAttribute LoginForm loginForm) {
-        return memberService.memberLogin(loginForm.getId(), loginForm.getPassword());
-    }
-    */
 }

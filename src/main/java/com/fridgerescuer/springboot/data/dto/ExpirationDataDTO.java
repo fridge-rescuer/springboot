@@ -8,6 +8,7 @@ import java.time.LocalDate;
 @NoArgsConstructor
 @Builder
 @Getter
+@Setter
 @ToString
 public class ExpirationDataDTO {
     private String id;

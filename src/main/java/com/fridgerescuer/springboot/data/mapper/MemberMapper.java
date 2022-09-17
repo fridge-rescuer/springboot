@@ -2,6 +2,7 @@ package com.fridgerescuer.springboot.data.mapper;
 
 import com.fridgerescuer.springboot.data.dto.MemberDTO;
 import com.fridgerescuer.springboot.data.entity.Member;
+import com.fridgerescuer.springboot.data.vo.MemberVO;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.factory.Mappers;
@@ -23,4 +24,5 @@ public interface MemberMapper {
     @Mapping(source = "commentDTOs", target = "comments")
     Member DtoToMember(MemberDTO memberDto);
 
+    MemberVO DtoToMemberVO(MemberDTO memberDTO);
 }
