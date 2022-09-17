@@ -18,11 +18,11 @@ public class IngredientVO {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         IngredientVO that = (IngredientVO) o;
-        return id.equals(that.id) && name.equals(that.name);
+        return Objects.equals(name, that.name);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, name);
+        return Objects.hash(name);
     }
 }

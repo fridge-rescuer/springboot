@@ -1,14 +1,17 @@
 package com.fridgerescuer.springboot.data.dto;
 
 import com.fridgerescuer.springboot.data.entity.Recipe;
-import lombok.Builder;
-import lombok.Getter;
+import lombok.*;
 
 import java.util.List;
 
 
-@Builder
 @Getter
+@Setter
+@ToString
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class IngredientDTO {
     private String id;
     private String name;
