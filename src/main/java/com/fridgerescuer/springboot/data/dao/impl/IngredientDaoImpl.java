@@ -4,6 +4,7 @@ import com.fridgerescuer.springboot.data.dao.IngredientDao;
 import com.fridgerescuer.springboot.data.dto.IngredientDTO;
 import com.fridgerescuer.springboot.data.dto.RecipeDTO;
 import com.fridgerescuer.springboot.data.entity.Ingredient;
+import com.fridgerescuer.springboot.data.entity.Recipe;
 import com.fridgerescuer.springboot.data.mapper.IngredientMapper;
 import com.fridgerescuer.springboot.data.mapper.RecipeMapper;
 import com.fridgerescuer.springboot.data.repository.IngredientRepository;
@@ -20,6 +21,7 @@ import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
 import java.util.Optional;
 
 @Slf4j
@@ -41,7 +43,7 @@ public class IngredientDaoImpl implements IngredientDao {
         Optional<Ingredient> foundIngredient = repository.findById(ingredientId);
 
         if(foundIngredient.isEmpty()){
-            throw new NoSuchIngredientException( new NullPointerException("no such ingredient id in Repository, id=" + ingredientId));
+            throw new IngredientException(IngredientError.NOT_EXIST);
         }
     }
 
@@ -89,7 +91,7 @@ public class IngredientDaoImpl implements IngredientDao {
         List<Ingredient> foundIngredients = template.find(query, Ingredient.class);
 
         if(foundIngredients.isEmpty()){
-            throw new NoSuchIngredientException( new NullPointerException("no such ingredient containName in Repository, containName=" + containName));
+            throw new IngredientException(IngredientError.NOT_EXIST);
         }
 
         return ingredientMapper.ingredientListToDtoList(foundIngredients);
