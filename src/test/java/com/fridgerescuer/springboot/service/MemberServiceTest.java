@@ -18,13 +18,6 @@ public class MemberServiceTest {
 
     @Autowired
     private MemberService memberService;
-    @Autowired
-    private MemberRepository memberRepository;
-
-    @BeforeEach
-    void beforeEach(){
-        memberRepository.deleteAll();
-    }
 
     @Test
     void memberJoin() throws Exception {
