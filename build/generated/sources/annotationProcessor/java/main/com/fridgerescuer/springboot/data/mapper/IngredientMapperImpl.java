@@ -1,32 +1,22 @@
 package com.fridgerescuer.springboot.data.mapper;
 
 import com.fridgerescuer.springboot.data.dto.IngredientDTO;
-import com.fridgerescuer.springboot.data.dto.IngredientResponseDTO;
+import com.fridgerescuer.springboot.data.dto.RecipeDTO;
 import com.fridgerescuer.springboot.data.entity.Ingredient;
+import com.fridgerescuer.springboot.data.entity.Recipe;
+import com.fridgerescuer.springboot.data.vo.IngredientVO;
 import java.util.ArrayList;
 import java.util.List;
 import javax.annotation.processing.Generated;
 
 @Generated(
     value = "org.mapstruct.ap.MappingProcessor",
-    date = "2022-09-04T21:43:35+0900",
+    date = "2022-09-15T13:16:11+0900",
     comments = "version: 1.5.2.Final, compiler: IncrementalProcessingEnvironment from gradle-language-java-7.5.jar, environment: Java 11.0.13 (Oracle Corporation)"
 )
 public class IngredientMapperImpl implements IngredientMapper {
 
-    @Override
-    public IngredientDTO ingredientToDTO(Ingredient ingredient) {
-        if ( ingredient == null ) {
-            return null;
-        }
-
-        IngredientDTO.IngredientDTOBuilder ingredientDTO = IngredientDTO.builder();
-
-        ingredientDTO.id( ingredient.getId() );
-        ingredientDTO.name( ingredient.getName() );
-
-        return ingredientDTO.build();
-    }
+    private final RecipeMapper recipeMapper = RecipeMapper.INSTANCE;
 
     @Override
     public Ingredient DTOtoIngredient(IngredientDTO ingredientDTO) {
@@ -36,6 +26,7 @@ public class IngredientMapperImpl implements IngredientMapper {
 
         Ingredient.IngredientBuilder ingredient = Ingredient.builder();
 
+        ingredient.recipes( recipeDTOListToRecipeList( ingredientDTO.getRecipeDTOs() ) );
         ingredient.id( ingredientDTO.getId() );
         ingredient.name( ingredientDTO.getName() );
 
@@ -43,17 +34,20 @@ public class IngredientMapperImpl implements IngredientMapper {
     }
 
     @Override
-    public IngredientResponseDTO ingredientToResponseDTO(Ingredient ingredient) {
-        if ( ingredient == null ) {
+    public IngredientVO DtoToIngredientVO(IngredientDTO ingredientDTO) {
+        if ( ingredientDTO == null ) {
             return null;
         }
 
-        IngredientResponseDTO.IngredientResponseDTOBuilder ingredientResponseDTO = IngredientResponseDTO.builder();
+        String id = null;
+        String name = null;
 
-        ingredientResponseDTO.id( ingredient.getId() );
-        ingredientResponseDTO.name( ingredient.getName() );
+        id = ingredientDTO.getId();
+        name = ingredientDTO.getName();
 
-        return ingredientResponseDTO.build();
+        IngredientVO ingredientVO = new IngredientVO( id, name );
+
+        return ingredientVO;
     }
 
     @Override
@@ -71,6 +65,21 @@ public class IngredientMapperImpl implements IngredientMapper {
     }
 
     @Override
+    public IngredientDTO ingredientToDTO(Ingredient ingredient) {
+        if ( ingredient == null ) {
+            return null;
+        }
+
+        IngredientDTO.IngredientDTOBuilder ingredientDTO = IngredientDTO.builder();
+
+        ingredientDTO.recipeDTOs( recipeMapper.recipeListToDTOList( ingredient.getRecipes() ) );
+        ingredientDTO.id( ingredient.getId() );
+        ingredientDTO.name( ingredient.getName() );
+
+        return ingredientDTO.build();
+    }
+
+    @Override
     public List<IngredientDTO> ingredientListToDtoList(List<Ingredient> ingredients) {
         if ( ingredients == null ) {
             return null;
@@ -84,44 +93,16 @@ public class IngredientMapperImpl implements IngredientMapper {
         return list;
     }
 
-    @Override
-    public List<IngredientDTO> responseDTOListToDTOList(List<IngredientResponseDTO> ingredientResponseDTOs) {
-        if ( ingredientResponseDTOs == null ) {
+    protected List<Recipe> recipeDTOListToRecipeList(List<RecipeDTO> list) {
+        if ( list == null ) {
             return null;
         }
 
-        List<IngredientDTO> list = new ArrayList<IngredientDTO>( ingredientResponseDTOs.size() );
-        for ( IngredientResponseDTO ingredientResponseDTO : ingredientResponseDTOs ) {
-            list.add( ingredientResponseDTOToIngredientDTO( ingredientResponseDTO ) );
+        List<Recipe> list1 = new ArrayList<Recipe>( list.size() );
+        for ( RecipeDTO recipeDTO : list ) {
+            list1.add( recipeMapper.DTOtoRecipe( recipeDTO ) );
         }
 
-        return list;
-    }
-
-    @Override
-    public List<IngredientResponseDTO> dtoListToResponseDtoList(List<Ingredient> ingredients) {
-        if ( ingredients == null ) {
-            return null;
-        }
-
-        List<IngredientResponseDTO> list = new ArrayList<IngredientResponseDTO>( ingredients.size() );
-        for ( Ingredient ingredient : ingredients ) {
-            list.add( ingredientToResponseDTO( ingredient ) );
-        }
-
-        return list;
-    }
-
-    protected IngredientDTO ingredientResponseDTOToIngredientDTO(IngredientResponseDTO ingredientResponseDTO) {
-        if ( ingredientResponseDTO == null ) {
-            return null;
-        }
-
-        IngredientDTO.IngredientDTOBuilder ingredientDTO = IngredientDTO.builder();
-
-        ingredientDTO.id( ingredientResponseDTO.getId() );
-        ingredientDTO.name( ingredientResponseDTO.getName() );
-
-        return ingredientDTO.build();
+        return list1;
     }
 }

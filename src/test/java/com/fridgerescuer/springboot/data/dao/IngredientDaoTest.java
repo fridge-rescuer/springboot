@@ -2,7 +2,7 @@ package com.fridgerescuer.springboot.data.dao;
 
 import com.fridgerescuer.springboot.data.dto.IngredientDTO;
 import com.fridgerescuer.springboot.data.repository.IngredientRepository;
-import com.fridgerescuer.springboot.exception.exceptionimpl.NoSuchIngredientException;
+import com.fridgerescuer.springboot.exception.exceptionimpl.IngredientException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -47,11 +47,11 @@ class IngredientDaoTest {
         //then
         ingredientDao.deleteById(savedIngredient.getId());
         assertThatThrownBy(() -> ingredientDao.findById(savedIngredient.getId()))
-                .isInstanceOf(NoSuchIngredientException.class);
+                .isInstanceOf(IngredientException.class);
 
         //존재하지 않는 id를 삭제하는 경우
         assertThatThrownBy(() -> ingredientDao.deleteById("1234560"))
-                .isInstanceOf(NoSuchIngredientException.class);
+                .isInstanceOf(IngredientException.class);
 
     }
 
@@ -91,7 +91,7 @@ class IngredientDaoTest {
 
         ingredientDao.save(ingredientDTO);
         assertThatThrownBy(() ->ingredientDao.findByName("양파"))
-                .isInstanceOf(NoSuchIngredientException.class);
+                .isInstanceOf(IngredientException.class);
     }
 
     @Test

@@ -24,7 +24,7 @@ public class MemberDTO {
     @NotBlank(message = "이름을 입력해주세요")
     private String name;
 
-//    @Pattern(regexp="(?=.*[a-zA-Z])(?=.*[0-9]).{8,20}", message = "1개 이상의 영문자와 숫자가 포함된 8자리 이상의 비밀번호를 입력해주세요")
+    @Pattern(regexp="(?=.*[a-zA-Z])(?=.*[0-9]).{8,20}", message = "1개 이상의 영문자와 숫자가 포함된 8자리 이상의 비밀번호를 입력해주세요")
     @NotBlank
     private String password;
 
