@@ -1,6 +1,7 @@
 package com.fridgerescuer.springboot.service.impl;
 
 import com.fridgerescuer.springboot.data.dao.MemberDao;
+import com.fridgerescuer.springboot.data.dto.ExpirationDataDTO;
 import com.fridgerescuer.springboot.data.dto.MemberDTO;
 import com.fridgerescuer.springboot.data.mapper.ExpirationDataMapper;
 import com.fridgerescuer.springboot.data.mapper.MemberMapper;
@@ -89,20 +90,17 @@ public class MemberServiceImpl implements MemberService {
 
     @Override
     public List<ExpirationDataVO> loadMemberIngredients(String memberId) {
-        MemberDTO memberDTO = findMemberById(memberId);
-        List<ExpirationDataVO> result = new ArrayList<>();
+        return combineExpirationData(memberId).stream().map(data -> ExpirationDataMapper.INSTANCE.DTOtoVO(data)).collect(Collectors.toList());
+    }
 
-        result.addAll(memberDTO.getExpirationDataDTOList()
-                .stream()
-                .map(data -> ExpirationDataMapper.INSTANCE.DTOtoVO(data))
-                .collect(Collectors.toList()));
+    private List<ExpirationDataDTO> combineExpirationData(String memberId) {
+        MemberDTO memberDTO = memberDao.findById(memberId);
 
-        result.addAll(memberDTO.getPrivateExpirationDataDTOList()
-                .stream()
-                .map(data -> ExpirationDataMapper.INSTANCE.DTOtoVO(data))
-                .collect(Collectors.toList()));
+        List<ExpirationDataDTO> list = new ArrayList<>();
+        list.addAll(memberDTO.getExpirationDataDTOList());
+        list.addAll(memberDTO.getPrivateExpirationDataDTOList());
 
-        return result;
+        return list;
     }
 
 
