@@ -1,5 +1,6 @@
 package com.fridgerescuer.springboot.service.impl;
 
+import com.fridgerescuer.springboot.data.dao.ExpirationDataDao;
 import com.fridgerescuer.springboot.data.dao.IngredientDao;
 import com.fridgerescuer.springboot.data.dao.MemberDao;
 import com.fridgerescuer.springboot.data.dto.ExpirationDataDTO;
@@ -15,6 +16,7 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -24,6 +26,8 @@ public class IngredientServiceImpl implements IngredientService {
     private final IngredientDao ingredientDao;  //언제든지 구현체를 대체가능하게 변경
     @Autowired
     private final MemberDao memberDao;
+    @Autowired
+    private final ExpirationDataDao expirationDataDao;
 
     public ExpirationDataDTO createExpirationDataList(IngredientDTO ingredient, LocalDate date, boolean isNoExpiration) {
         return ExpirationDataDTO.builder().ingredientDTO(ingredient).expirationDate(date).isNoExpiration(isNoExpiration).build();
@@ -41,11 +45,15 @@ public class IngredientServiceImpl implements IngredientService {
     }
 
     @Override
-    public void addExistingIngredient(MemberDTO memberDTO, IngredientDTO ingredientDTO, LocalDate date, boolean isNoExpiration) {
-        ExpirationDataDTO data = createExpirationDataList(ingredientDTO, date, isNoExpiration);
+    public ExpirationDataDTO addExistingIngredient(String memberId, String ingredientId, LocalDate date, boolean isNoExpiration) {
+        IngredientDTO ingredient = ingredientDao.findById(ingredientId);
+        MemberDTO memberDTO = memberDao.findById(memberId);
+        ExpirationDataDTO data = createExpirationDataList(ingredient, date, isNoExpiration);
         List<ExpirationDataDTO> list = new ArrayList<>();
         list.add(data);
         memberDao.addExpirationDataToMember(memberDTO.getId(), list);
+
+        return data;
     }
 
     @Override
@@ -61,21 +69,38 @@ public class IngredientServiceImpl implements IngredientService {
         return IngredientMapper.INSTANCE.DtoToIngredientVO(foundIngredient);
     }
 
-    //dao 개발 후 재구현
-//    @Override
-//    public void deleteIngredient(String expirationDataId, String memberId) {
-//        MemberDTO member = memberDao.findById(memberId);
-//        ExpirationDataDTO expirationDataDTO = member.getExpirationDataDTOList().stream().filter(data -> data.getExpirationId().equals(expirationDataId));
-//        memberDao.deleteExpirationData(expirationDataDTO, member);
-//    }
+    @Override
+    public void deleteIngredient(String expirationDataId) {
+        expirationDataDao.deletePrivateExpirationDataById(expirationDataId);
+    }
 
-    //dao 개발 후 재구현
-//    @Override
-//    public ExpirationDataDTO updateIngredient(ExpirationDataDTO newData, String memberId) {
-//    }
+    @Override
+    public ExpirationDataDTO updateIngredient(ExpirationDataDTO newData) {
+        expirationDataDao.updateExpirationDataById(newData.getId(), newData);
+
+        return newData;
+    }
 
     //jwt 개발 후 재구현
-//    public ExpirationDataDTO getExpirationData() {}
+    @Override
+    public Optional<ExpirationDataDTO> findExpirationData(String memberId, String ingredientName) {
+        return combineExpirationData(memberId)
+                .stream()
+                .filter(data -> data.getIngredientDTO().getName().equals(ingredientName))
+                .findFirst();
+    }
+
+    private List<ExpirationDataDTO> combineExpirationData(String memberId) {
+        MemberDTO memberDTO = memberDao.findById(memberId);
+
+        List<ExpirationDataDTO> list = new ArrayList<>();
+        list.addAll(memberDTO.getExpirationDataDTOList());
+        list.addAll(memberDTO.getPrivateExpirationDataDTOList());
+
+        return list;
+    }
+
+
 
     /**
      * 이거는 식재료 DB가 정상적인걸로 되면 다시 구현

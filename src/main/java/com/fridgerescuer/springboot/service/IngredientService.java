@@ -7,20 +7,23 @@ import com.fridgerescuer.springboot.data.dto.MemberDTO;
 import com.fridgerescuer.springboot.data.vo.IngredientVO;
 
 import java.time.LocalDate;
+import java.util.Optional;
 
 public interface IngredientService {
     ExpirationDataDTO addCustomIngredient(String memberId, IngredientDTO ingredientDTO, LocalDate date, boolean isNoExpiration);
-    void addExistingIngredient(MemberDTO memberDTO, IngredientDTO ingredientDTO, LocalDate date, boolean isNoExpiration);
+    ExpirationDataDTO addExistingIngredient(String memberId, String ingredientId, LocalDate date, boolean isNoExpiration);
+
     IngredientVO findIngredientByName(String name);
 
     IngredientVO findIngredientById(String id);
 
-    //jwt 개발 후 재구현
-//    ExpirationDataDTO getExpirationData();
+    void deleteIngredient(String expirationDataId);
+    ExpirationDataDTO updateIngredient(ExpirationDataDTO newData);
+
+    Optional<ExpirationDataDTO> findExpirationData(String memberId, String ingredientName);
+
 
     //dao 개발 후 재구현
-//    void deleteIngredient(String expirationDataId, String memberId);
-//    ExpirationDataDTO updateIngredient(ExpirationDataDTO newData, String memberId);
 //    List<IngredientVO> loadAllIngredients();
 
 }
