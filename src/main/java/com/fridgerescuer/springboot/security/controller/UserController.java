@@ -1,7 +1,7 @@
-package com.fridgerescuer.springboot.secu.controller;
+package com.fridgerescuer.springboot.security.controller;
 
 import com.fridgerescuer.springboot.data.dto.MemberDTO;
-import com.fridgerescuer.springboot.secu.service.UserService;
+import com.fridgerescuer.springboot.security.service.UserService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;

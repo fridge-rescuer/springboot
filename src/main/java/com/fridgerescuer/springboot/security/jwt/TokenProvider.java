@@ -1,4 +1,4 @@
-package com.fridgerescuer.springboot.secu.jwt;
+package com.fridgerescuer.springboot.security.jwt;
 
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.io.Decoders;

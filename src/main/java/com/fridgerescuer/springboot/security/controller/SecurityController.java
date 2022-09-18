@@ -1,4 +1,4 @@
-package com.fridgerescuer.springboot.secu.controller;
+package com.fridgerescuer.springboot.security.controller;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;

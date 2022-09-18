@@ -1,4 +1,4 @@
-package com.fridgerescuer.springboot.secu.util;
+package com.fridgerescuer.springboot.security.util;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

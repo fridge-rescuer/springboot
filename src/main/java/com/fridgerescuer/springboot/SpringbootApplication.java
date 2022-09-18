@@ -1,7 +1,7 @@
 package com.fridgerescuer.springboot;
 
 import com.fridgerescuer.springboot.config.Config;
-import com.fridgerescuer.springboot.secu.InitDataSet;
+import com.fridgerescuer.springboot.security.InitDataSet;
 import lombok.extern.slf4j.Slf4j;
 
 import org.springframework.beans.factory.annotation.Autowired;

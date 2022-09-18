@@ -1,7 +1,7 @@
-package com.fridgerescuer.springboot.secu.dto;
+package com.fridgerescuer.springboot.security.dto;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fridgerescuer.springboot.secu.entity.User;
+import com.fridgerescuer.springboot.security.entity.User;
 import lombok.*;
 
 import javax.validation.constraints.NotNull;

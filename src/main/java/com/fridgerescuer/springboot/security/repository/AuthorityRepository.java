@@ -1,6 +1,6 @@
-package com.fridgerescuer.springboot.secu.repository;
+package com.fridgerescuer.springboot.security.repository;
 
-import com.fridgerescuer.springboot.secu.entity.Authority;
+import com.fridgerescuer.springboot.security.entity.Authority;
 import org.springframework.data.mongodb.repository.MongoRepository;
 
 

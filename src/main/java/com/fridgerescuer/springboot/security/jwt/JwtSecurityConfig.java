@@ -1,4 +1,4 @@
-package com.fridgerescuer.springboot.secu.jwt;
+package com.fridgerescuer.springboot.security.jwt;
 
 //TokenProvider, JwtFilter를 SecurityConfig에 적용
 import org.springframework.security.config.annotation.SecurityConfigurerAdapter;

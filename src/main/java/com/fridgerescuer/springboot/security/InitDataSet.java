@@ -1,10 +1,9 @@
-package com.fridgerescuer.springboot.secu;
+package com.fridgerescuer.springboot.security;
 
-import com.fridgerescuer.springboot.data.entity.Member;
-import com.fridgerescuer.springboot.secu.entity.Authority;
-import com.fridgerescuer.springboot.secu.entity.User;
-import com.fridgerescuer.springboot.secu.repository.AuthorityRepository;
-import com.fridgerescuer.springboot.secu.repository.UserRepository;
+import com.fridgerescuer.springboot.security.entity.Authority;
+import com.fridgerescuer.springboot.security.entity.User;
+import com.fridgerescuer.springboot.security.repository.AuthorityRepository;
+import com.fridgerescuer.springboot.security.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;

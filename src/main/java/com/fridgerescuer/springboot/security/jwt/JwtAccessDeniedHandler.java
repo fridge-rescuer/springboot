@@ -1,4 +1,4 @@
-package com.fridgerescuer.springboot.secu.jwt;
+package com.fridgerescuer.springboot.security.jwt;
 
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.web.access.AccessDeniedHandler;

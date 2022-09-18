@@ -1,4 +1,4 @@
-package com.fridgerescuer.springboot.secu.service;
+package com.fridgerescuer.springboot.security.service;
 
 import com.fridgerescuer.springboot.data.entity.Member;
 import com.fridgerescuer.springboot.data.repository.MemberRepository;

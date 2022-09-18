@@ -1,4 +1,4 @@
-package com.fridgerescuer.springboot.secu.entity;
+package com.fridgerescuer.springboot.security.entity;
 
 import lombok.*;
 import org.springframework.data.annotation.Id;

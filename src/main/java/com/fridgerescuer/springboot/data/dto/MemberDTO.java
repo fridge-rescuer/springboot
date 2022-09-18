@@ -1,16 +1,10 @@
 package com.fridgerescuer.springboot.data.dto;
 
-import com.fridgerescuer.springboot.data.entity.Comment;
 import com.fridgerescuer.springboot.data.entity.Member;
-import com.fridgerescuer.springboot.data.entity.PrivateExpirationData;
-import com.fridgerescuer.springboot.secu.dto.AuthorityDto;
-import com.fridgerescuer.springboot.secu.dto.UserDto;
+import com.fridgerescuer.springboot.security.dto.AuthorityDto;
 import lombok.*;
-import com.fridgerescuer.springboot.data.entity.ExpirationData;
 
 import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotEmpty;
-import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 import java.util.List;
 import java.util.Set;

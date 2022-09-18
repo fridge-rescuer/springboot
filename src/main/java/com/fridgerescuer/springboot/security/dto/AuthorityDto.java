@@ -1,4 +1,4 @@
-package com.fridgerescuer.springboot.secu.dto;
+package com.fridgerescuer.springboot.security.dto;
 import lombok.*;
 
 @Getter

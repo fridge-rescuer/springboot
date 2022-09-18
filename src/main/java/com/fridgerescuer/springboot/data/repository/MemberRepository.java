@@ -1,7 +1,6 @@
 package com.fridgerescuer.springboot.data.repository;
 
 import com.fridgerescuer.springboot.data.entity.Member;
-import com.fridgerescuer.springboot.secu.entity.User;
 import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.mongodb.repository.MongoRepository;
 

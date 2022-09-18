@@ -1,17 +1,15 @@
-package com.fridgerescuer.springboot.secu.service;
+package com.fridgerescuer.springboot.security.service;
 
 import java.util.Collections;
-import java.util.Optional;
 
 import com.fridgerescuer.springboot.data.dao.MemberDao;
 import com.fridgerescuer.springboot.data.dto.MemberDTO;
 import com.fridgerescuer.springboot.data.entity.Member;
 import com.fridgerescuer.springboot.data.repository.MemberRepository;
-import com.fridgerescuer.springboot.secu.entity.Authority;
-import com.fridgerescuer.springboot.secu.exception.DuplicateMemberException;
-import com.fridgerescuer.springboot.secu.exception.NotFoundMemberException;
-import com.fridgerescuer.springboot.secu.repository.UserRepository;
-import com.fridgerescuer.springboot.secu.util.SecurityUtil;
+import com.fridgerescuer.springboot.security.entity.Authority;
+import com.fridgerescuer.springboot.security.exception.DuplicateMemberException;
+import com.fridgerescuer.springboot.security.exception.NotFoundMemberException;
+import com.fridgerescuer.springboot.security.util.SecurityUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;

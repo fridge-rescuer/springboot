@@ -1,9 +1,9 @@
-package com.fridgerescuer.springboot.secu.controller;
+package com.fridgerescuer.springboot.security.controller;
 
-import com.fridgerescuer.springboot.secu.dto.LoginDto;
-import com.fridgerescuer.springboot.secu.dto.TokenDto;
-import com.fridgerescuer.springboot.secu.jwt.JwtFilter;
-import com.fridgerescuer.springboot.secu.jwt.TokenProvider;
+import com.fridgerescuer.springboot.security.dto.LoginDto;
+import com.fridgerescuer.springboot.security.dto.TokenDto;
+import com.fridgerescuer.springboot.security.jwt.JwtFilter;
+import com.fridgerescuer.springboot.security.jwt.TokenProvider;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -19,7 +19,7 @@ import org.springframework.web.bind.annotation.RestController;
 import javax.validation.Valid;
 
 @RestController
-@RequestMapping("/api")
+@RequestMapping("/security")
 public class AuthController {
     private final TokenProvider tokenProvider;
     private final AuthenticationManagerBuilder authenticationManagerBuilder;

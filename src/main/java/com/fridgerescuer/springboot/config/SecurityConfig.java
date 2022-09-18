@@ -1,9 +1,9 @@
 package com.fridgerescuer.springboot.config;
 
-import com.fridgerescuer.springboot.secu.jwt.JwtAccessDeniedHandler;
-import com.fridgerescuer.springboot.secu.jwt.JwtAuthenticationEntryPoint;
-import com.fridgerescuer.springboot.secu.jwt.JwtSecurityConfig;
-import com.fridgerescuer.springboot.secu.jwt.TokenProvider;
+import com.fridgerescuer.springboot.security.jwt.JwtAccessDeniedHandler;
+import com.fridgerescuer.springboot.security.jwt.JwtAuthenticationEntryPoint;
+import com.fridgerescuer.springboot.security.jwt.JwtSecurityConfig;
+import com.fridgerescuer.springboot.security.jwt.TokenProvider;
 import org.springframework.context.annotation.Bean;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -72,9 +72,10 @@ public class SecurityConfig {
                 .sessionManagement()
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
 
-                //로그인과 회원가입은 토큰이 없는 상태에서 요청하므로 허가함
+                //토큰이 없는 상태에서도 요청할 수 있는 URL 목록
                 .and()
                 .authorizeRequests()
+                .antMatchers("/").permitAll()
                 .antMatchers("/api/hello").permitAll()
                 .antMatchers("/api/authenticate").permitAll()
                 .antMatchers("/api/signup").permitAll()

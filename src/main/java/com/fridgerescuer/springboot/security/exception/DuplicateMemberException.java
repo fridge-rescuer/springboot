@@ -1,4 +1,4 @@
-package com.fridgerescuer.springboot.secu.exception;
+package com.fridgerescuer.springboot.security.exception;
 
 public class DuplicateMemberException extends RuntimeException {
     public DuplicateMemberException() {
