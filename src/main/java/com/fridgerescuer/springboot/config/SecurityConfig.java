@@ -78,7 +78,8 @@ public class SecurityConfig {
                 .antMatchers("/").permitAll()
                 .antMatchers("/api/hello").permitAll()
                 .antMatchers("/api/authenticate").permitAll()
-                .antMatchers("/api/signup").permitAll()
+                .antMatchers("/security/signin").permitAll()
+                .antMatchers("/security/signup").permitAll()
 
                 .anyRequest().authenticated()
 
