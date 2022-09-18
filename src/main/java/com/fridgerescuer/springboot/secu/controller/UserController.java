@@ -1,6 +1,6 @@
 package com.fridgerescuer.springboot.secu.controller;
 
-import com.fridgerescuer.springboot.secu.dto.UserDto;
+import com.fridgerescuer.springboot.data.dto.MemberDTO;
 import com.fridgerescuer.springboot.secu.service.UserService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -28,23 +28,23 @@ public class UserController {
 
     //회원가입
     @PostMapping("/signup")
-    public ResponseEntity<UserDto> signup(
-            @Valid @RequestBody UserDto userDto
+    public ResponseEntity<MemberDTO> signup(
+            @Valid @RequestBody MemberDTO memberDTO
     ) {
-        return ResponseEntity.ok(userService.signup(userDto));
+        return ResponseEntity.ok(userService.signup(memberDTO));
     }
 
     //'USER','ADMIN' 두가지 권한 모두 호출 가능한 api
     @GetMapping("/user")
     @PreAuthorize("hasAnyRole('USER','ADMIN')")
-    public ResponseEntity<UserDto> getMyUserInfo(HttpServletRequest request) {
+    public ResponseEntity<MemberDTO> getMyUserInfo(HttpServletRequest request) {
         return ResponseEntity.ok(userService.getMyUserWithAuthorities());
     }
 
     //'ADMIN' 권한만 가능한 호출 가능한 api
     @GetMapping("/user/{username}")
     @PreAuthorize("hasAnyRole('ADMIN')")
-    public ResponseEntity<UserDto> getUserInfo(@PathVariable String username) {
+    public ResponseEntity<MemberDTO> getUserInfo(@PathVariable String username) {
         return ResponseEntity.ok(userService.getUserWithAuthorities(username));
     }
 }

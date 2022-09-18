@@ -1,7 +1,10 @@
 package com.fridgerescuer.springboot.data.dto;
 
 import com.fridgerescuer.springboot.data.entity.Comment;
+import com.fridgerescuer.springboot.data.entity.Member;
 import com.fridgerescuer.springboot.data.entity.PrivateExpirationData;
+import com.fridgerescuer.springboot.secu.dto.AuthorityDto;
+import com.fridgerescuer.springboot.secu.dto.UserDto;
 import lombok.*;
 import com.fridgerescuer.springboot.data.entity.ExpirationData;
 
@@ -10,6 +13,8 @@ import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 @Getter
 @Setter
@@ -34,4 +39,17 @@ public class MemberDTO {
     private List<RecipeDTO> recipeDTOs;
 
     private List<CommentDTO> commentDTOs;
+
+    private Set<AuthorityDto> authorityDtoSet;
+
+    public static MemberDTO from(Member member) {
+        if(member == null) return null;
+
+        return MemberDTO.builder()
+                .id(member.getId())
+                .authorityDtoSet(member.getAuthorities().stream()
+                        .map(authority -> AuthorityDto.builder().authorityName(authority.getAuthorityName()).build())
+                        .collect(Collectors.toSet()))
+                .build();
+    }
 }

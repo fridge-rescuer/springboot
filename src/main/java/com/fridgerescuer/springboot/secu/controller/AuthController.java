@@ -36,7 +36,7 @@ public class AuthController {
 
         //받아온 post파라미터로 생성
         UsernamePasswordAuthenticationToken authenticationToken =
-                new UsernamePasswordAuthenticationToken(loginDto.getUsername(), loginDto.getPassword());
+                new UsernamePasswordAuthenticationToken(loginDto.getId(), loginDto.getPassword());
 
         //loadUserByUserName이 실행됨
         Authentication authentication = authenticationManagerBuilder.getObject().authenticate(authenticationToken);
