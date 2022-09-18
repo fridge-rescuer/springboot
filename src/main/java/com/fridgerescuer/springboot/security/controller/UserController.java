@@ -4,7 +4,10 @@ import com.fridgerescuer.springboot.data.dto.LoginForm;
 import com.fridgerescuer.springboot.data.dto.MemberDTO;
 import com.fridgerescuer.springboot.security.dto.TokenDto;
 import com.fridgerescuer.springboot.security.jwt.JwtFilter;
+import com.fridgerescuer.springboot.security.jwt.TokenProvider;
 import com.fridgerescuer.springboot.security.service.UserService;
+import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -16,14 +19,14 @@ import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 import java.io.IOException;
 
+@RequiredArgsConstructor
 @RestController
 @RequestMapping("/security")
 public class UserController {
+    @Autowired
     private final UserService userService;
-
-    public UserController(UserService userService) {
-        this.userService = userService;
-    }
+    @Autowired
+    private final TokenProvider tokenProvider;
 
 
     @PostMapping("/test-redirect")
@@ -53,8 +56,12 @@ public class UserController {
     }
 
     @GetMapping("/member")
-    public ResponseEntity<MemberDTO> getMyMemberInfo(HttpServletRequest request) {
-        return ResponseEntity.ok(userService.getMyUserWithAuthorities());
+    public void getMyMemberInfo(HttpServletRequest request) {
+        String bearerToken = request.getHeader("Authorization");
+
+        String token = bearerToken.substring(7);
+
+        tokenProvider.getClaimsFromToken(token);
     }
 
     //'USER','ADMIN' 두가지 권한 모두 호출 가능한 api

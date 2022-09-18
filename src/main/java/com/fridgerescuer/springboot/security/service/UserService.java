@@ -15,6 +15,7 @@ import com.fridgerescuer.springboot.security.exception.DuplicateMemberException;
 import com.fridgerescuer.springboot.security.exception.NotFoundMemberException;
 import com.fridgerescuer.springboot.security.jwt.TokenProvider;
 import com.fridgerescuer.springboot.security.util.SecurityUtil;
+import io.jsonwebtoken.Jwts;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;

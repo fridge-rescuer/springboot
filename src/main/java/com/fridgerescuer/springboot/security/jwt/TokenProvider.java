@@ -3,6 +3,7 @@ package com.fridgerescuer.springboot.security.jwt;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
+import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.InitializingBean;
@@ -15,12 +16,14 @@ import org.springframework.security.core.userdetails.User;
 import org.springframework.stereotype.Component;
 
 import java.security.Key;
+import java.time.Duration;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Date;
 import java.util.stream.Collectors;
 //토큰의 생성, 유효성 검증
 
+@Slf4j
 @Component
 public class TokenProvider implements InitializingBean {
 
@@ -52,6 +55,7 @@ public class TokenProvider implements InitializingBean {
         //토큰 유효기간을 설정정
         long now = (new Date()).getTime();
         Date validity = new Date(now + this.tokenValidityInMilliseconds);
+        //Date validity = new Date(now + Duration.ofMinutes(1).toMillis());   //1분으로 설정시
 
         //jwt토큰 생성해 return
         return Jwts.builder()
@@ -97,5 +101,16 @@ public class TokenProvider implements InitializingBean {
             logger.info("JWT 토큰이 잘못되었습니다.");
         }
         return false;
+    }
+
+    //token 에서 claims 추출(회원 정보 구별)
+    public Claims getClaimsFromToken(String token){
+        //유효성 검사
+        if(!validateToken(token)){
+            throw new JwtException("토큰이 유효하지 않음");
+        }
+
+        JwtParser jwtParser = Jwts.parserBuilder().setSigningKey(key).build();
+        return jwtParser.parseClaimsJws(token).getBody();
     }
 }
