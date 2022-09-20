@@ -83,10 +83,10 @@ public class IngredientServiceImpl implements IngredientService {
 
     //jwt 개발 후 재구현
     @Override
-    public Optional<ExpirationDataDTO> findExpirationData(String memberId, String ingredientName) {
+    public Optional<ExpirationDataDTO> findExpirationData(String memberId, String expirationId) {
         return combineExpirationData(memberId)
                 .stream()
-                .filter(data -> data.getIngredientDTO().getName().equals(ingredientName))
+                .filter(data -> data.getId().equals(expirationId))
                 .findFirst();
     }
 
