@@ -1,14 +1,15 @@
 package com.fridgerescuer.springboot.data.dto;
 
-import lombok.Builder;
-import lombok.Getter;
-import lombok.ToString;
+import lombok.*;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Pattern;
 
-@Builder
 @Getter
+@Setter
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
 @ToString
 public class LoginForm {
 
