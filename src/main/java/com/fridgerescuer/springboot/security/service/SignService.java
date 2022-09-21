@@ -6,6 +6,7 @@ import com.fridgerescuer.springboot.data.dao.MemberDao;
 import com.fridgerescuer.springboot.data.dto.LoginForm;
 import com.fridgerescuer.springboot.data.dto.MemberDTO;
 import com.fridgerescuer.springboot.data.entity.Member;
+import com.fridgerescuer.springboot.data.mapper.MemberMapper;
 import com.fridgerescuer.springboot.data.repository.MemberRepository;
 import com.fridgerescuer.springboot.exception.errorcodeimpl.MemberError;
 import com.fridgerescuer.springboot.exception.exceptionimpl.MemberException;
@@ -15,6 +16,7 @@ import com.fridgerescuer.springboot.security.exception.DuplicateMemberException;
 import com.fridgerescuer.springboot.security.exception.NotFoundMemberException;
 import com.fridgerescuer.springboot.security.jwt.TokenProvider;
 import com.fridgerescuer.springboot.security.util.SecurityUtil;
+import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -44,6 +46,8 @@ public class SignService {
     @Autowired
     private final AuthenticationManagerBuilder authenticationManagerBuilder;
 
+    private final MemberMapper memberMapper = MemberMapper.INSTANCE;
+
     //회원가입 로직
     @Transactional
     public MemberDTO signup(MemberDTO memberDTO) {
@@ -64,7 +68,8 @@ public class SignService {
                 .build();
 
         //from으로 미리 권한을 주입해서 만듬
-        return MemberDTO.from(memberRepository.save(member));
+        return memberMapper.memberToDto(memberRepository.save(member));
+        //return MemberDTO.from(memberRepository.save(member));
     }
 
     @Transactional
@@ -100,15 +105,24 @@ public class SignService {
     }
 
 
+    public String getMemberIdByToken(String jwtToken){
+        Claims claimsFromToken = tokenProvider.getClaimsFromToken(jwtToken);
+
+        return claimsFromToken.getSubject();
+    }
+
+
     //아래는 권한 정보를 가져오는 메서드드
    @Transactional(readOnly = true)  //db에 저장된 정보에 접근
-    public MemberDTO getUserWithAuthorities(String id) {
-        return MemberDTO.from(memberRepository.findOneWithAuthoritiesById(id).orElse(null));
+    public MemberDTO getMemberDtoWithAuthorities(String id) {
+        return memberMapper.memberToDto(memberRepository.findOneWithAuthoritiesById(id).orElse(null));
+        //return MemberDTO.from(memberRepository.findOneWithAuthoritiesById(id).orElse(null));
     }
 
     @Transactional(readOnly = true) //오직 securityContext내에 저장된 데이터에서 username으로 찾음
-    public MemberDTO getMyUserWithAuthorities() {
-        return MemberDTO.from(
+    public MemberDTO getMyMemberWithAuthorities() {
+
+        return memberMapper.memberToDto(
                 SecurityUtil.getCurrentUsername()
                         .flatMap(memberRepository::findOneWithAuthoritiesById)
                         .orElseThrow(() -> new NotFoundMemberException("Member not found"))

@@ -7,7 +7,7 @@ import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.factory.Mappers;
 
-@Mapper( uses = {RecipeMapper.class, ExpirationDataMapper.class, CommentMapper.class})
+@Mapper( uses = {RecipeMapper.class, ExpirationDataMapper.class, CommentMapper.class, AuthorityMapper.class})
 public interface MemberMapper {
     MemberMapper INSTANCE = Mappers.getMapper(MemberMapper.class);
 
@@ -15,6 +15,7 @@ public interface MemberMapper {
     @Mapping(source = "privateExpirationDataList", target = "privateExpirationDataDTOList")
     @Mapping(source = "recipes", target = "recipeDTOs")
     @Mapping(source = "comments", target = "commentDTOs")
+    @Mapping(source = "authorities", target = "authorityDtoSet")
     MemberDTO memberToDto(Member member);
 
 
@@ -22,6 +23,7 @@ public interface MemberMapper {
     @Mapping(source = "privateExpirationDataDTOList", target = "privateExpirationDataList")
     @Mapping(source = "recipeDTOs", target = "recipes")
     @Mapping(source = "commentDTOs", target = "comments")
+    @Mapping(source = "authorityDtoSet", target = "authorities")
     Member DtoToMember(MemberDTO memberDto);
 
     MemberVO DtoToMemberVO(MemberDTO memberDTO);

@@ -2,11 +2,12 @@ package com.fridgerescuer.springboot.data.mapper;
 
 import com.fridgerescuer.springboot.data.dto.*;
 import com.fridgerescuer.springboot.data.entity.*;
+import com.fridgerescuer.springboot.security.dto.AuthorityDto;
+import com.fridgerescuer.springboot.security.entity.Authority;
 import io.swagger.models.auth.In;
 import org.junit.jupiter.api.Test;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 import static org.assertj.core.api.Assertions.*;
 
@@ -113,6 +114,21 @@ class MapperTest {
 
         assertThat(expirationDataDTOList.size()).isEqualTo(3);
         assertThat(expirationDataDTOList.get(2).getIngredientDTO().getName()).isEqualTo(ingredient.getName());
+    }
+
+    @Test
+    void MemberWithAuthorities(){
+        Authority authority = Authority.builder()
+                .authorityName("ROLE_USER")
+                .build();
+
+        Member member = Member.builder().authorities(Collections.singleton(authority)).build();
+
+        MemberDTO memberDTO = memberMapper.memberToDto(member);
+        Set<AuthorityDto> authorityDtoSet = memberDTO.getAuthorityDtoSet();
+
+        Iterator<AuthorityDto> iterator = authorityDtoSet.iterator();
+        assertThat(iterator.next().getAuthorityName()).isEqualTo(authority.getAuthorityName());
     }
 
 }

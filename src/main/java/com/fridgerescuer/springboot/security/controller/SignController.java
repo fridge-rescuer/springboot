@@ -7,6 +7,7 @@ import com.fridgerescuer.springboot.security.jwt.JwtFilter;
 import com.fridgerescuer.springboot.security.jwt.TokenProvider;
 import com.fridgerescuer.springboot.security.service.SignService;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -19,6 +20,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 import java.io.IOException;
 
+@Slf4j
 @RequiredArgsConstructor
 @RestController
 @RequestMapping("/security")
@@ -55,15 +57,20 @@ public class SignController {
         return new ResponseEntity<>(tokenDto, httpHeaders, HttpStatus.OK);
     }
 
-    @GetMapping("/member")
-    public void getMyMemberInfo(HttpServletRequest request) {
-        String bearerToken = request.getHeader("Authorization");
+    @GetMapping("/memberid")
+    @ResponseBody
+    public String getMyMemberId(HttpServletRequest request) {
+        String token = getTokenFromHttpServletRequest(request);
 
-        String token = bearerToken.substring(7);
-
-        tokenProvider.getClaimsFromToken(token);
+        return signService.getMemberIdByToken(token);
     }
 
+    private String getTokenFromHttpServletRequest(HttpServletRequest request){
+        String bearerToken = request.getHeader("Authorization");
+
+        return bearerToken.substring(7);
+    }
+/*
     //'USER','ADMIN' 두가지 권한 모두 호출 가능한 api
     @GetMapping("/user")
     @PreAuthorize("hasAnyRole('USER','ADMIN')")
@@ -76,5 +83,5 @@ public class SignController {
     @PreAuthorize("hasAnyRole('ADMIN')")
     public ResponseEntity<MemberDTO> getUserInfo(@PathVariable String username) {
         return ResponseEntity.ok(signService.getUserWithAuthorities(username));
-    }
+    }*/
 }

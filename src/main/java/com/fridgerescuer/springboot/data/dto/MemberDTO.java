@@ -36,14 +36,4 @@ public class MemberDTO {
 
     private Set<AuthorityDto> authorityDtoSet;
 
-    public static MemberDTO from(Member member) {
-        if(member == null) return null;
-
-        return MemberDTO.builder()
-                .id(member.getId())
-                .authorityDtoSet(member.getAuthorities().stream()
-                        .map(authority -> AuthorityDto.builder().authorityName(authority.getAuthorityName()).build())
-                        .collect(Collectors.toSet()))
-                .build();
-    }
 }
