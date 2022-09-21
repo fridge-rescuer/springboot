@@ -12,8 +12,6 @@ import com.fridgerescuer.springboot.exception.errorcodeimpl.MemberError;
 import com.fridgerescuer.springboot.exception.exceptionimpl.MemberException;
 import com.fridgerescuer.springboot.security.dto.TokenDTO;
 import com.fridgerescuer.springboot.security.entity.Authority;
-import com.fridgerescuer.springboot.security.exception.DuplicateMemberException;
-import com.fridgerescuer.springboot.security.exception.NotFoundMemberException;
 import com.fridgerescuer.springboot.security.jwt.TokenProvider;
 import com.fridgerescuer.springboot.security.util.SecurityUtil;
 import io.jsonwebtoken.Claims;
@@ -51,7 +49,7 @@ public class SignService {
     @Transactional
     public MemberDTO signup(MemberDTO memberDTO) {
         if (memberRepository.findOneWithAuthoritiesById(memberDTO.getId()).orElse(null) != null) {
-            throw new DuplicateMemberException("이미 가입되어 있는 유저입니다.");
+            throw new MemberException(MemberError.DUPLICATE_ID);    //이미 존재하는 아이디
         }
 
         //이미 존재 x인 경우에맘 권한 정보를 넣어서 만듬, 일반 권한
@@ -68,7 +66,6 @@ public class SignService {
 
         //from으로 미리 권한을 주입해서 만듬
         return memberMapper.memberToDto(memberRepository.save(member));
-        //return MemberDTO.from(memberRepository.save(member));
     }
 
     @Transactional
@@ -115,7 +112,6 @@ public class SignService {
    @Transactional(readOnly = true)  //db에 저장된 정보에 접근
     public MemberDTO getMemberDtoWithAuthorities(String id) {
         return memberMapper.memberToDto(memberRepository.findOneWithAuthoritiesById(id).orElse(null));
-        //return MemberDTO.from(memberRepository.findOneWithAuthoritiesById(id).orElse(null));
     }
 
     @Transactional(readOnly = true) //오직 securityContext내에 저장된 데이터에서 username으로 찾음
@@ -124,7 +120,7 @@ public class SignService {
         return memberMapper.memberToDto(
                 SecurityUtil.getCurrentUsername()
                         .flatMap(memberRepository::findOneWithAuthoritiesById)
-                        .orElseThrow(() -> new NotFoundMemberException("Member not found"))
+                        .orElseThrow(() -> new MemberException(MemberError.NOT_EXIST))  //존재 하지 않는 멤버
         );
     }
 }
