@@ -30,7 +30,7 @@ import org.springframework.transaction.annotation.Transactional;
 @Slf4j
 @Service
 @RequiredArgsConstructor
-public class UserService {
+public class SignService {
     @Autowired
     private final MemberDao memberDao;
     @Autowired

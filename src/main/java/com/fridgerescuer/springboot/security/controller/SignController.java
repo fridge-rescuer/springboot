@@ -5,7 +5,7 @@ import com.fridgerescuer.springboot.data.dto.MemberDTO;
 import com.fridgerescuer.springboot.security.dto.TokenDto;
 import com.fridgerescuer.springboot.security.jwt.JwtFilter;
 import com.fridgerescuer.springboot.security.jwt.TokenProvider;
-import com.fridgerescuer.springboot.security.service.UserService;
+import com.fridgerescuer.springboot.security.service.SignService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
@@ -22,9 +22,9 @@ import java.io.IOException;
 @RequiredArgsConstructor
 @RestController
 @RequestMapping("/security")
-public class UserController {
+public class SignController {
     @Autowired
-    private final UserService userService;
+    private final SignService signService;
     @Autowired
     private final TokenProvider tokenProvider;
 
@@ -39,7 +39,7 @@ public class UserController {
     public ResponseEntity<MemberDTO> signup(
             @Valid @RequestBody MemberDTO memberDTO
     ) {
-        return ResponseEntity.ok(userService.signup(memberDTO));
+        return ResponseEntity.ok(signService.signup(memberDTO));
     }
 
     //회원가입
@@ -47,7 +47,7 @@ public class UserController {
     public ResponseEntity<TokenDto> signIn(
             @Valid @RequestBody LoginForm loginForm
     ) {
-        TokenDto tokenDto = userService.singIn(loginForm);  //잘못된 아이디라면 런타입 예외 발생
+        TokenDto tokenDto = signService.singIn(loginForm);  //잘못된 아이디라면 런타입 예외 발생
 
         HttpHeaders httpHeaders = new HttpHeaders();
         httpHeaders.add(JwtFilter.AUTHORIZATION_HEADER, "Bearer " + tokenDto.getToken());
@@ -68,13 +68,13 @@ public class UserController {
     @GetMapping("/user")
     @PreAuthorize("hasAnyRole('USER','ADMIN')")
     public ResponseEntity<MemberDTO> getMyUserInfo(HttpServletRequest request) {
-        return ResponseEntity.ok(userService.getMyUserWithAuthorities());
+        return ResponseEntity.ok(signService.getMyUserWithAuthorities());
     }
 
     //'ADMIN' 권한만 가능한 호출 가능한 api
     @GetMapping("/user/{username}")
     @PreAuthorize("hasAnyRole('ADMIN')")
     public ResponseEntity<MemberDTO> getUserInfo(@PathVariable String username) {
-        return ResponseEntity.ok(userService.getUserWithAuthorities(username));
+        return ResponseEntity.ok(signService.getUserWithAuthorities(username));
     }
 }

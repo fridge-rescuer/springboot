@@ -6,6 +6,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -24,22 +25,22 @@ public class CustomUserDetailsService implements UserDetailsService {
 
     @Override
     @Transactional  //로그인시 DB에서 유저 정보와 권한 정보를 갖옴 -> 활성화 상태시 유저 객체 리턴
-    public UserDetails loadUserByUsername(final String username) {
-        return memberRepository.findOneWithAuthoritiesById(username)
-                .map(user -> createUser(username, user))
-                .orElseThrow(() -> new UsernameNotFoundException(username + " -> 데이터베이스에서 찾을 수 없습니다."));
+    public UserDetails loadUserByUsername(final String userName) {
+        return memberRepository.findOneWithAuthoritiesById(userName)
+                .map(user -> createUser(userName, user))
+                .orElseThrow(() -> new UsernameNotFoundException(userName + " -> 데이터베이스에서 찾을 수 없는 Member 입니다."));
     }
 
-    private org.springframework.security.core.userdetails.User createUser(String username, Member member) {
+    private User createUser(String memberId, Member member) {
         if (!member.isActivated()) {
-            throw new RuntimeException(username + " -> 활성화되어 있지 않습니다.");
+            throw new RuntimeException(memberId + " -> 활성화되어 있지 않습니다.");
         }
 
         List<GrantedAuthority> grantedAuthorities = member.getAuthorities().stream()
                 .map(authority -> new SimpleGrantedAuthority(authority.getAuthorityName()))
                 .collect(Collectors.toList());
 
-        return new org.springframework.security.core.userdetails.User(member.getId(),
+        return new User(member.getId(),
                 member.getPassword(),
                 grantedAuthorities);
     }
