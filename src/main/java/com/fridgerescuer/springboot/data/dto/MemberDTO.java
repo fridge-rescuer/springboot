@@ -1,14 +1,12 @@
 package com.fridgerescuer.springboot.data.dto;
 
-import com.fridgerescuer.springboot.data.entity.Member;
-import com.fridgerescuer.springboot.security.dto.AuthorityDto;
+import com.fridgerescuer.springboot.security.dto.AuthorityDTO;
 import lombok.*;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Pattern;
 import java.util.List;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 @Getter
 @Setter
@@ -34,6 +32,6 @@ public class MemberDTO {
 
     private List<CommentDTO> commentDTOs;
 
-    private Set<AuthorityDto> authorityDtoSet;
+    private Set<AuthorityDTO> authorityDtoSet;
 
 }

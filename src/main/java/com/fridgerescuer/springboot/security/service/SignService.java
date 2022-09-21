@@ -10,14 +10,13 @@ import com.fridgerescuer.springboot.data.mapper.MemberMapper;
 import com.fridgerescuer.springboot.data.repository.MemberRepository;
 import com.fridgerescuer.springboot.exception.errorcodeimpl.MemberError;
 import com.fridgerescuer.springboot.exception.exceptionimpl.MemberException;
-import com.fridgerescuer.springboot.security.dto.TokenDto;
+import com.fridgerescuer.springboot.security.dto.TokenDTO;
 import com.fridgerescuer.springboot.security.entity.Authority;
 import com.fridgerescuer.springboot.security.exception.DuplicateMemberException;
 import com.fridgerescuer.springboot.security.exception.NotFoundMemberException;
 import com.fridgerescuer.springboot.security.jwt.TokenProvider;
 import com.fridgerescuer.springboot.security.util.SecurityUtil;
 import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.Jwts;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -73,7 +72,7 @@ public class SignService {
     }
 
     @Transactional
-    public TokenDto singIn(LoginForm loginForm){
+    public TokenDTO singIn(LoginForm loginForm){
         MemberDTO memberDTO = memberDao.findById(loginForm.getId());
 
         //패스워드 비교
@@ -82,7 +81,7 @@ public class SignService {
         }
         log.info("SingIn Success! id ={}", loginForm.getId());
 
-        TokenDto tokenDto = TokenDto.builder().token(getJwtToken(loginForm)).build();
+        TokenDTO tokenDto = TokenDTO.builder().token(getJwtToken(loginForm)).build();
 
         return tokenDto;
     }

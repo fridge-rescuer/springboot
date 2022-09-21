@@ -2,9 +2,8 @@ package com.fridgerescuer.springboot.data.mapper;
 
 import com.fridgerescuer.springboot.data.dto.*;
 import com.fridgerescuer.springboot.data.entity.*;
-import com.fridgerescuer.springboot.security.dto.AuthorityDto;
+import com.fridgerescuer.springboot.security.dto.AuthorityDTO;
 import com.fridgerescuer.springboot.security.entity.Authority;
-import io.swagger.models.auth.In;
 import org.junit.jupiter.api.Test;
 
 import java.util.*;
@@ -125,9 +124,9 @@ class MapperTest {
         Member member = Member.builder().authorities(Collections.singleton(authority)).build();
 
         MemberDTO memberDTO = memberMapper.memberToDto(member);
-        Set<AuthorityDto> authorityDtoSet = memberDTO.getAuthorityDtoSet();
+        Set<AuthorityDTO> authorityDtoSet = memberDTO.getAuthorityDtoSet();
 
-        Iterator<AuthorityDto> iterator = authorityDtoSet.iterator();
+        Iterator<AuthorityDTO> iterator = authorityDtoSet.iterator();
         assertThat(iterator.next().getAuthorityName()).isEqualTo(authority.getAuthorityName());
     }
 

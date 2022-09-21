@@ -2,7 +2,7 @@ package com.fridgerescuer.springboot.security.controller;
 
 import com.fridgerescuer.springboot.data.dto.LoginForm;
 import com.fridgerescuer.springboot.data.dto.MemberDTO;
-import com.fridgerescuer.springboot.security.dto.TokenDto;
+import com.fridgerescuer.springboot.security.dto.TokenDTO;
 import com.fridgerescuer.springboot.security.jwt.JwtFilter;
 import com.fridgerescuer.springboot.security.jwt.TokenProvider;
 import com.fridgerescuer.springboot.security.service.SignService;
@@ -12,7 +12,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
@@ -46,10 +45,10 @@ public class SignController {
 
     //회원가입
     @PostMapping("/signin")
-    public ResponseEntity<TokenDto> signIn(
+    public ResponseEntity<TokenDTO> signIn(
             @Valid @RequestBody LoginForm loginForm
     ) {
-        TokenDto tokenDto = signService.singIn(loginForm);  //잘못된 아이디라면 런타입 예외 발생
+        TokenDTO tokenDto = signService.singIn(loginForm);  //잘못된 아이디라면 런타입 예외 발생
 
         HttpHeaders httpHeaders = new HttpHeaders();
         httpHeaders.add(JwtFilter.AUTHORIZATION_HEADER, "Bearer " + tokenDto.getToken());
@@ -83,5 +82,29 @@ public class SignController {
     @PreAuthorize("hasAnyRole('ADMIN')")
     public ResponseEntity<MemberDTO> getUserInfo(@PathVariable String username) {
         return ResponseEntity.ok(signService.getUserWithAuthorities(username));
-    }*/
+    }
+
+    @PostMapping("/authenticate")
+    public ResponseEntity<TokenDto> authorize(@Valid @RequestBody LoginDto loginDto) {
+
+        //받아온 post파라미터로 생성
+        UsernamePasswordAuthenticationToken authenticationToken =
+                new UsernamePasswordAuthenticationToken(loginDto.getId(), loginDto.getPassword());
+
+        //loadUserByUserName이 실행됨
+        Authentication authentication = authenticationManagerBuilder.getObject().authenticate(authenticationToken);
+
+        //생성된 authentication를 SecurityContext에 저장
+        SecurityContextHolder.getContext().setAuthentication(authentication);
+
+        //jwt 토큰 생성
+        String jwt = tokenProvider.createToken(authentication);
+
+        //헤더와 바디에 jwt토큰 넣어줌
+        HttpHeaders httpHeaders = new HttpHeaders();
+        httpHeaders.add(JwtFilter.AUTHORIZATION_HEADER, "Bearer " + jwt);
+
+        return new ResponseEntity<>(new TokenDto(jwt), httpHeaders, HttpStatus.OK);
+    }
+    */
 }

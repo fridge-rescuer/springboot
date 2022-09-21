@@ -7,7 +7,7 @@ import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.factory.Mappers;
 
-@Mapper( uses = {RecipeMapper.class, ExpirationDataMapper.class, CommentMapper.class, AuthorityMapper.class})
+@Mapper(uses = {RecipeMapper.class, ExpirationDataMapper.class, CommentMapper.class, AuthorityMapper.class})
 public interface MemberMapper {
     MemberMapper INSTANCE = Mappers.getMapper(MemberMapper.class);
 
