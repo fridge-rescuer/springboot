@@ -12,6 +12,9 @@ import com.mongodb.client.MongoClient;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoCursor;
 import com.mongodb.client.MongoDatabase;
+import com.mongodb.client.model.Filters;
+import com.mongodb.client.model.Updates;
+import com.mongodb.client.result.UpdateResult;
 import lombok.extern.slf4j.Slf4j;
 import org.bson.BsonBinarySubType;
 import org.bson.Document;
@@ -34,6 +37,7 @@ import java.io.InputStream;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 import java.util.StringTokenizer;
 
 import static org.springframework.data.mongodb.core.query.Criteria.where;
@@ -58,6 +62,375 @@ public class DBConverter {
     private GridFsTemplate gridFsTemplate;
     @Autowired
     private GridFsOperations operations;
+
+
+    public void convertNameToCategories(){
+        MongoDatabase mongoDb = mongoClient.getDatabase("test");  //get database, where DBname is the name of your database
+
+        MongoCollection<Document> robosCollection = mongoDb.getCollection("NationalDB_v2"); //get the name of the collection that you want
+
+        MongoCursor<Document> cursor =  robosCollection.find().cursor();//Mongo Cursor interface implementing the iterator protocol
+        int count = 0;
+        while(cursor.hasNext()) {
+            Document doc = cursor.next();
+            String name = doc.getString("name");
+            String[] split = name.split(", ");
+            String representationName = split[0];
+            String largeCategory ="", mediumCategory="", smallCategory="", subCategory="";
+
+            switch (split.length){
+                case 5:
+                    subCategory = split[4];
+                case 4:
+                    smallCategory = split[3];
+                case 3:
+                    mediumCategory = split[2];
+                case 2:
+                    largeCategory = split[1];
+                    break;
+                case 1:
+                    break;
+                default:
+                    log.info("other length detected!!!!");
+            }
+            Object id = doc.get("_id");
+            robosCollection.updateMany(Filters.eq("_id", id), Updates.set("representationName",representationName));
+            robosCollection.updateMany(Filters.eq("_id", id), Updates.set("largeCategory", largeCategory));
+            robosCollection.updateMany(Filters.eq("_id", id), Updates.set("mediumCategory", mediumCategory));
+            robosCollection.updateMany(Filters.eq("_id", id), Updates.set("smallCategory", smallCategory));
+            robosCollection.updateMany(Filters.eq("_id", id), Updates.set("subCategory", subCategory));
+
+            log.info("count = {}" , count++);
+        }
+
+    }
+
+    public void convertIngredientStringTypeToDouble(){
+        String fieldName = "alanine_mg\talpalinolenicAcid_mg\tarachidicAcid_mg\tarachidonicAcid_mg\targinine_mg\tash_g\tasparticAcid_mg\tbatacarotene_micro_g\tbegenicAcid_mg\tbiotin_micro_g\tbutyricAcid_mg\tcalcium_mg\tcapricAcid_mg\tcaproicAcid_mg\tcaprylicAcid_mg\tcarbohydrate_g\tcholecalciferol_micro_g\tcholesterol_mg\tcopper_mg\tcysteine_mg\tdihomolinolenicAcid_mg\tdocosadienoicAcid_mg\tdocosahexaenoicAcid_mg\tdocosapentaenoicAcid_mg\teicosadienoicAcid_mg\teicosapentaenoicAcid_mg\teicosatrienoicAcid_mg\tenergy_kcal\tergocalciferol_micro_g\terucicAcid_mg\tfat_g\tfolate_micro_g\tfolicAcid_micro_g\tfoodFolate_micro_g\tfoodGroup\tfructose_g\tgadoleicAcid_mg\tgalactose_g\tgammalinolenicAcid_mg\tglucose_g\tglutamicAcid_mg\tglycine_mg\thenicosanoicAcid_mg\theptadecanoicAcid_mg\theptadecenoicAcid_mg\thistidine_mg\tiodine_micro_g\tiron_mg\tisoleucine_mg\tlactose_g\tlauricAcid_mg\tleucine_mg\tlignocericAcid_mg\tlinoleicAcid_mg\tlysine_mg\tmagnesium_mg\tmaltose_g\tmanganese_mg\tmenaquinone_micro_g\tmethionine_mg\tmolybdenum_micro_g\tmyristicAcid_mg\tmyristoleicAcid_mg\tname\tnervonicAcid_mg\tniacin_mg\tnicotinamide_mg\tnicotinicAcid_mg\toleicAcid_mg\tpalmiticAcid_mg\tpalmitoleicAcid_mg\tpantothenicAcid_mg\tpentadecanoicAcid_mg\tphenylalanine_mg\tphosphorus_mg\tphylloquinone_micro_g\tpotassium_mg\tproline_mg\tprotein_g\tpyridoxine_mg\trefuse_percent\tretinol_micro_g\triboflavin_mg\tsaltEquivalent_g\tselenium_micro_g\tserine_mg\tsodium_mg\tstearicAcid_mg\tsucrose_g\ttaurine_mg\tthiamin_mg\tthreonine_mg\ttocpha_mg\ttocphb_mg\ttocphd_mg\ttocphg_mg\ttoctra_mg\ttoctrb_mg\ttoctrd_mg\ttoctrg_mg\ttotalAminoAcids_mg\ttotalDietaryFiber_g\ttotalEssentialAminoAcids_mg\ttotalEssentialFattyAcids_g\ttotalFattyAcids_g\ttotalMonounsaturatedFattyAcids_g\ttotalN_3PolyunsaturatedFattyAcids_g\ttotalN_6PolyunsaturatedFattyAcids_g\ttotalNiacinEquivalents_mg\ttotalPolyunsaturatedFattyAcids_g\ttotalSaturatedFattyAcids_g\ttotalSugars_g\ttotalTransFattyAcids_g\ttotalUnsaturatedFattyAcids_g\ttrans_linoleicAcids_mg\ttrans_linolenicAcids_mg\ttrans_oleicAcids_mg\ttricosanoicAcid_mg\ttridecanoicAcid_mg\ttryptophan_mg\ttyrosine_mg\tvaccenicAcid_mg\tvaline_mg\tvitaminA_micro_g\tvitaminB12_micro_g\tvitaminB6_mg\tvitaminC_mg\tvitaminD_micro_g\tvitaminE_mg\tvitaminK_micro_g\twaterInsolubleDietaryFiber_g\twaterSolubleDietaryFiber_g\twater_g\tzinc_mg";
+
+        String fieldNames[] = fieldName.split("\\t");
+
+        MongoDatabase mongoDb = mongoClient.getDatabase("test");  //get database, where DBname is the name of your database
+
+        MongoCollection<Document> robosCollection = mongoDb.getCollection("NationalDB_v2"); //get the name of the collection that you want
+
+        MongoCursor<Document> cursor =  robosCollection.find().cursor();//Mongo Cursor interface implementing the iterator protocol
+        int count = 0;
+        while(cursor.hasNext()) {
+            int modifeidCnt = 0;
+            Document doc = cursor.next();
+            Object id = doc.get("_id");
+            for (String name: fieldNames) {
+                Object value = doc.get(name);
+                if(value.equals("-")) {
+                    UpdateResult updateResult = robosCollection.updateMany(Filters.eq("_id", id), Updates.set(name, 0));
+                    modifeidCnt += updateResult.getModifiedCount();
+                }
+            }
+            log.info("count: {} finished,change: {}", ++count, modifeidCnt);
+        }
+    }
+
+    public void createFiledName(){
+        String prefix = "Column";
+
+        String body ="Energy\n" +
+                "Water\n" +
+                "Protein\n" +
+                "Fat\n" +
+                "Ash\n" +
+                "Carbohydrate\n" +
+                "Total sugars\n" +
+                "Sucrose\n" +
+                "Glucose\n" +
+                "Fructose\n" +
+                "Lactose\n" +
+                "Maltose\n" +
+                "Galactose\n" +
+                "Total dietary fiber\n" +
+                "Water soluble dietary fiber\n" +
+                "Water insoluble dietary fiber\n" +
+                "Calcium\n" +
+                "Iron\n" +
+                "Magnesium\n" +
+                "Phosphorus\n" +
+                "Potassium\n" +
+                "Sodium\n" +
+                "Zinc\n" +
+                "Copper\n" +
+                "Manganese\n" +
+                "Selenium\n" +
+                "Molybdenum\n" +
+                "Iodine\n" +
+                "Vitamin A\n" +
+                "Retinol\n" +
+                "bataCarotene\n" +
+                "Thiamin\n" +
+                "Riboflavin\n" +
+                "Niacin\n" +
+                "Total niacin equivalents\n" +
+                "Nicotinic acid\n" +
+                "Nicotinamide\n" +
+                "Pantothenic acid\n" +
+                "Vitamin B6\n" +
+                "Pyridoxine\n" +
+                "Biotin\n" +
+                "Folate\n" +
+                "Food folate\n" +
+                "Folic acid\n" +
+                "Vitamin B12\n" +
+                "Vitamin C\n" +
+                "Vitamin D\n" +
+                "Ergocalciferol\n" +
+                "Cholecalciferol\n" +
+                "Vitamin E\n" +
+                "TOCPHA\n" +
+                "TOCPHB\n" +
+                "TOCPHG\n" +
+                "TOCPHD\n" +
+                "TOCTRA\n" +
+                "TOCTRB\n" +
+                "TOCTRG\n" +
+                "TOCTRD\n" +
+                "Vitamin K\n" +
+                "Phylloquinone\n" +
+                "Menaquinone\n" +
+                "Total amino acids\n" +
+                "Total essential amino acids\n" +
+                "Isoleucine\n" +
+                "Leucine\n" +
+                "Lysine\n" +
+                "Methionine\n" +
+                "Phenylalanine\n" +
+                "Threonine\n" +
+                "Tryptophan\n" +
+                "Valine\n" +
+                "Histidine\n" +
+                "Arginine\n" +
+                "Tyrosine\n" +
+                "Cysteine\n" +
+                "Alanine\n" +
+                "Aspartic acid\n" +
+                "Glutamic acid\n" +
+                "Glycine\n" +
+                "Proline\n" +
+                "Serine\n" +
+                "Taurine\n" +
+                "Cholesterol\n" +
+                "Total fatty acids\n" +
+                "Total essential fatty acids\n" +
+                "Total saturated fatty acids\n" +
+                "Butyric acid\n" +
+                "Caproic acid\n" +
+                "Caprylic acid\n" +
+                "Capric acid\n" +
+                "Lauric acid\n" +
+                "Tridecanoic acid\n" +
+                "Myristic acid\n" +
+                "Pentadecanoic acid\n" +
+                "Palmitic acid\n" +
+                "Heptadecanoic acid\n" +
+                "Stearic acid\n" +
+                "Arachidic acid\n" +
+                "Henicosanoic acid\n" +
+                "Begenic acid\n" +
+                "Tricosanoic acid\n" +
+                "Lignoceric acid\n" +
+                "Total unsaturated fatty acids\n" +
+                "Total monounsaturated fatty acids\n" +
+                "Myristoleic acid\n" +
+                "Palmitoleic acid\n" +
+                "Heptadecenoic acid\n" +
+                "Oleic acid\n" +
+                "Vaccenic acid\n" +
+                "Gadoleic acid\n" +
+                "Erucic acid\n" +
+                "Nervonic acid\n" +
+                "Total polyunsaturated fatty acids\n" +
+                "Linoleic acid\n" +
+                "alpaLinolenic acid\n" +
+                "gammaLinolenic acid\n" +
+                "Eicosadienoic acid\n" +
+                "Dihomolinolenic acid\n" +
+                "Eicosatrienoic acid\n" +
+                "Arachidonic acid\n" +
+                "Eicosapentaenoic acid\n" +
+                "Docosadienoic acid\n" +
+                "Docosapentaenoic acid\n" +
+                "Docosahexaenoic acid\n" +
+                "Total n_3 polyunsaturated fatty acids\n" +
+                "Total n_6 polyunsaturated fatty acids\n" +
+                "Total trans fatty acids\n" +
+                "trans_Oleic acids\n" +
+                "trans_Linoleic acids\n" +
+                "trans_Linolenic acids\n" +
+                "Salt equivalent\n" +
+                "Refuse\n";
+        String unit = "kcal\n" +
+                "g\n" +
+                "g\n" +
+                "g\n" +
+                "g\n" +
+                "g\n" +
+                "g\n" +
+                "g\n" +
+                "g\n" +
+                "g\n" +
+                "g\n" +
+                "g\n" +
+                "g\n" +
+                "g\n" +
+                "g\n" +
+                "g\n" +
+                "mg\n" +
+                "mg\n" +
+                "mg\n" +
+                "mg\n" +
+                "mg\n" +
+                "mg\n" +
+                "mg\n" +
+                "mg\n" +
+                "mg\n" +
+                "μg\n" +
+                "μg\n" +
+                "μg\n" +
+                "μg\n" +
+                "μg\n" +
+                "μg\n" +
+                "mg\n" +
+                "mg\n" +
+                "mg\n" +
+                "mg\n" +
+                "mg\n" +
+                "mg\n" +
+                "mg\n" +
+                "mg\n" +
+                "mg\n" +
+                "μg\n" +
+                "μg\n" +
+                "μg\n" +
+                "μg\n" +
+                "μg\n" +
+                "mg\n" +
+                "μg\n" +
+                "μg\n" +
+                "μg\n" +
+                "mg\n" +
+                "mg\n" +
+                "mg\n" +
+                "mg\n" +
+                "mg\n" +
+                "mg\n" +
+                "mg\n" +
+                "mg\n" +
+                "mg\n" +
+                "μg\n" +
+                "μg\n" +
+                "μg\n" +
+                "mg\n" +
+                "mg\n" +
+                "mg\n" +
+                "mg\n" +
+                "mg\n" +
+                "mg\n" +
+                "mg\n" +
+                "mg\n" +
+                "mg\n" +
+                "mg\n" +
+                "mg\n" +
+                "mg\n" +
+                "mg\n" +
+                "mg\n" +
+                "mg\n" +
+                "mg\n" +
+                "mg\n" +
+                "mg\n" +
+                "mg\n" +
+                "mg\n" +
+                "mg\n" +
+                "mg\n" +
+                "g\n" +
+                "g\n" +
+                "g\n" +
+                "mg\n" +
+                "mg\n" +
+                "mg\n" +
+                "mg\n" +
+                "mg\n" +
+                "mg\n" +
+                "mg\n" +
+                "mg\n" +
+                "mg\n" +
+                "mg\n" +
+                "mg\n" +
+                "mg\n" +
+                "mg\n" +
+                "mg\n" +
+                "mg\n" +
+                "mg\n" +
+                "g\n" +
+                "g\n" +
+                "mg\n" +
+                "mg\n" +
+                "mg\n" +
+                "mg\n" +
+                "mg\n" +
+                "mg\n" +
+                "mg\n" +
+                "mg\n" +
+                "g\n" +
+                "mg\n" +
+                "mg\n" +
+                "mg\n" +
+                "mg\n" +
+                "mg\n" +
+                "mg\n" +
+                "mg\n" +
+                "mg\n" +
+                "mg\n" +
+                "mg\n" +
+                "mg\n" +
+                "g\n" +
+                "g\n" +
+                "g\n" +
+                "mg\n" +
+                "mg\n" +
+                "mg\n" +
+                "g\n" +
+                "percent\n";
+
+        String[] split = body.split("\\n");
+        String[] splitUnit = unit.split("\\n");
+
+        for(int i =0; i< split.length;++i){
+            String tailUnit = splitUnit[i];
+            if(splitUnit[i].equals("μg"))
+                tailUnit = "micro_g";
+
+            String temp = split[i].toLowerCase(Locale.ENGLISH)+ "_" + tailUnit;
+            String[] tempSplits = temp.split(" ");
+            String result = tempSplits[0];
+            for(int j=1; j< tempSplits.length ; ++j){
+                String front = tempSplits[j].substring(0, 1).toUpperCase(Locale.ENGLISH);
+                result = result + front + tempSplits[j].substring(1);
+            }
+            split[i] = result;
+        }
+
+
+
+        String result = "";
+        int idx = 0;
+
+        for(; idx< split.length;++idx){
+            String column = prefix + (idx + 6);
+            String full = "\"" + column + "\" : \"" + split[idx] + "\"" ;
+            result = result + full + " , ";
+        }
+
+        log.info(result);
+
+    }
 
     public void injectRecipeToIngredient(){
         MongoDatabase mongoDb = mongoClient.getDatabase("test");  //get database, where DBname is the name of your database
