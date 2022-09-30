@@ -26,9 +26,10 @@ public class SpringbootApplication implements CommandLineRunner {
 		log.info("==서버 초기 동작 시작==");
 		//convertDocumentAddComponent();
 		//renameFields();
-		//dbConverter.convertNameToCategories();
+		//dbConverter.convertIngredientStringTypeToDouble();
 		//convertRecipeJsonToDocument();
-
+		dbConverter.setEntityClassForNationalDB();
+		//dbConverter.convertIngredientAllTypeToDouble();
 		//dbConverter.injectRecipeToIngredient();
 		//initDataSet.setData();
 
