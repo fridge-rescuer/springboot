@@ -1,6 +1,7 @@
 package com.fridgerescuer.springboot;
 
 import com.fridgerescuer.springboot.config.Config;
+import com.fridgerescuer.springboot.databaseoperation.DBConverter;
 import lombok.extern.slf4j.Slf4j;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,7 +16,7 @@ import org.springframework.context.annotation.Import;
 public class SpringbootApplication implements CommandLineRunner {
 
 	@Autowired
-	private  DBConverter dbConverter;
+	private DBConverter dbConverter;
 
 	public static void main(String[] args) {
 		SpringApplication.run(SpringbootApplication.class, args);

@@ -1,4 +1,4 @@
-package com.fridgerescuer.springboot;
+package com.fridgerescuer.springboot.databaseoperation;
 
 import com.fridgerescuer.springboot.config.Config;
 import com.fridgerescuer.springboot.data.entity.*;
@@ -793,7 +793,7 @@ public class DBConverter {
         log.info(result);
 
     }
-
+/*
     public void injectRecipeToIngredient(){
         MongoDatabase mongoDb = mongoClient.getDatabase("test");  //get database, where DBname is the name of your database
 
@@ -868,7 +868,7 @@ public class DBConverter {
             log.info("count = {}", count++);
         }
 
-    }
+    } */
 
     void convertRecipeJsonToDocument(){
         MongoDatabase mongoDb = mongoClient.getDatabase("test");  //get database, where DBname is the name of your database
@@ -995,7 +995,7 @@ public class DBConverter {
 
         return null;
     }
-
+/*
     void convertDocumentAddComponent(){
 
         MongoDatabase mongoDb = mongoClient.getDatabase("test");  //get database, where DBname is the name of your database
@@ -1048,12 +1048,11 @@ public class DBConverter {
                     transFat_g, refuse);
 
 
-            DetailIngredient ingredient = new DetailIngredient(name, dataCode, dataTypeName, representationName,
-                    originTypeName, largeCategory, mediumCategory, smallCategory, subCategory,component);
+            //DetailIngredient ingredient = new DetailIngredient(name, dataCode, dataTypeName, representationName, originTypeName, largeCategory, mediumCategory, smallCategory, subCategory,component);
             //ingredientRepository.save(ingredient);
         }
         //cursor.forEachRemaining(System.out::println);
-    }
+    }*/
 
     private void renameFields(){
         BasicDBObject searchQuery = new BasicDBObject();
