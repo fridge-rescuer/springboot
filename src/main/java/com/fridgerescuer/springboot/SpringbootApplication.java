@@ -30,7 +30,7 @@ public class SpringbootApplication implements CommandLineRunner {
 		//convertRecipeJsonToDocument();
 
 		//dbConverter.injectRecipeToIngredient();
-
+		//initDataSet.setData();
 
 		log.info("==서버 초기 동작 끝~==");
 	}
