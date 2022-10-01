@@ -1,13 +1,15 @@
 package com.fridgerescuer.springboot.data.dto;
 
-import lombok.Builder;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.ToString;
+import lombok.*;
 
-@Builder
+import java.time.LocalDateTime;
+
 @Getter
+@Setter
 @ToString
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class CommentDTO {
     private String id;
 
@@ -15,11 +17,8 @@ public class CommentDTO {
     private String body;
 
     private String imageId;
-    private String date;
+    private LocalDateTime date;
 
     private String recipeId;
 
-    public void setRecipeId(String recipeId) {
-        this.recipeId = recipeId;
-    }
 }
