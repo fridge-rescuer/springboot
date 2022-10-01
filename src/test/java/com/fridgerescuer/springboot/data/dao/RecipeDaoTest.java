@@ -1,13 +1,9 @@
 package com.fridgerescuer.springboot.data.dao;
 
-import com.fridgerescuer.springboot.data.dao.RecipeDao;
 import com.fridgerescuer.springboot.data.dto.*;
-import com.fridgerescuer.springboot.data.entity.Member;
-import com.fridgerescuer.springboot.data.mapper.RecipeMapper;
 import com.fridgerescuer.springboot.data.repository.IngredientRepository;
 import com.fridgerescuer.springboot.data.repository.RecipeRepository;
-import com.fridgerescuer.springboot.exception.exceptionimpl.NoSuchRecipeException;
-import org.assertj.core.api.Assertions;
+import com.fridgerescuer.springboot.exception.exceptionimpl.RecipeException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -16,7 +12,6 @@ import org.springframework.boot.test.autoconfigure.data.mongo.DataMongoTest;
 import org.springframework.context.annotation.ComponentScan;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.*;
@@ -70,7 +65,7 @@ class RecipeDaoTest {
         //then
         recipeDao.deleteById(recipeResponseDTO.getId());
         assertThatThrownBy(() -> recipeDao.findById(recipeResponseDTO.getId()))
-                .isInstanceOf(NoSuchRecipeException.class);
+                .isInstanceOf(RecipeException.class);
 
         //연관 관계 제거도 확인
         assertThat(ingredientRepository.findByName("마늘").getRecipes().size()).isEqualTo(0);
