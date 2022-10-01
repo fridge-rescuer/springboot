@@ -2,6 +2,7 @@ package com.fridgerescuer.springboot;
 
 import com.fridgerescuer.springboot.config.Config;
 import com.fridgerescuer.springboot.databaseoperation.DBConverter;
+import com.fridgerescuer.springboot.databaseoperation.ReferenceInjector;
 import lombok.extern.slf4j.Slf4j;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,6 +18,8 @@ public class SpringbootApplication implements CommandLineRunner {
 
 	@Autowired
 	private DBConverter dbConverter;
+	@Autowired
+	private ReferenceInjector referenceInjector;
 
 	public static void main(String[] args) {
 		SpringApplication.run(SpringbootApplication.class, args);
@@ -25,14 +28,14 @@ public class SpringbootApplication implements CommandLineRunner {
 	public void run(String... args) throws Exception {
 
 		log.info("==서버 초기 동작 시작==");
-		//convertDocumentAddComponent();
-		//renameFields();
 		//dbConverter.convertIngredientStringTypeToDouble();
-		//convertRecipeJsonToDocument();
-		dbConverter.setEntityClassForNationalDB();
+		//dbConverter.setEntityClassForNationalDB();
 		//dbConverter.convertIngredientAllTypeToDouble();
 		//dbConverter.injectRecipeToIngredient();
 		//initDataSet.setData();
+
+		//referenceInjector.setReferenceWithRecipe();
+
 
 		log.info("==서버 초기 동작 끝~==");
 	}

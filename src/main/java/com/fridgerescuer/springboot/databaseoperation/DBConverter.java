@@ -298,52 +298,6 @@ public class DBConverter {
 
     }
 
-    public void referenceSetWithRecipe(){
-        MongoDatabase mongoDb = mongoClient.getDatabase("test");  //get database, where DBname is the name of your database
-
-        MongoCollection<Document> ingredientCollection = mongoDb.getCollection("NationalDB_v2"); //get the name of the collection that you want
-
-        MongoCursor<Document> ingredientCursor =  ingredientCollection.find().cursor();//Mongo Cursor interface implementing the iterator protocol
-
-        MongoCollection<Document> recipeCollection = mongoDb.getCollection("recipe"); //get the name of the collection that you want
-
-        MongoCursor<Document> recipeCursor =  recipeCollection.find().cursor();//Mongo Cursor interface implementing the iterator protocol
-        int count = 0;
-        while(recipeCursor.hasNext()) {
-            Document recipeDoc = recipeCursor.next();
-            String ingredientData = recipeDoc.getString("ingredientData");
-
-            log.info("ingredient data: {}", ingredientData);
-            // key: IngredientId, value: count
-            Map<String, Integer> countOfAppearance;
-
-            while(ingredientCursor.hasNext()){
-                Document ingredientDoc = ingredientCursor.next();
-                String representationName = ingredientDoc.getString("representationName");
-                String largeCategory = ingredientDoc.getString("largeCategory");
-                String mediumCategory = ingredientDoc.getString("mediumCategory");
-                String smallCategory = ingredientDoc.getString("smallCategory");
-
-
-                int priorityIndex = 0;
-                if(ingredientData.contains(representationName))
-                    priorityIndex += 1000;
-                /*
-                if(!largeCategory.isEmpty() && ingredientData.contains(largeCategory))
-                    priorityIndex += 100;
-                if(!mediumCategory.isEmpty() && ingredientData.contains(mediumCategory))
-                    priorityIndex += 10;
-                if(!smallCategory.isEmpty() && ingredientData.contains(smallCategory))
-                    priorityIndex += 1;*/
-
-                if(priorityIndex >=1000)
-                    log.info("use ingredient : {}", ingredientDoc.getString("name"));
-            }
-
-
-        }
-    }
-
     public void convertNameToCategories(){
         MongoDatabase mongoDb = mongoClient.getDatabase("test");  //get database, where DBname is the name of your database
 
