@@ -1,11 +1,11 @@
 package com.fridgerescuer.springboot.data.dao.impl;
 
 import com.fridgerescuer.springboot.data.dao.CommentDao;
+import com.fridgerescuer.springboot.data.dao.ImageDao;
 import com.fridgerescuer.springboot.data.dao.MemberDao;
 import com.fridgerescuer.springboot.data.dao.RecipeDao;
 import com.fridgerescuer.springboot.data.dto.CommentDTO;
 import com.fridgerescuer.springboot.data.entity.Comment;
-import com.fridgerescuer.springboot.data.gridfs.CommentGridFsAccessObject;
 import com.fridgerescuer.springboot.data.mapper.CommentMapper;
 import com.fridgerescuer.springboot.data.mapper.RecipeMapper;
 import com.fridgerescuer.springboot.data.repository.CommentRepository;
@@ -45,7 +45,7 @@ public class CommentDaoImpl implements CommentDao {
     private final RecipeDao recipeDao;
 
     @Autowired
-    private final CommentGridFsAccessObject gridFsAO;
+    private final ImageDao imageDao;
 
     private final CommentMapper commentMapper = CommentMapper.INSTANCE;
 
@@ -80,7 +80,7 @@ public class CommentDaoImpl implements CommentDao {
 
         return commentMapper.commentToDTO(foundComment);
     }
-
+/*
     @Override
     public void addImage(String commentId, MultipartFile file) throws IOException {
         Comment comment = this.getCommentById(commentId);
@@ -96,7 +96,7 @@ public class CommentDaoImpl implements CommentDao {
                 .matching(where("id").is(commentId))
                 .apply(new Update().set("imageId", imageId))
                 .first();
-    }
+    }*/
 
     @Override
     public void updateCommentById(String commentId, CommentDTO updateDataDTO) {
@@ -106,9 +106,9 @@ public class CommentDaoImpl implements CommentDao {
             recipeDao.updateRating(originComment.getRecipeId(),updateDataDTO.getRating(), originComment.getRating());
         }
 
-        // 이미지가 변경되면 기존 이미지 DB에서 제거
-        if(updateDataDTO.getImageId() != null && updateDataDTO.getImageId() != originComment.getImageId()){
-            gridFsAO.deleteImageByGridFsId(originComment.getImageId());
+        // 이미지가 변경되면 기존 이미지 DB에서 제거, 만약 updateDTO의 imageid가 Null이면 삭제됨
+        if(originComment.getImageId() != null && updateDataDTO.getImageId() != originComment.getImageId()){
+            imageDao.deleteImageByImageId(originComment.getImageId());
         }
 
         Query query = new Query();

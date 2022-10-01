@@ -1,5 +1,6 @@
 package com.fridgerescuer.springboot.data.dao.impl;
 
+import com.fridgerescuer.springboot.data.dao.ImageDao;
 import com.fridgerescuer.springboot.data.dao.MemberDao;
 import com.fridgerescuer.springboot.data.dao.RecipeDao;
 import com.fridgerescuer.springboot.data.dto.CommentDTO;
@@ -9,7 +10,6 @@ import com.fridgerescuer.springboot.data.entity.Comment;
 import com.fridgerescuer.springboot.data.entity.Ingredient;
 import com.fridgerescuer.springboot.data.entity.Member;
 import com.fridgerescuer.springboot.data.entity.Recipe;
-import com.fridgerescuer.springboot.data.gridfs.RecipeGridFsAccessObject;
 import com.fridgerescuer.springboot.data.mapper.CommentMapper;
 import com.fridgerescuer.springboot.data.mapper.RecipeMapper;
 import com.fridgerescuer.springboot.data.repository.RecipeRepository;
@@ -48,7 +48,7 @@ public class RecipeDaoImpl implements RecipeDao {
     private final MemberDao memberDao;
 
     @Autowired
-    private final RecipeGridFsAccessObject gridFsAO;
+    private final ImageDao imageDao;
 
     private final RecipeMapper recipeMapper = RecipeMapper.INSTANCE;
 
@@ -124,13 +124,19 @@ public class RecipeDaoImpl implements RecipeDao {
         Recipe targetRecipe = this.getRecipeById(targetId);  //존재하지 않는 id면 여기서 예외 처리됨
         deleteReferenceWithIngredients(targetRecipe);
 
+        // 이미지가 변경되면 기존 이미지 DB에서 제거, 만약 updateDTO의 imageid가 Null이면 삭제됨
+        if(targetRecipe.getImageId() != null && updateDataDTO.getImageId() != targetRecipe.getImageId()){
+            imageDao.deleteImageByImageId(targetRecipe.getImageId());
+        }
+
         Query query = new Query();
         query.addCriteria(Criteria.where("id").is(targetId));
 
-        Update update = new Update();
-        update.set("name", updateDataDTO.getName());
-        update.set("type", updateDataDTO.getType());
-        update.set("ingredientNames", updateDataDTO.getIngredientNames());
+        Update update = new Update()
+                .set("name", updateDataDTO.getName())
+                .set("type", updateDataDTO.getType())
+                .set("imageId", updateDataDTO.getImageId())
+                .set("ingredientNames", updateDataDTO.getIngredientNames());
         template.updateMulti(query, update, Recipe.class);
 
         setReferenceWithIngredientsByName(updateDataDTO.getIngredientNames(), targetRecipe);   //연관 관계 다시 맵핑
@@ -143,7 +149,7 @@ public class RecipeDaoImpl implements RecipeDao {
         Recipe targetRecipe = this.getRecipeById(targetId);
 
         if(targetRecipe.getImageId() != null)   //이미지 부터 제거거
-           gridFsAO.deleteImageByGridFsId(targetRecipe.getImageId());
+            imageDao.deleteImageByImageId(targetRecipe.getImageId());
 
         repository.deleteById(targetId);
 
@@ -157,7 +163,7 @@ public class RecipeDaoImpl implements RecipeDao {
                 .apply(new Update().set("producerMemberId", producerMemberId))
                 .first();
     }
-
+/*
     @Override
     public void addImage(String targetId, MultipartFile file) throws IOException {
         Recipe foundRecipe = this.getRecipeById(targetId);   //존재하지 않는 id는 여기서 예외 처리됨
@@ -168,7 +174,7 @@ public class RecipeDaoImpl implements RecipeDao {
                 .matching(where("id").is(targetId))
                 .apply(new Update().set("imageId", imageId))
                 .first();
-    }
+    }*/
 
     @Override
     public void addCommentToRecipe(String recipeId, CommentDTO commentDTO) {
