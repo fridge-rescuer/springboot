@@ -128,7 +128,8 @@ public class IngredientDaoImpl implements IngredientDao {
 
         Update update = new Update();
         update.set("name", ingredientDTO.getName());
-        //update.set("type", ingredient.getType());
+        // 엄청난 양의 성분 업데이트는 추후에 DB 데이터가 완벽해 지면 진행
+
         UpdateResult updateResult = template.updateMulti(query, update, Ingredient.class);
 
         log.info("update id={} to ingredient ={}", targetId,ingredientDTO);
@@ -141,14 +142,22 @@ public class IngredientDaoImpl implements IngredientDao {
 
     @Override
     public void deleteById(String targetId) {
-        Query query = new Query();
-        query.addCriteria(Criteria.where("id").is(targetId));
+        Ingredient targetIngredient = getIngredientById(targetId);
+        List<Recipe> recipes = targetIngredient.getRecipes();
 
-        Ingredient removedIngredient = template.findAndRemove(query, Ingredient.class);
-        log.info("delete ingredient ={}", removedIngredient);
+        this.repository.deleteById(targetId);
+        deleteReferenceWithRecipe(recipes, targetId);   //제거가 완료된 후 참조 삭제
 
-        if(removedIngredient ==null){
-            throw new IngredientException(IngredientError.NOT_EXIST);
+       log.info("delete ingredient ={}", targetId);
+    }
+
+    private void deleteReferenceWithRecipe(List<Recipe> recipes, String ingredientId){
+        for (Recipe recipe: recipes) {
+            Query query = new Query();
+            query.addCriteria(Criteria.where("_id").is(recipe.getId()));
+            Update referenceUpdate = new Update().pull("ingredientIds", ingredientId);
+
+            template.updateMulti(query, referenceUpdate, Recipe.class);
         }
 
     }
