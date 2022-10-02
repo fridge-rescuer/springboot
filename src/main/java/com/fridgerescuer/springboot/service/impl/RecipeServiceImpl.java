@@ -64,8 +64,8 @@ public class RecipeServiceImpl implements RecipeService {
     @Override
     public void createRecipeComment(RecipeDTO recipeDTO, String memberToken, CommentDTO trySaveComment, MultipartFile image) {
         String imageId = null;
-        if(!image.isEmpty())
-            trySaveComment.setImageId(commentDao.addImage(image));
+        //if(!image.isEmpty())
+           // trySaveComment.setImageId(commentDao.addImage(image));
 
         //memberToken에서 id 추출
         String memberId = null;

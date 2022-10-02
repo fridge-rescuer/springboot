@@ -4,6 +4,7 @@ import com.fridgerescuer.springboot.data.dao.ImageDao;
 import com.fridgerescuer.springboot.data.dao.MemberDao;
 import com.fridgerescuer.springboot.data.dao.RecipeDao;
 import com.fridgerescuer.springboot.data.dto.CommentDTO;
+import com.fridgerescuer.springboot.data.dto.IngredientDTO;
 import com.fridgerescuer.springboot.data.dto.RecipeDTO;
 import com.fridgerescuer.springboot.data.entity.Comment;
 import com.fridgerescuer.springboot.data.entity.Ingredient;
@@ -13,6 +14,7 @@ import com.fridgerescuer.springboot.data.mapper.RecipeMapper;
 import com.fridgerescuer.springboot.data.repository.RecipeRepository;
 import com.fridgerescuer.springboot.exception.errorcodeimpl.RecipeError;
 import com.fridgerescuer.springboot.exception.exceptionimpl.RecipeException;
+import com.mongodb.client.result.UpdateResult;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,8 +26,10 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 import static org.springframework.data.mongodb.core.query.Criteria.where;
 
@@ -47,10 +51,41 @@ public class RecipeDaoImpl implements RecipeDao {
 
     private final RecipeMapper recipeMapper = RecipeMapper.INSTANCE;
 
+    private void setReferenceWithIngredientsByIngredientIds(Recipe recipe){
+        Set<String> ingredientIds = recipe.getIngredientIds();
+
+        if(ingredientIds == null || ingredientIds.isEmpty())
+            return;
+
+        int modifiedCnt =0;
+
+        Iterator<String> it = ingredientIds.iterator();
+        while(it.hasNext()){
+            UpdateResult result = template.update(Ingredient.class)
+                    .matching(where("_id").is(it.next()))
+                    .apply(new Update().push("recipes", recipe))
+                    .first();
+            modifiedCnt += result.getModifiedCount();
+        }
+        log.info(" setReferenceWithIngredientsByIngredientIds modify {}'document ", modifiedCnt);
+    }
+    /*
+    private void setReferenceWithIngredientsByName(String[] ingredientNames, Recipe recipe){
+        if(ingredientNames== null || ingredientNames.length ==0)
+            return;
+
+        for (String name:ingredientNames) {
+            template.update(Ingredient.class)
+                    .matching(where("name").is(name))
+                    .apply(new Update().push("recipes", recipe))
+                    .first();
+        }
+    }*/
+
     @Override
     public RecipeDTO save(RecipeDTO recipeDTO) {        //member 없이 저장
         Recipe savedRecipe = repository.save(recipeMapper.DTOtoRecipe(recipeDTO));
-        setReferenceWithIngredientsByName(savedRecipe.getIngredientNames(), savedRecipe);
+        setReferenceWithIngredientsByIngredientIds(savedRecipe);
 
         return recipeMapper.recipeToDTO(savedRecipe);
     }
@@ -131,12 +166,24 @@ public class RecipeDaoImpl implements RecipeDao {
                 .set("name", updateDataDTO.getName())
                 .set("type", updateDataDTO.getType())
                 .set("imageId", updateDataDTO.getImageId())
-                .set("ingredientNames", updateDataDTO.getIngredientNames());
+                .set("ingredientIds", updateDataDTO.getIngredientIds());
         template.updateMulti(query, update, Recipe.class);
 
-        setReferenceWithIngredientsByName(updateDataDTO.getIngredientNames(), targetRecipe);   //연관 관계 다시 맵핑
+        targetRecipe = this.getRecipeById(targetId);  //업데이트 내용 다시 가져옴
+        setReferenceWithIngredientsByIngredientIds(targetRecipe);   //연관 관계 다시 맵핑
 
         log.info("update id={} to recipe data ={}", targetId, updateDataDTO);
+    }
+
+    private void deleteReferenceWithIngredients(Recipe recipe){
+
+        for (String ingredientId: recipe.getIngredientIds()) {   // 기존 재료들과의 연관 관계 제거
+            Query query = new Query();
+            query.addCriteria(Criteria.where("_id").is(ingredientId));
+            Update referenceUpdate = new Update().pull("recipes", recipe);
+
+            template.updateMulti(query, referenceUpdate, Ingredient.class);
+        }
     }
 
     @Override
@@ -158,18 +205,6 @@ public class RecipeDaoImpl implements RecipeDao {
                 .apply(new Update().set("producerMemberId", producerMemberId))
                 .first();
     }
-/*
-    @Override
-    public void addImage(String targetId, MultipartFile file) throws IOException {
-        Recipe foundRecipe = this.getRecipeById(targetId);   //존재하지 않는 id는 여기서 예외 처리됨
-
-        String imageId = gridFsAO.saveImageByGridFs(-1, foundRecipe, file.getInputStream());
-
-        template.update(Recipe.class)
-                .matching(where("id").is(targetId))
-                .apply(new Update().set("imageId", imageId))
-                .first();
-    }*/
 
     @Override
     public void addCommentToRecipe(String recipeId, CommentDTO commentDTO) {
@@ -232,28 +267,5 @@ public class RecipeDaoImpl implements RecipeDao {
         template.updateMulti(query, referenceUpdate, Recipe.class);
 
         log.info("delete recipe id ={} of rating ={}, now avg={} ", recipeId,rating, updatedRatingAvg);
-    }
-
-
-    private void setReferenceWithIngredientsByName(String[] ingredientNames, Recipe recipe){
-        if(ingredientNames== null || ingredientNames.length ==0)
-            return;
-
-        for (String name:ingredientNames) {
-            template.update(Ingredient.class)
-                    .matching(where("name").is(name))
-                    .apply(new Update().push("recipes", recipe))
-                    .first();
-        }
-    }
-
-    private void deleteReferenceWithIngredients(Recipe recipe){
-        for (String name: recipe.getIngredientNames()) {   // 기존 재료들과의 연관 관계 제거
-            Query query = new Query();
-            query.addCriteria(Criteria.where("name").is(name));
-            Update referenceUpdate = new Update().pull("recipes", recipe);
-
-            template.updateMulti(query, referenceUpdate, Ingredient.class);
-        }
     }
 }
