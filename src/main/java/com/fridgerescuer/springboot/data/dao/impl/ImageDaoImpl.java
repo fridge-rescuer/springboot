@@ -16,6 +16,7 @@ import org.springframework.data.mongodb.gridfs.GridFsResource;
 import org.springframework.data.mongodb.gridfs.GridFsTemplate;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -33,14 +34,20 @@ public class ImageDaoImpl implements ImageDao {
 
     //파일 이름은 반드시 필요해서 카테코리 이름을 넘기는 걸로
     @Override
-    public String uploadImage(InputStream inputStream, String category) {
+    public String uploadImage(MultipartFile imageFile, String category) {
         //BasicDBObject meta = new BasicDBObject();
         //meta.put("category", category);
 
-        ObjectId id = gridFsTemplate.store(inputStream, category);
+        try{
+            InputStream inputStream = imageFile.getInputStream();
+            ObjectId id = gridFsTemplate.store(inputStream, category);
 
-        log.info("image upload id ={}, category={}", id.toString(), category);
-        return id.toString();
+            log.info("image upload id ={}, category={}", id.toString(), category);
+            return id.toString();
+        }catch (IOException e){
+            throw new RuntimeException(new IOException("upload Image IOException Occur!"));
+        }
+
     }
 
     @Override

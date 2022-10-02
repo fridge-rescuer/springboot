@@ -6,10 +6,10 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.data.mongo.DataMongoTest;
 import org.springframework.context.annotation.ComponentScan;
+import org.springframework.mock.web.MockMultipartFile;
+import org.springframework.web.multipart.MultipartFile;
 
-import java.io.ByteArrayInputStream;
-import java.io.IOException;
-import java.io.InputStream;
+import java.io.*;
 
 @ComponentScan(basePackages = "com.fridgerescuer.springboot")
 @DataMongoTest
@@ -21,14 +21,18 @@ public class ImageDaoTest {
     @Test
     void uploadAndDeleteImage() throws IOException {
         byte[] bytes = new byte[]{10,20,30};
-        InputStream inputStream = new ByteArrayInputStream(bytes);
+        FileInputStream inputStream = new FileInputStream("src/test/resources/application.properties");
 
-        String imageId = imageDao.uploadImage(inputStream, "test");
+        MultipartFile multipartFile = new MockMultipartFile("application.properties",inputStream);
+
+        String imageId = imageDao.uploadImage(multipartFile, "test");
         InputStream downloadStream = imageDao.downloadImageByImageId(imageId);
 
-        byte[] downloadBytes = downloadStream.readAllBytes();   //다운로드 데이터와 비교
-        for (int i=0; i<downloadBytes.length ; ++i) {
-            Assertions.assertThat(downloadBytes[i]).isEqualTo(bytes[i]);
+        byte[] uploadBytes = multipartFile.getInputStream().readAllBytes();
+        byte[] downloadBytes = downloadStream.readAllBytes();
+
+        for (int idx = 0; idx < downloadBytes.length; idx++) {
+            Assertions.assertThat(uploadBytes[idx]).isEqualTo(downloadBytes[idx]);
         }
 
         imageDao.deleteImageByImageId(imageId);
