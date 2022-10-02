@@ -15,8 +15,7 @@ import org.springframework.boot.test.autoconfigure.data.mongo.DataMongoTest;
 import org.springframework.context.annotation.ComponentScan;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 import static org.assertj.core.api.Assertions.*;
 
@@ -267,11 +266,13 @@ class MemberDaoTest {
         //given
         MemberDTO member = MemberDTO.builder().name("우왁굳").build();
         IngredientDTO ingredient = IngredientDTO.builder().name("감자").build();
-        RecipeDTO recipe = RecipeDTO.builder().name("감자 튀김").type("튀김").ingredientNames(new String[]{"감자"}).build();
 
         //when
         MemberDTO memberResponseDto = memberDao.saveMember(member);
-        ingredientDao.save(ingredient);
+        IngredientDTO savedIngredient = ingredientDao.save(ingredient);
+
+        RecipeDTO recipe = RecipeDTO.builder().name("감자 튀김").type("튀김")
+                .ingredientIds(new HashSet<>(Arrays.asList(savedIngredient.getId()))).build();
         RecipeDTO recipeResponseDTO = recipeDao.saveRecipeByMemberId(memberResponseDto.getId(), recipe);
 
         //then

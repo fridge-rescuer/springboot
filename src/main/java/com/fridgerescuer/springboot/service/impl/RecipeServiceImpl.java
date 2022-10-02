@@ -1,6 +1,7 @@
 package com.fridgerescuer.springboot.service.impl;
 
 import com.fridgerescuer.springboot.data.dao.CommentDao;
+import com.fridgerescuer.springboot.data.dao.ImageDao;
 import com.fridgerescuer.springboot.data.dao.MemberDao;
 import com.fridgerescuer.springboot.data.dao.RecipeDao;
 import com.fridgerescuer.springboot.data.dto.CommentDTO;
@@ -21,6 +22,8 @@ public class RecipeServiceImpl implements RecipeService {
     private final CommentDao commentDao;
     @Autowired
     private final MemberDao memberDao;
+    @Autowired
+    private final ImageDao imageDao;
 
 /*    @Override
     public List<RecipeDTO> loadAllRecipeList() {
@@ -65,7 +68,7 @@ public class RecipeServiceImpl implements RecipeService {
     public void createRecipeComment(RecipeDTO recipeDTO, String memberToken, CommentDTO trySaveComment, MultipartFile image) {
         String imageId = null;
         if(!image.isEmpty())
-            trySaveComment.setImageId(commentDao.addImage(image));
+            trySaveComment.setImageId(imageDao.uploadImage(image,"Comment"));
 
         //memberToken에서 id 추출
         String memberId = null;

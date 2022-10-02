@@ -1,6 +1,7 @@
 package com.fridgerescuer.springboot.data.dao;
 
 import com.fridgerescuer.springboot.data.dto.IngredientDTO;
+import com.fridgerescuer.springboot.data.dto.RecipeDTO;
 import com.fridgerescuer.springboot.data.repository.IngredientRepository;
 import com.fridgerescuer.springboot.exception.exceptionimpl.IngredientException;
 import org.junit.jupiter.api.BeforeEach;
@@ -11,7 +12,9 @@ import org.springframework.boot.test.autoconfigure.data.mongo.DataMongoTest;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.data.mongodb.core.MongoTemplate;
 
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import static org.assertj.core.api.Assertions.*;
 
@@ -23,6 +26,9 @@ class IngredientDaoTest {
 
     @Autowired
     private IngredientDao ingredientDao;
+    @Autowired
+    private RecipeDao recipeDao;
+
     @Autowired
     private MongoTemplate template;
 
@@ -37,17 +43,25 @@ class IngredientDaoTest {
     //then
 
     @Test
-    void deleteIngredient(){
+    void deleteIngredientWithRecipeReference(){
         //given
         IngredientDTO ingredientDTO = IngredientDTO.builder().name("마늘").build();
 
         //when
         IngredientDTO savedIngredient = ingredientDao.save(ingredientDTO);
 
+        Set<String> ingredientIds = new HashSet<>();
+        ingredientIds.add(savedIngredient.getId());
+        RecipeDTO recipe = RecipeDTO.builder().name("알리오 올리오").type("파스타").ingredientIds(ingredientIds).build();
+        String savedRecipeId = recipeDao.save(recipe).getId();
+
         //then
         ingredientDao.deleteById(savedIngredient.getId());
         assertThatThrownBy(() -> ingredientDao.findById(savedIngredient.getId()))
                 .isInstanceOf(IngredientException.class);
+
+        //외래키 제거 확인
+        assertThat( recipeDao.findById(savedRecipeId).getIngredientIds().isEmpty()).isEqualTo(true);
 
         //존재하지 않는 id를 삭제하는 경우
         assertThatThrownBy(() -> ingredientDao.deleteById("1234560"))

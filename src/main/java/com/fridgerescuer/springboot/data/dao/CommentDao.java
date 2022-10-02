@@ -7,11 +7,12 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.IOException;
 
 public interface CommentDao {
+    CommentDTO save(CommentDTO commentDTO);
     CommentDTO save(String memberId, String recipeId, CommentDTO commentDTO);
 
     CommentDTO findById(String commentId);
 
-    void addImage(String commentId, MultipartFile file) throws IOException;
+    //void addImage(String commentId, MultipartFile file) throws IOException;
     void updateCommentById(String commentId, CommentDTO updateDataDTO);
 
     void deleteCommentById(String commentId);

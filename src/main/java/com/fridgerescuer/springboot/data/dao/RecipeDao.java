@@ -25,7 +25,7 @@ public interface RecipeDao {
 
     void setProducerMemberIByRecipeId(String recipeId, String producerMemberId);
 
-    void addImage(String targetId, MultipartFile file) throws IOException;
+    //void addImage(String targetId, MultipartFile file) throws IOException;
     void addCommentToRecipe(String recipeId, CommentDTO commentDTO);
     void updateRating(String recipeId, double newRating, double originRating);
     void deleteRating(String recipeId, double rating);

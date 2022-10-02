@@ -11,8 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.data.mongo.DataMongoTest;
 import org.springframework.context.annotation.ComponentScan;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 import static org.assertj.core.api.Assertions.*;
 
@@ -52,12 +51,14 @@ class RecipeDaoTest {
         IngredientDTO ingredient2 = IngredientDTO.builder().name("올리브유").build();
         IngredientDTO ingredient3 = IngredientDTO.builder().name("고추").build();
 
-        RecipeDTO recipe = RecipeDTO.builder().name("알리오 올리오").type("파스타").ingredientNames(new String[]{"마늘","올리브유","고추"}).build();
 
         //when
-        ingredientDao.save(ingredient1);
-        ingredientDao.save(ingredient2);
-        ingredientDao.save(ingredient3);
+        Set<String> ingredientId = new HashSet<>();
+        ingredientId.add(ingredientDao.save(ingredient1).getId());
+        ingredientId.add(ingredientDao.save(ingredient2).getId());
+        ingredientId.add(ingredientDao.save(ingredient3).getId());
+
+        RecipeDTO recipe = RecipeDTO.builder().name("알리오 올리오").type("파스타").ingredientIds(ingredientId).build();
 
         RecipeDTO recipeResponseDTO = recipeDao.save(recipe);
         assertThat(ingredientRepository.findByName("마늘").getRecipes().size()).isEqualTo(1);
@@ -80,14 +81,19 @@ class RecipeDaoTest {
         IngredientDTO ingredient3 = IngredientDTO.builder().name("고추").build();
         IngredientDTO ingredient4 = IngredientDTO.builder().name("감자").build();
 
-        RecipeDTO recipe = RecipeDTO.builder().name("알리오 올리오").type("파스타").ingredientNames(new String[]{"마늘","올리브유","고추"}).build();
-        RecipeDTO updateDateRecipe = RecipeDTO.builder().name("감자 튀김").type("튀김").ingredientNames(new String[]{"감자"}).build();
 
         //when
-        ingredientDao.save(ingredient1);
-        ingredientDao.save(ingredient2);
-        ingredientDao.save(ingredient3);
-        ingredientDao.save(ingredient4);
+        Set<String> originIngredientId = new HashSet<>();
+        originIngredientId.add(ingredientDao.save(ingredient1).getId());
+        originIngredientId.add(ingredientDao.save(ingredient2).getId());
+        originIngredientId.add(ingredientDao.save(ingredient3).getId());
+        RecipeDTO recipe = RecipeDTO.builder().name("알리오 올리오").type("파스타").ingredientIds(originIngredientId).build();
+
+
+        Set<String> updatedIngredientId = new HashSet<>();
+        updatedIngredientId.add(ingredientDao.save(ingredient4).getId());
+        RecipeDTO updateDateRecipe = RecipeDTO.builder().name("감자 튀김").type("튀김").ingredientIds(updatedIngredientId).build();
+
 
         RecipeDTO savedRecipe = recipeDao.save(recipe);
         recipeDao.updateRecipeById(savedRecipe.getId(), updateDateRecipe);
@@ -105,9 +111,9 @@ class RecipeDaoTest {
     @DisplayName("해당 이름을 포함하는 모든 레시피 찾기")
     void findAllRecipesByContainName(){
         //given
-        RecipeDTO recipe1 = RecipeDTO.builder().name("감자 튀김").type("튀김").ingredientNames(new String[]{}).build();
-        RecipeDTO recipe2 = RecipeDTO.builder().name("새우튀김").type("튀김").ingredientNames(new String[]{}).build();
-        RecipeDTO recipe3 = RecipeDTO.builder().name("병아리 튀김").type("튀김").ingredientNames(new String[]{}).build();
+        RecipeDTO recipe1 = RecipeDTO.builder().name("감자 튀김").type("튀김").build();
+        RecipeDTO recipe2 = RecipeDTO.builder().name("새우튀김").type("튀김").build();
+        RecipeDTO recipe3 = RecipeDTO.builder().name("병아리 튀김").type("튀김").build();
 
         //when
         recipeDao.save(recipe1);
@@ -169,12 +175,13 @@ class RecipeDaoTest {
         IngredientDTO ingredient2 = IngredientDTO.builder().name("올리브유").build();
         IngredientDTO ingredient3 = IngredientDTO.builder().name("고추").build();
 
-        RecipeDTO recipe = RecipeDTO.builder().name("알리오 올리오").type("파스타").ingredientNames(new String[]{"마늘","올리브유","고추"}).build();
 
         //when
-        ingredientDao.save(ingredient1);
-        ingredientDao.save(ingredient2);
-        ingredientDao.save(ingredient3);
+        Set<String> ingredientId = new HashSet<>();
+        ingredientId.add(ingredientDao.save(ingredient1).getId());
+        ingredientId.add(ingredientDao.save(ingredient2).getId());
+        ingredientId.add(ingredientDao.save(ingredient3).getId());
+        RecipeDTO recipe = RecipeDTO.builder().name("알리오 올리오").type("파스타").ingredientIds(ingredientId).build();
 
         recipeDao.save(recipe);
         //then

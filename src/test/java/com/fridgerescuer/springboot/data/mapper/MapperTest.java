@@ -33,7 +33,7 @@ class MapperTest {
         assertThat(ingredient.getRecipes().size()).isEqualTo(2);
         assertThat(ingredient.getRecipes().get(0).getName()).isEqualTo("고구마 전");
     }
-
+/*
     @Test
     void builderWithMapperTest(){
         RecipeDTO recipeDTO = RecipeDTO.builder().name("pizza").type("instance")
@@ -41,7 +41,7 @@ class MapperTest {
         Recipe recipe = RecipeMapper.INSTANCE.DTOtoRecipe(recipeDTO);
 
         assertThat(recipe.getName()).isEqualTo("pizza");
-    }
+    }*/
 
     @Test
     void commentListToDTOListMapper(){

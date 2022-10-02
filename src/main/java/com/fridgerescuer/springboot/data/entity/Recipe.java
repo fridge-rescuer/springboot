@@ -10,6 +10,7 @@ import org.springframework.data.mongodb.core.mapping.DocumentReference;
 
 import javax.persistence.GeneratedValue;
 import java.util.List;
+import java.util.Set;
 
 @Document(collection = "recipe")
 @AllArgsConstructor
@@ -24,7 +25,6 @@ public class Recipe {
 
     private String name;
     private String type;
-    private String[] ingredientNames;
 
     private String producerMemberId;
 
@@ -32,6 +32,8 @@ public class Recipe {
     private List<Comment> comments;
     private double ratingAvg; //comment들로 부터 계산한 평균값
     private double ratingTotalSum;
+
+    private Set<String> ingredientIds;
 
     private String imageId;
 
