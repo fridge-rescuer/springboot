@@ -49,6 +49,13 @@ public class CommentDaoImpl implements CommentDao {
 
     private final CommentMapper commentMapper = CommentMapper.INSTANCE;
 
+    @Override
+    public CommentDTO save(CommentDTO commentDTO) {
+        Comment savedComment = commentRepository.save(commentMapper.DTOtoComment(commentDTO));
+        log.info("save Comment ={}", savedComment);
+        return commentMapper.commentToDTO(savedComment);
+    }
+
     //다른 dao를 접근해 처리하는건 일종의 월권행위로 판단되지만, 일단 dao 파트에 작성
     // 추후 검토 후에 서비스 계층으로 변경 요망(서비스 계층이 할일이 너무 많이 지는 문제도 고려해야함)
     @Override

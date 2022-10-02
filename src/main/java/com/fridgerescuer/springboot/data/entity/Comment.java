@@ -5,6 +5,7 @@ import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import javax.persistence.GeneratedValue;
+import java.time.LocalDateTime;
 
 @Document(collection = "comment")
 @AllArgsConstructor
@@ -21,7 +22,7 @@ public class Comment {
     private String body;
 
     private String imageId;
-    private String date;
+    private LocalDateTime date;
 
     private String recipeId;
 
