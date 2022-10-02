@@ -3,6 +3,7 @@ package com.fridgerescuer.springboot.exception;
 import com.fridgerescuer.springboot.exception.errorcodeimpl.CommonError;
 import com.fridgerescuer.springboot.exception.exceptionimpl.IngredientException;
 import com.fridgerescuer.springboot.exception.exceptionimpl.MemberException;
+import com.fridgerescuer.springboot.exception.exceptionimpl.RecipeException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -36,6 +37,13 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
 
     @ExceptionHandler(IngredientException.class)
     public ResponseEntity<Object> handleIngredientException(IngredientException ingredientException) {
+        log.info("IngredientException thrown : " + ingredientException.getErrorCode().getMessage());
+        ErrorCode error = ingredientException.getErrorCode();
+        return createErrorResponse(error);
+    }
+
+    @ExceptionHandler(RecipeException.class)
+    public ResponseEntity<Object> handleRecipeException(IngredientException ingredientException) {
         log.info("IngredientException thrown : " + ingredientException.getErrorCode().getMessage());
         ErrorCode error = ingredientException.getErrorCode();
         return createErrorResponse(error);

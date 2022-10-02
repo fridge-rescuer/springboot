@@ -1,74 +1,79 @@
 package com.fridgerescuer.springboot.controller;
 
-//import lombok.RequiredArgsConstructor;
-//import lombok.extern.slf4j.Slf4j;
-//import org.springframework.beans.factory.annotation.Autowired;
-//import org.springframework.stereotype.Controller;
-//import org.springframework.web.bind.annotation.*;
-//
-//@Slf4j
-//@RequiredArgsConstructor
-//@Controller
-//@RequestMapping("/recipe")
-public class RecipeController { //사진 등록 테스트용 컨트롤러, 테스트용이라 전부 삭제해도됨
-//
+import com.fridgerescuer.springboot.data.dto.CommentDTO;
+import com.fridgerescuer.springboot.data.dto.CommentForm;
+import com.fridgerescuer.springboot.data.dto.RecipeDTO;
+import com.fridgerescuer.springboot.service.GlobalService;
+import com.fridgerescuer.springboot.service.RecipeService;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.*;
+
+import java.time.LocalDateTime;
+
+@RestController
+@RequiredArgsConstructor
+@Slf4j
+@RequestMapping("/recipes")
+public class RecipeController {
+
+    @Autowired
+    private final RecipeService recipeService;
 //    @Autowired
-//    private final RecipeService recipeService;
-//    @Autowired
-//    private final RecipeRepository repository; //테스트 용임
-//
-//    @Autowired
-//    private GridFsTemplate gridFsTemplate;
-//    @Autowired
-//    private GridFsOperations operations;
-//
-//    @PostMapping("/upload")
-//    public String addImage(@RequestParam("name") String name, @RequestParam("image")MultipartFile image, Model model) throws IOException {
-//        RecipeDTO recipe = RecipeDTO.builder().name(name).build();
-//        String savedId = recipeService.saveRecipe(recipe).getId();
-//        recipeService.addRecipeImage(savedId, image);
-//
-//        RecipeResponseDTO foundRecipe = recipeService.findById(savedId);
-//        log.info("saved = {}", foundRecipe);
-//        return "redirect:/recipe/" + savedId;
-//    }
-//
-//    @GetMapping("/{id}")
-//    public String getImage(@PathVariable String id, Model model){
-//        RecipeResponseDTO foundRecipe = recipeService.findById(id);
-//        model.addAttribute("name", foundRecipe.getName());
-//        model.addAttribute("image", Base64.getEncoder().encodeToString(foundRecipe.getImage().getData()));
-//        return "recipe";
-//    }
-//
-//    @GetMapping("/{id}")
-//    public String getImage(@PathVariable String id, Model model) {
-//        Recipe foundRecipe = repository.findById(id).get();
-//        log.info("found recipe ={}", foundRecipe);
-//
-//        GridFSFile file = gridFsTemplate.findOne(new Query(Criteria.where("_id").is(foundRecipe.getImageId())));
-//        GridFsResource resource = operations.getResource(file);
-//
-//
-//        model.addAttribute("name", foundRecipe.getName());
-//        try {
-//            model.addAttribute("image",resource.getInputStream());
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//        }
-//        return "recipe";
-//    }
-//
-//    @ResponseBody
-//    @RequestMapping(value = "/{id}/image", method = RequestMethod.GET, produces = MediaType.IMAGE_JPEG_VALUE)
-//    public byte[] testphoto(@PathVariable String id) throws IOException {
-//        Recipe foundRecipe = repository.findById(id).get();
-//        log.info("found recipe ={}", foundRecipe);
-//
-//        GridFSFile file = gridFsTemplate.findOne(new Query(Criteria.where("_id").is(foundRecipe.getImageId())));
-//        GridFsResource resource = operations.getResource(file);
-//
-//        InputStream in = resource.getInputStream();
-//        return in.readAllBytes();
-//    }
+//    private final GlobalService globalService;
+
+    @PostMapping("/create")
+    public RecipeDTO createRecipe(@RequestBody RecipeDTO recipeDTO) {
+        //토큰 꺼내는 작업
+        String memberToken = null;
+
+        return recipeService.createRecipe(recipeDTO, memberToken);
+    }
+
+    @GetMapping("/{recipeId}")
+    public RecipeDTO getRecipeDetail(@PathVariable("recipeId") String recipeId) {
+        return recipeService.getRecipeDetail(recipeId);
+    }
+
+    @PostMapping("/{recipeId}/update")
+    public RecipeDTO updateRecipe(@RequestBody RecipeDTO recipeDTO) {
+        return recipeService.updateRecipe(recipeDTO);
+    }
+
+    @DeleteMapping("/{recipeId}/delete")
+    public void deleteRecipe(@RequestBody RecipeDTO recipeDTO) {
+        recipeService.deleteRecipe(recipeDTO);
+    }
+
+    @PostMapping("/{recipeId}/comments/create")
+    public void createComment(@PathVariable("recipeId") String recipeId, @ModelAttribute CommentForm commentForm) {
+        //memberToken 전달
+        String memberToken = null;
+        RecipeDTO recipeDTO = recipeService.getRecipeDetail(recipeId);
+        CommentDTO commentDTO = CommentDTO.builder().body(commentForm.getBody()).rating(commentForm.getRating()).date(LocalDateTime.now()).recipeId(recipeId).build();
+        recipeService.createRecipeComment(recipeDTO, memberToken, commentDTO, commentForm.getImages());
+    }
+
+    //추후 사진 변경도 추가해야함
+    @PostMapping("/{recipeId}/comments/{commentId}/update")
+    public void updateComment(@PathVariable("recipeId") String recipeId, @PathVariable("commentId") String commentId, CommentForm tryUpdateComment) {
+        CommentDTO commentDTO = recipeService.getRecipeComment(commentId);
+        commentDTO.setBody(tryUpdateComment.getBody());
+        commentDTO.setRating(tryUpdateComment.getRating());
+
+        //추후 token 추출
+        String memberToken = null;
+        recipeService.updateRecipeComment(commentDTO, memberToken);
+    }
+
+    @DeleteMapping("/{recipeId}/comments/{commentId}/delete")
+    public void deleteComment(@PathVariable("recipeId") String recipeId, @PathVariable("commentId") String commentId) {
+        //추후 token 추출
+        String memberToken = null;
+
+        recipeService.deleteRecipeComment(commentId, memberToken);
+
+    }
+
 }

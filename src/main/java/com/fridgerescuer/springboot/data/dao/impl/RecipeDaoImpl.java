@@ -4,22 +4,17 @@ import com.fridgerescuer.springboot.data.dao.ImageDao;
 import com.fridgerescuer.springboot.data.dao.MemberDao;
 import com.fridgerescuer.springboot.data.dao.RecipeDao;
 import com.fridgerescuer.springboot.data.dto.CommentDTO;
-import com.fridgerescuer.springboot.data.dto.MemberDTO;
 import com.fridgerescuer.springboot.data.dto.RecipeDTO;
 import com.fridgerescuer.springboot.data.entity.Comment;
 import com.fridgerescuer.springboot.data.entity.Ingredient;
-import com.fridgerescuer.springboot.data.entity.Member;
 import com.fridgerescuer.springboot.data.entity.Recipe;
 import com.fridgerescuer.springboot.data.mapper.CommentMapper;
 import com.fridgerescuer.springboot.data.mapper.RecipeMapper;
 import com.fridgerescuer.springboot.data.repository.RecipeRepository;
-import com.fridgerescuer.springboot.exception.exceptionimpl.NoSuchRecipeException;
-import com.mongodb.client.result.UpdateResult;
+import com.fridgerescuer.springboot.exception.errorcodeimpl.RecipeError;
+import com.fridgerescuer.springboot.exception.exceptionimpl.RecipeException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.bson.BsonBinarySubType;
-import org.bson.conversions.Bson;
-import org.bson.types.Binary;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
@@ -77,7 +72,7 @@ public class RecipeDaoImpl implements RecipeDao {
         Optional<Recipe> foundRecipe = repository.findById(id);
 
         if (foundRecipe.isEmpty()){
-            throw new NoSuchRecipeException(new NullPointerException("no such recipe id in Repository, id=" + id));
+            throw new RecipeException(RecipeError.NOT_EXIST);
         }
 
         return foundRecipe.get();
@@ -92,7 +87,7 @@ public class RecipeDaoImpl implements RecipeDao {
     public RecipeDTO findByName(String name) {
         Recipe foundRecipe = repository.findByName(name);
         if(foundRecipe == null){
-            throw new NoSuchRecipeException(new NullPointerException("no such recipe name in Repository, name=" + name));
+            throw new RecipeException(RecipeError.NOT_EXIST);
         }
 
         return recipeMapper.recipeToDTO(foundRecipe);
@@ -106,7 +101,7 @@ public class RecipeDaoImpl implements RecipeDao {
         List<Recipe> foundRecipes = template.find(query, Recipe.class);
 
         if(foundRecipes.isEmpty()){
-            throw new NoSuchRecipeException(new NullPointerException("no such recipe contain name in Repository, name=" + name));
+            throw new RecipeException(RecipeError.NOT_EXIST);
          }
 
         return recipeMapper.recipeListToDTOList(foundRecipes);
