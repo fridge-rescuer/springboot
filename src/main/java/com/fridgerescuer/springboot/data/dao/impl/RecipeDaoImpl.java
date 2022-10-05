@@ -18,6 +18,8 @@ import com.mongodb.client.result.UpdateResult;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
@@ -69,18 +71,7 @@ public class RecipeDaoImpl implements RecipeDao {
         }
         log.info(" setReferenceWithIngredientsByIngredientIds modify {}'document ", modifiedCnt);
     }
-    /*
-    private void setReferenceWithIngredientsByName(String[] ingredientNames, Recipe recipe){
-        if(ingredientNames== null || ingredientNames.length ==0)
-            return;
 
-        for (String name:ingredientNames) {
-            template.update(Ingredient.class)
-                    .matching(where("name").is(name))
-                    .apply(new Update().push("recipes", recipe))
-                    .first();
-        }
-    }*/
 
     @Override
     public RecipeDTO save(RecipeDTO recipeDTO) {        //member 없이 저장
@@ -114,6 +105,7 @@ public class RecipeDaoImpl implements RecipeDao {
     }
 
     @Override
+    @Cacheable(cacheNames = "recipe", key = "#id")
     public RecipeDTO findById(String id) {
         return recipeMapper.recipeToDTO(this.getRecipeById(id));
     }
@@ -150,6 +142,7 @@ public class RecipeDaoImpl implements RecipeDao {
     }
 
     @Override
+    @CacheEvict(cacheNames = "recipe", key = "#p0")
     public void updateRecipeById(String targetId, RecipeDTO updateDataDTO) {
         Recipe targetRecipe = this.getRecipeById(targetId);  //존재하지 않는 id면 여기서 예외 처리됨
         deleteReferenceWithIngredients(targetRecipe);
@@ -176,6 +169,8 @@ public class RecipeDaoImpl implements RecipeDao {
     }
 
     private void deleteReferenceWithIngredients(Recipe recipe){
+        if(recipe.getIngredientIds() == null || recipe.getIngredientIds().size() == 0)
+            return;
 
         for (String ingredientId: recipe.getIngredientIds()) {   // 기존 재료들과의 연관 관계 제거
             Query query = new Query();
@@ -187,6 +182,7 @@ public class RecipeDaoImpl implements RecipeDao {
     }
 
     @Override
+    @CacheEvict(cacheNames = "recipe", key = "#p0")
     public void deleteById(String targetId) {
         Recipe targetRecipe = this.getRecipeById(targetId);
 
@@ -198,8 +194,7 @@ public class RecipeDaoImpl implements RecipeDao {
         log.info("delete recipe, id={}", targetId);
     }
 
-    @Override
-    public void setProducerMemberIByRecipeId(String recipeId, String producerMemberId){
+    private void setProducerMemberIByRecipeId(String recipeId, String producerMemberId){
         template.update(Recipe.class)
                 .matching(where("id").is(recipeId))
                 .apply(new Update().set("producerMemberId", producerMemberId))
@@ -207,6 +202,7 @@ public class RecipeDaoImpl implements RecipeDao {
     }
 
     @Override
+    @CacheEvict(cacheNames = "recipe", key = "#p0")
     public void addCommentToRecipe(String recipeId, CommentDTO commentDTO) {
         Comment comment = CommentMapper.INSTANCE.DTOtoComment(commentDTO);
 
@@ -232,6 +228,7 @@ public class RecipeDaoImpl implements RecipeDao {
     }
 
     @Override
+    @CacheEvict(cacheNames = "recipe", key = "#p0")
     public void updateRating(String recipeId, double newRating, double originRating) {
         Recipe recipe = this.getRecipeById(recipeId);
         double totalSum = recipe.getRatingTotalSum() - originRating + newRating;
@@ -248,6 +245,7 @@ public class RecipeDaoImpl implements RecipeDao {
     }
 
     @Override
+    @CacheEvict(cacheNames = "recipe", key = "#p0")
     public void deleteRating(String recipeId, double rating) {
         Recipe recipe = this.getRecipeById(recipeId);
 
