@@ -111,13 +111,13 @@ public class RecipeDaoImpl implements RecipeDao {
     }
 
     @Override
-    public RecipeDTO findByName(String name) {
-        Recipe foundRecipe = repository.findByName(name);
-        if(foundRecipe == null){
+    public List<RecipeDTO> findAllByName(String name) {
+        List<Recipe> recipes = repository.findAllByName(name);
+        if(recipes == null || recipes.isEmpty()){
             throw new RecipeException(RecipeError.NOT_EXIST);
         }
 
-        return recipeMapper.recipeToDTO(foundRecipe);
+        return recipeMapper.recipeListToDTOList(recipes);
     }
 
     @Override
