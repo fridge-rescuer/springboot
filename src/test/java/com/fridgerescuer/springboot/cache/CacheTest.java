@@ -12,6 +12,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.data.mongo.DataMongoTest;
 import org.springframework.context.annotation.ComponentScan;
 
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+
 @ComponentScan(basePackages = "com.fridgerescuer.springboot")
 @DataMongoTest
 public class CacheTest {
@@ -51,20 +56,28 @@ public class CacheTest {
     @Test
     void evictIngredientCache(){
         //given
-        IngredientDTO ingredient = IngredientDTO.builder().name("김피탕").build();
+        IngredientDTO ingredient = IngredientDTO.builder().name("김치").build();
         String id = ingredientDao.save(ingredient).getId();
 
+        Set<String> ingredientIds = new HashSet<>();
+        ingredientIds.add(id);
+
+        RecipeDTO recipe = RecipeDTO.builder().name("김피탕").ingredientIds(ingredientIds).build();
+        RecipeDTO savedRecipeDto = recipeDao.save(recipe);
+
         IngredientDTO firstCache = ingredientDao.findById(id);
+
+        recipeDao.updateRecipeById(savedRecipeDto.getId(),RecipeDTO.builder().name("짬뽕").ingredientIds(ingredientIds).build());
+        IngredientDTO recipeUpdatedCache = ingredientDao.findById(id);
+        Assertions.assertThat(recipeUpdatedCache.getRecipeDTOs().get(0).getName()).isEqualTo("짬뽕");
+
+
         ingredientDao.findById(id);
-        ingredientDao.findById(id);
-        ingredientDao.findByName(firstCache.getName());
-        ingredientDao.findByName(firstCache.getName());
-        IngredientDTO updateDTO = IngredientDTO.builder().name("짬뽕").build();
+        IngredientDTO updateDTO = IngredientDTO.builder().name("피자").build();
 
         //when
         ingredientDao.updateById(id, updateDTO);
         IngredientDTO secondCache = ingredientDao.findById(id);
-        ingredientDao.findByName(secondCache.getName());
 
         //then
         Assertions.assertThat(secondCache.getName()).isEqualTo(updateDTO.getName());

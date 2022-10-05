@@ -38,8 +38,6 @@ public class IngredientDaoImpl implements IngredientDao {
     private final IngredientRepository repository;
     @Autowired
     private final MongoTemplate template;
-    @Autowired
-    private final CacheUtil cacheUtil;
 
     private final IngredientMapper ingredientMapper = IngredientMapper.INSTANCE;
     private final RecipeMapper recipeMapper = RecipeMapper.INSTANCE;
@@ -62,7 +60,7 @@ public class IngredientDaoImpl implements IngredientDao {
     }
 
 
-    @Cacheable(cacheNames = "ingredient", key = "#name")
+    //@Cacheable(cacheNames = "ingredient", key = "#name")
     private Ingredient getIngredientByName(String name){
         Ingredient foundIngredient = repository.findByName(name);
         if(foundIngredient ==null){
@@ -73,7 +71,7 @@ public class IngredientDaoImpl implements IngredientDao {
     }
 
     @Override
-    @Cacheable(cacheNames = "ingredient", key = "#name")
+    //@Cacheable(cacheNames = "ingredient", key = "#name")
     public IngredientDTO findByName(String name) {
         Ingredient ingredientByName = this.getIngredientByName(name);
 
@@ -136,9 +134,10 @@ public class IngredientDaoImpl implements IngredientDao {
     } */
 
     @Override
+    @CacheEvict(cacheNames = "ingredient", key = "#p0")
     public void updateById(String targetId, IngredientDTO ingredientDTO) {
         this.getIngredientById(targetId);//존재 id인지 확인
-        cacheUtil.evictCacheFromIngredient(CacheType.INGREDIENT.getCacheName(), targetId);
+        //cacheUtil.evictCacheFromIngredient(CacheType.INGREDIENT.getCacheName(), targetId);
 
         Query query = new Query();
         query.addCriteria(Criteria.where("id").is(targetId));
@@ -153,9 +152,10 @@ public class IngredientDaoImpl implements IngredientDao {
     }
 
     @Override
+    @CacheEvict(cacheNames = "ingredient", key = "#p0")
     public void deleteById(String targetId) {
         Ingredient targetIngredient = getIngredientById(targetId);
-        cacheUtil.evictCacheFromIngredient(CacheType.INGREDIENT.getCacheName(), targetId);
+        //cacheUtil.evictCacheFromIngredient(CacheType.INGREDIENT.getCacheName(), targetId);
 
         List<Recipe> recipes = targetIngredient.getRecipes();
 

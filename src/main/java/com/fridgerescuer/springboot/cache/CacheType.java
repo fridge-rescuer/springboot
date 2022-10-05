@@ -4,9 +4,9 @@ import lombok.Getter;
 
 @Getter
 public enum CacheType {
-    RECIPE("recipe", 5 * 60, 1000),
-    INGREDIENT("ingredient", 5 * 60, 1000);
-    //ARTIST_INFO("artistInfo", 24 * 60 * 60, 10000);
+    RECIPE("recipe", 10 * 60, 1000),
+    INGREDIENT("ingredient", 10 * 60, 1000);
+    //EXPIRATION_DATA("expirationData", 10 * 60, 1000);
 
     CacheType(String cacheName, int expiredAfterWrite, int maximumSize) {
         this.cacheName = cacheName;

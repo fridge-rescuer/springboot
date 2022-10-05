@@ -1,5 +1,6 @@
 package com.fridgerescuer.springboot.data.dao.impl;
 
+import com.fridgerescuer.springboot.cache.CacheUtil;
 import com.fridgerescuer.springboot.data.dao.ImageDao;
 import com.fridgerescuer.springboot.data.dao.MemberDao;
 import com.fridgerescuer.springboot.data.dao.RecipeDao;
@@ -20,6 +21,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
+import org.springframework.cache.annotation.Caching;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
@@ -47,9 +49,11 @@ public class RecipeDaoImpl implements RecipeDao {
 
     @Autowired
     private final MemberDao memberDao;
-
     @Autowired
     private final ImageDao imageDao;
+
+    @Autowired
+    private final CacheUtil cacheUtil;
 
     private final RecipeMapper recipeMapper = RecipeMapper.INSTANCE;
 
@@ -145,6 +149,7 @@ public class RecipeDaoImpl implements RecipeDao {
     @CacheEvict(cacheNames = "recipe", key = "#p0")
     public void updateRecipeById(String targetId, RecipeDTO updateDataDTO) {
         Recipe targetRecipe = this.getRecipeById(targetId);  //존재하지 않는 id면 여기서 예외 처리됨
+        cacheUtil.evictCacheFromRecipeReferenceIngredient(targetRecipe.getIngredientIds());
         deleteReferenceWithIngredients(targetRecipe);
 
         // 이미지가 변경되면 기존 이미지 DB에서 제거, 만약 updateDTO의 imageid가 Null이면 삭제됨
@@ -185,6 +190,7 @@ public class RecipeDaoImpl implements RecipeDao {
     @CacheEvict(cacheNames = "recipe", key = "#p0")
     public void deleteById(String targetId) {
         Recipe targetRecipe = this.getRecipeById(targetId);
+        cacheUtil.evictCacheFromRecipeReferenceIngredient(targetRecipe.getIngredientIds());
 
         if(targetRecipe.getImageId() != null)   //이미지 부터 제거거
             imageDao.deleteImageByImageId(targetRecipe.getImageId());
@@ -204,9 +210,11 @@ public class RecipeDaoImpl implements RecipeDao {
     @Override
     @CacheEvict(cacheNames = "recipe", key = "#p0")
     public void addCommentToRecipe(String recipeId, CommentDTO commentDTO) {
+
         Comment comment = CommentMapper.INSTANCE.DTOtoComment(commentDTO);
 
         Recipe recipe = this.getRecipeById(recipeId);
+        cacheUtil.evictCacheFromRecipeReferenceIngredient(recipe.getIngredientIds());
 
         double ratingTotalSum = comment.getRating();
         double finalRatingAvg = ratingTotalSum;
@@ -231,6 +239,8 @@ public class RecipeDaoImpl implements RecipeDao {
     @CacheEvict(cacheNames = "recipe", key = "#p0")
     public void updateRating(String recipeId, double newRating, double originRating) {
         Recipe recipe = this.getRecipeById(recipeId);
+        cacheUtil.evictCacheFromRecipeReferenceIngredient(recipe.getIngredientIds());
+
         double totalSum = recipe.getRatingTotalSum() - originRating + newRating;
         double updatedRatingAvg = totalSum/ recipe.getComments().size();
 
@@ -247,7 +257,9 @@ public class RecipeDaoImpl implements RecipeDao {
     @Override
     @CacheEvict(cacheNames = "recipe", key = "#p0")
     public void deleteRating(String recipeId, double rating) {
+
         Recipe recipe = this.getRecipeById(recipeId);
+        cacheUtil.evictCacheFromRecipeReferenceIngredient(recipe.getIngredientIds());
 
         double totalSum = 0;
         double updatedRatingAvg = 0;
