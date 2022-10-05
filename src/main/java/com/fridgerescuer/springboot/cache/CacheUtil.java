@@ -33,6 +33,11 @@ public class CacheUtil {
             log.info("cacheName: {}, key: {} evicted",cacheName,name );
     }
 
+    public void evictCacheByRecipeId(String key){
+        final String cacheName = CacheType.RECIPE.getCacheName();
+        cacheManager.getCache(cacheName).evictIfPresent(key);
+    }
+
     public void evictCacheFromRecipeReferenceIngredient(Set<String> ingredientIds){
         if(ingredientIds == null || ingredientIds.size() == 0)
             return;

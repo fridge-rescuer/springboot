@@ -38,6 +38,8 @@ public class IngredientDaoImpl implements IngredientDao {
     private final IngredientRepository repository;
     @Autowired
     private final MongoTemplate template;
+    @Autowired
+    private final CacheUtil cacheUtil;
 
     private final IngredientMapper ingredientMapper = IngredientMapper.INSTANCE;
     private final RecipeMapper recipeMapper = RecipeMapper.INSTANCE;
@@ -167,6 +169,8 @@ public class IngredientDaoImpl implements IngredientDao {
 
     private void deleteReferenceWithRecipe(List<Recipe> recipes, String ingredientId){
         for (Recipe recipe: recipes) {
+            cacheUtil.evictCacheByRecipeId(recipe.getId());
+
             Query query = new Query();
             query.addCriteria(Criteria.where("_id").is(recipe.getId()));
             Update referenceUpdate = new Update().pull("ingredientIds", ingredientId);
