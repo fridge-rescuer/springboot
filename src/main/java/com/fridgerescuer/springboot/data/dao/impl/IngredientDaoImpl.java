@@ -1,5 +1,7 @@
 package com.fridgerescuer.springboot.data.dao.impl;
 
+import com.fridgerescuer.springboot.cache.CacheType;
+import com.fridgerescuer.springboot.cache.CacheUtil;
 import com.fridgerescuer.springboot.data.dao.IngredientDao;
 import com.fridgerescuer.springboot.data.dto.IngredientDTO;
 import com.fridgerescuer.springboot.data.dto.RecipeDTO;
@@ -14,6 +16,8 @@ import com.mongodb.client.result.UpdateResult;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
@@ -34,6 +38,8 @@ public class IngredientDaoImpl implements IngredientDao {
     private final IngredientRepository repository;
     @Autowired
     private final MongoTemplate template;
+    @Autowired
+    private final CacheUtil cacheUtil;
 
     private final IngredientMapper ingredientMapper = IngredientMapper.INSTANCE;
     private final RecipeMapper recipeMapper = RecipeMapper.INSTANCE;
@@ -56,14 +62,22 @@ public class IngredientDaoImpl implements IngredientDao {
     }
 
 
-    @Override
-    public IngredientDTO findByName(String name) {
+    @Cacheable(cacheNames = "ingredient", key = "#name")
+    private Ingredient getIngredientByName(String name){
         Ingredient foundIngredient = repository.findByName(name);
         if(foundIngredient ==null){
             throw new IngredientException(IngredientError.NOT_EXIST);
         }
 
-        return ingredientMapper.ingredientToDTO(foundIngredient);
+        return foundIngredient;
+    }
+
+    @Override
+    @Cacheable(cacheNames = "ingredient", key = "#name")
+    public IngredientDTO findByName(String name) {
+        Ingredient ingredientByName = this.getIngredientByName(name);
+
+        return ingredientMapper.ingredientToDTO(ingredientByName);
     }
 
     private Ingredient getIngredientById(String id){
@@ -72,11 +86,11 @@ public class IngredientDaoImpl implements IngredientDao {
         if(foundIngredient.isEmpty()){
             throw new IngredientException(IngredientError.NOT_EXIST);
         }
-
         return foundIngredient.get();
     }
 
     @Override
+    @Cacheable(cacheNames = "ingredient", key = "#id")
     public IngredientDTO findById(String id) {
         Ingredient foundIngredient = getIngredientById(id);
 
@@ -123,6 +137,9 @@ public class IngredientDaoImpl implements IngredientDao {
 
     @Override
     public void updateById(String targetId, IngredientDTO ingredientDTO) {
+        this.getIngredientById(targetId);//존재 id인지 확인
+        cacheUtil.evictCacheFromIngredient(CacheType.INGREDIENT.getCacheName(), targetId);
+
         Query query = new Query();
         query.addCriteria(Criteria.where("id").is(targetId));
 
@@ -130,25 +147,22 @@ public class IngredientDaoImpl implements IngredientDao {
         update.set("name", ingredientDTO.getName());
         // 엄청난 양의 성분 업데이트는 추후에 DB 데이터가 완벽해 지면 진행
 
-        UpdateResult updateResult = template.updateMulti(query, update, Ingredient.class);
+        template.updateMulti(query, update, Ingredient.class);
 
         log.info("update id={} to ingredient ={}", targetId,ingredientDTO);
-
-        if (updateResult.getModifiedCount() ==0){   //아무것도 변경되지 않은 경우, 해당 id가 존재하지 않는 것
-            throw new IngredientException(IngredientError.NOT_EXIST);
-        }
-
     }
 
     @Override
     public void deleteById(String targetId) {
         Ingredient targetIngredient = getIngredientById(targetId);
+        cacheUtil.evictCacheFromIngredient(CacheType.INGREDIENT.getCacheName(), targetId);
+
         List<Recipe> recipes = targetIngredient.getRecipes();
 
         this.repository.deleteById(targetId);
         deleteReferenceWithRecipe(recipes, targetId);   //제거가 완료된 후 참조 삭제
 
-       log.info("delete ingredient ={}", targetId);
+        log.info("delete ingredient ={}", targetId);
     }
 
     private void deleteReferenceWithRecipe(List<Recipe> recipes, String ingredientId){

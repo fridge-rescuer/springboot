@@ -1,8 +1,7 @@
 package com.fridgerescuer.springboot;
 
-import com.fridgerescuer.springboot.cache.CacheService;
+import com.fridgerescuer.springboot.cache.CacheUtil;
 import com.fridgerescuer.springboot.config.Config;
-import com.fridgerescuer.springboot.data.dao.RecipeDao;
 import com.fridgerescuer.springboot.databaseoperation.DBConverter;
 import com.fridgerescuer.springboot.databaseoperation.ReferenceInjector;
 import lombok.extern.slf4j.Slf4j;
@@ -23,8 +22,6 @@ public class SpringbootApplication implements CommandLineRunner {
 	@Autowired
 	private ReferenceInjector referenceInjector;
 
-	@Autowired
-	private CacheService cacheService;
 
 	public static void main(String[] args) {
 		SpringApplication.run(SpringbootApplication.class, args);
