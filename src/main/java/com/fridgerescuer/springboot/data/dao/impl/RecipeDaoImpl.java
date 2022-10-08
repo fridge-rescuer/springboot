@@ -1,12 +1,13 @@
 package com.fridgerescuer.springboot.data.dao.impl;
 
+import com.fridgerescuer.springboot.cache.AutoCompleteUtils;
 import com.fridgerescuer.springboot.cache.CacheUtil;
 import com.fridgerescuer.springboot.data.dao.ImageDao;
 import com.fridgerescuer.springboot.data.dao.MemberDao;
 import com.fridgerescuer.springboot.data.dao.RecipeDao;
 import com.fridgerescuer.springboot.data.dto.CommentDTO;
-import com.fridgerescuer.springboot.data.dto.IngredientDTO;
 import com.fridgerescuer.springboot.data.dto.RecipeDTO;
+import com.fridgerescuer.springboot.data.dto.SimpleRecipe;
 import com.fridgerescuer.springboot.data.entity.Comment;
 import com.fridgerescuer.springboot.data.entity.Ingredient;
 import com.fridgerescuer.springboot.data.entity.Recipe;
@@ -21,15 +22,12 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
-import org.springframework.cache.annotation.Caching;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.stereotype.Component;
-import org.springframework.web.multipart.MultipartFile;
 
-import java.io.IOException;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Optional;
@@ -54,6 +52,8 @@ public class RecipeDaoImpl implements RecipeDao {
 
     @Autowired
     private final CacheUtil cacheUtil;
+    @Autowired
+    private final AutoCompleteUtils autoCompleteUtils;
 
     private final RecipeMapper recipeMapper = RecipeMapper.INSTANCE;
 
@@ -112,6 +112,11 @@ public class RecipeDaoImpl implements RecipeDao {
     @Cacheable(cacheNames = "recipe", key = "#id")
     public RecipeDTO findById(String id) {
         return recipeMapper.recipeToDTO(this.getRecipeById(id));
+    }
+
+    @Override
+    public List<SimpleRecipe> searchSimpleRecipeListByAutoComplete(String keyword) {
+        return autoCompleteUtils.putSimplRecipeListByCache(keyword);
     }
 
     @Override

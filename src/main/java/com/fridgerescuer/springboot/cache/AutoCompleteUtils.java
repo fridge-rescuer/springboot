@@ -1,22 +1,21 @@
-package com.fridgerescuer.springboot.databaseoperation;
+package com.fridgerescuer.springboot.cache;
 
+import com.fridgerescuer.springboot.data.dto.SimpleRecipe;
 import com.mongodb.client.MongoClient;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoCursor;
 import com.mongodb.client.MongoDatabase;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import org.bson.Document;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.cache.annotation.CachePut;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Component;
 
 import java.util.*;
 
 @Component
 @Slf4j
-public class AutoCompleteInjector {
+public class AutoCompleteUtils {
     @Autowired
     private MongoClient mongoClient;
 
@@ -38,20 +37,25 @@ public class AutoCompleteInjector {
         Set<String> keySet = prefixCacheMap.keySet();
         log.info("keySet size ={}", keySet.size());
         Iterator<String> iterator = keySet.iterator();
-        iterator.forEachRemaining((key) -> {putAutoCompleteCache(key);});
+        iterator.forEachRemaining((key) -> {
+            putSimplRecipeListByCache(key);});
 
     }
 
-    @CachePut(cacheNames = "recipeAutoComplete", key = "#p0")
-    private List<String> putAutoCompleteCache(String keyword){
-        List<String> recipeIds = new ArrayList<>();
+    @Cacheable(cacheNames = "recipeAutoComplete", key = "#p0")
+    public List<SimpleRecipe> putSimplRecipeListByCache(String keyword){
+        List<SimpleRecipe> simpleRecipes = new ArrayList<>();
 
-         prefixCacheMap.get(keyword).iterator()
-                 .forEachRemaining((simpleRecipe) -> {
-                     log.info("keyword: {}     =>    recipe ={}" ,keyword, simpleRecipe.getName());
-                     recipeIds.add(simpleRecipe.getId());});
-        log.info("complete={}", count++);
-         return recipeIds;
+        if(prefixCacheMap.containsKey(keyword)){
+            prefixCacheMap.get(keyword).iterator()
+                    .forEachRemaining((simpleRecipe) -> {
+                        //log.info("keyword: {}     =>    recipe ={}" ,keyword, simpleRecipe.getName());
+                        simpleRecipes.add(simpleRecipe);});
+
+            log.info("complete={}", count++);
+        }
+
+        return simpleRecipes;
     }
 
     private void insertKeywordByStrings(List<String> parsedName, SimpleRecipe recipe){
@@ -85,8 +89,8 @@ public class AutoCompleteInjector {
 
         MongoCursor<Document> recipeCursor =  recipeCollection.find().cursor();//Mongo Cursor interface implementing the iterator protocol
 
-        int cnt = 0;
         List<SimpleRecipe> recipes = new ArrayList<>();
+
         while (recipeCursor.hasNext()){
             Document ingredient = recipeCursor.next();
             String fullName = ingredient.getString("name");
@@ -94,28 +98,10 @@ public class AutoCompleteInjector {
             int priority = ingredient.getInteger("cachePriority");
 
             recipes.add(new SimpleRecipe(fullName,id,priority));
-
-            //if(cnt++ >4) break;
-            //log.info( "pass: ",cnt++);
         }
         return recipes;
     }
 
 
-    @Getter
-    @AllArgsConstructor
-    private class SimpleRecipe implements Comparable<SimpleRecipe>{
-        private String name;
-        private String id;
-        private int cachePriority;
 
-        @Override
-        public int compareTo(SimpleRecipe o) {
-            if (this.cachePriority > o.getCachePriority())
-                return 1;
-            else if(this.cachePriority < o.getCachePriority())
-                return -1;
-            return 0;
-        }
-    }
 }

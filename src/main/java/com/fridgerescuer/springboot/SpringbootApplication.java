@@ -2,7 +2,9 @@ package com.fridgerescuer.springboot;
 
 import com.fridgerescuer.springboot.cache.CacheUtil;
 import com.fridgerescuer.springboot.config.Config;
-import com.fridgerescuer.springboot.databaseoperation.AutoCompleteInjector;
+import com.fridgerescuer.springboot.data.dao.RecipeDao;
+import com.fridgerescuer.springboot.data.dto.SimpleRecipe;
+import com.fridgerescuer.springboot.cache.AutoCompleteUtils;
 import com.fridgerescuer.springboot.databaseoperation.DBConverter;
 import com.fridgerescuer.springboot.databaseoperation.ReferenceInjector;
 import lombok.extern.slf4j.Slf4j;
@@ -12,6 +14,8 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Import;
+
+import java.util.List;
 
 @Slf4j
 @Import(Config.class)
@@ -24,7 +28,11 @@ public class SpringbootApplication implements CommandLineRunner {
 	private ReferenceInjector referenceInjector;
 
 	@Autowired
-	private AutoCompleteInjector autoCompleteInjector;
+	private AutoCompleteUtils autoCompleteInjector;
+	@Autowired
+	private CacheUtil cacheUtil;
+	@Autowired
+	private RecipeDao recipeDao;
 
 
 	public static void main(String[] args) {
@@ -39,17 +47,19 @@ public class SpringbootApplication implements CommandLineRunner {
 		//dbConverter.convertIngredientAllTypeToDouble();
 		//dbConverter.injectRecipeToIngredient();
 		//initDataSet.setData();?
-/*
-		for(int i=0; i<10 ; ++i){
-			String a =cacheService.callCacheMethod("6301b03c2a86b05a127ad67b");
-			System.out.println(a);
-			String aa =cacheService.callCacheMethod("6301b03d2a86b05a127ad685");
-			System.out.println(aa);
-		}
-		//referenceInjector.setReferenceWithRecipe();
-*/
 
+		//referenceInjector.setReferenceWithRecipe();
+
+
+		/*	자동완성 초기 주입, DB 데이터 필요
 		autoCompleteInjector.generateAllAutoCompleteCache();
+		List<SimpleRecipe> searchResult = recipeDao.searchSimpleRecipeListByAutoComplete("고구마");
+		for (SimpleRecipe result: searchResult) {
+			log.info("name ={}, id={}", result.getName(), result.getId());
+		}
+		*/
+
+
 		log.info("==서버 초기 동작 끝~==");
 	}
 
