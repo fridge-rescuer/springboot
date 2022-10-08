@@ -21,6 +21,7 @@ public class Member {
     private String id;
     private String password;
     private String name;
+    private String imageId;
 
     @DocumentReference
     private List<ExpirationData> expirationDataList;

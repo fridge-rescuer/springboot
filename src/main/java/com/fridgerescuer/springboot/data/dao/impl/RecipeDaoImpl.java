@@ -1,11 +1,13 @@
 package com.fridgerescuer.springboot.data.dao.impl;
 
+import com.fridgerescuer.springboot.cache.AutoCompleteUtils;
+import com.fridgerescuer.springboot.cache.CacheUtil;
 import com.fridgerescuer.springboot.data.dao.ImageDao;
 import com.fridgerescuer.springboot.data.dao.MemberDao;
 import com.fridgerescuer.springboot.data.dao.RecipeDao;
 import com.fridgerescuer.springboot.data.dto.CommentDTO;
-import com.fridgerescuer.springboot.data.dto.IngredientDTO;
 import com.fridgerescuer.springboot.data.dto.RecipeDTO;
+import com.fridgerescuer.springboot.data.dto.SimpleRecipe;
 import com.fridgerescuer.springboot.data.entity.Comment;
 import com.fridgerescuer.springboot.data.entity.Ingredient;
 import com.fridgerescuer.springboot.data.entity.Recipe;
@@ -18,14 +20,14 @@ import com.mongodb.client.result.UpdateResult;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.stereotype.Component;
-import org.springframework.web.multipart.MultipartFile;
 
-import java.io.IOException;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Optional;
@@ -45,9 +47,13 @@ public class RecipeDaoImpl implements RecipeDao {
 
     @Autowired
     private final MemberDao memberDao;
-
     @Autowired
     private final ImageDao imageDao;
+
+    @Autowired
+    private final CacheUtil cacheUtil;
+    @Autowired
+    private final AutoCompleteUtils autoCompleteUtils;
 
     private final RecipeMapper recipeMapper = RecipeMapper.INSTANCE;
 
@@ -69,18 +75,7 @@ public class RecipeDaoImpl implements RecipeDao {
         }
         log.info(" setReferenceWithIngredientsByIngredientIds modify {}'document ", modifiedCnt);
     }
-    /*
-    private void setReferenceWithIngredientsByName(String[] ingredientNames, Recipe recipe){
-        if(ingredientNames== null || ingredientNames.length ==0)
-            return;
 
-        for (String name:ingredientNames) {
-            template.update(Ingredient.class)
-                    .matching(where("name").is(name))
-                    .apply(new Update().push("recipes", recipe))
-                    .first();
-        }
-    }*/
 
     @Override
     public RecipeDTO save(RecipeDTO recipeDTO) {        //member 없이 저장
@@ -114,18 +109,24 @@ public class RecipeDaoImpl implements RecipeDao {
     }
 
     @Override
+    @Cacheable(cacheNames = "recipe", key = "#id")
     public RecipeDTO findById(String id) {
         return recipeMapper.recipeToDTO(this.getRecipeById(id));
     }
 
     @Override
-    public RecipeDTO findByName(String name) {
-        Recipe foundRecipe = repository.findByName(name);
-        if(foundRecipe == null){
+    public List<SimpleRecipe> searchSimpleRecipeListByAutoComplete(String keyword) {
+        return autoCompleteUtils.putSimplRecipeListByCache(keyword);
+    }
+
+    @Override
+    public List<RecipeDTO> findAllByName(String name) {
+        List<Recipe> recipes = repository.findAllByName(name);
+        if(recipes == null || recipes.isEmpty()){
             throw new RecipeException(RecipeError.NOT_EXIST);
         }
 
-        return recipeMapper.recipeToDTO(foundRecipe);
+        return recipeMapper.recipeListToDTOList(recipes);
     }
 
     @Override
@@ -150,8 +151,10 @@ public class RecipeDaoImpl implements RecipeDao {
     }
 
     @Override
+    @CacheEvict(cacheNames = "recipe", key = "#p0")
     public void updateRecipeById(String targetId, RecipeDTO updateDataDTO) {
         Recipe targetRecipe = this.getRecipeById(targetId);  //존재하지 않는 id면 여기서 예외 처리됨
+        cacheUtil.evictCacheFromRecipeReferenceIngredient(targetRecipe.getIngredientIds());
         deleteReferenceWithIngredients(targetRecipe);
 
         // 이미지가 변경되면 기존 이미지 DB에서 제거, 만약 updateDTO의 imageid가 Null이면 삭제됨
@@ -176,6 +179,8 @@ public class RecipeDaoImpl implements RecipeDao {
     }
 
     private void deleteReferenceWithIngredients(Recipe recipe){
+        if(recipe.getIngredientIds() == null || recipe.getIngredientIds().size() == 0)
+            return;
 
         for (String ingredientId: recipe.getIngredientIds()) {   // 기존 재료들과의 연관 관계 제거
             Query query = new Query();
@@ -187,8 +192,10 @@ public class RecipeDaoImpl implements RecipeDao {
     }
 
     @Override
+    @CacheEvict(cacheNames = "recipe", key = "#p0")
     public void deleteById(String targetId) {
         Recipe targetRecipe = this.getRecipeById(targetId);
+        cacheUtil.evictCacheFromRecipeReferenceIngredient(targetRecipe.getIngredientIds());
 
         if(targetRecipe.getImageId() != null)   //이미지 부터 제거거
             imageDao.deleteImageByImageId(targetRecipe.getImageId());
@@ -198,8 +205,7 @@ public class RecipeDaoImpl implements RecipeDao {
         log.info("delete recipe, id={}", targetId);
     }
 
-    @Override
-    public void setProducerMemberIByRecipeId(String recipeId, String producerMemberId){
+    private void setProducerMemberIByRecipeId(String recipeId, String producerMemberId){
         template.update(Recipe.class)
                 .matching(where("id").is(recipeId))
                 .apply(new Update().set("producerMemberId", producerMemberId))
@@ -207,10 +213,13 @@ public class RecipeDaoImpl implements RecipeDao {
     }
 
     @Override
+    @CacheEvict(cacheNames = "recipe", key = "#p0")
     public void addCommentToRecipe(String recipeId, CommentDTO commentDTO) {
+
         Comment comment = CommentMapper.INSTANCE.DTOtoComment(commentDTO);
 
         Recipe recipe = this.getRecipeById(recipeId);
+        cacheUtil.evictCacheFromRecipeReferenceIngredient(recipe.getIngredientIds());
 
         double ratingTotalSum = comment.getRating();
         double finalRatingAvg = ratingTotalSum;
@@ -232,8 +241,11 @@ public class RecipeDaoImpl implements RecipeDao {
     }
 
     @Override
+    @CacheEvict(cacheNames = "recipe", key = "#p0")
     public void updateRating(String recipeId, double newRating, double originRating) {
         Recipe recipe = this.getRecipeById(recipeId);
+        cacheUtil.evictCacheFromRecipeReferenceIngredient(recipe.getIngredientIds());
+
         double totalSum = recipe.getRatingTotalSum() - originRating + newRating;
         double updatedRatingAvg = totalSum/ recipe.getComments().size();
 
@@ -248,8 +260,11 @@ public class RecipeDaoImpl implements RecipeDao {
     }
 
     @Override
+    @CacheEvict(cacheNames = "recipe", key = "#p0")
     public void deleteRating(String recipeId, double rating) {
+
         Recipe recipe = this.getRecipeById(recipeId);
+        cacheUtil.evictCacheFromRecipeReferenceIngredient(recipe.getIngredientIds());
 
         double totalSum = 0;
         double updatedRatingAvg = 0;
