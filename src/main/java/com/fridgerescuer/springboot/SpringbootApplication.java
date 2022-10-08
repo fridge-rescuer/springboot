@@ -2,6 +2,7 @@ package com.fridgerescuer.springboot;
 
 import com.fridgerescuer.springboot.cache.CacheUtil;
 import com.fridgerescuer.springboot.config.Config;
+import com.fridgerescuer.springboot.databaseoperation.AutoCompleteInjector;
 import com.fridgerescuer.springboot.databaseoperation.DBConverter;
 import com.fridgerescuer.springboot.databaseoperation.ReferenceInjector;
 import lombok.extern.slf4j.Slf4j;
@@ -21,6 +22,9 @@ public class SpringbootApplication implements CommandLineRunner {
 	private DBConverter dbConverter;
 	@Autowired
 	private ReferenceInjector referenceInjector;
+
+	@Autowired
+	private AutoCompleteInjector autoCompleteInjector;
 
 
 	public static void main(String[] args) {
@@ -44,6 +48,8 @@ public class SpringbootApplication implements CommandLineRunner {
 		}
 		//referenceInjector.setReferenceWithRecipe();
 */
+
+		autoCompleteInjector.generateAllAutoCompleteCache();
 		log.info("==서버 초기 동작 끝~==");
 	}
 
