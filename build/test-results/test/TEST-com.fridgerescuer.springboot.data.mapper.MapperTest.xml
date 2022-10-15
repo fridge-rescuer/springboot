@@ -1,8 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<testsuite name="com.fridgerescuer.springboot.data.mapper.MapperTest" tests="2" skipped="0" failures="0" errors="0" timestamp="2022-09-04T12:44:04" hostname="DESKTOP-QT4MFI0" time="0.014">
+<testsuite name="com.fridgerescuer.springboot.data.mapper.MapperTest" tests="7" skipped="0" failures="0" errors="0" timestamp="2022-10-10T14:41:04" hostname="DESKTOP-QT4MFI0" time="0.01">
   <properties/>
-  <testcase name="commentListToResponseListMapper()" classname="com.fridgerescuer.springboot.data.mapper.MapperTest" time="0.004"/>
-  <testcase name="builderWithMapperTest()" classname="com.fridgerescuer.springboot.data.mapper.MapperTest" time="0.009"/>
+  <testcase name="mappingExpirationDTOListToPrivateList()" classname="com.fridgerescuer.springboot.data.mapper.MapperTest" time="0.001"/>
+  <testcase name="mappingExpirationListToDTOList()" classname="com.fridgerescuer.springboot.data.mapper.MapperTest" time="0.001"/>
+  <testcase name="ingredientWithInnerRecipeMapper()" classname="com.fridgerescuer.springboot.data.mapper.MapperTest" time="0.001"/>
+  <testcase name="MemberWithAuthorities()" classname="com.fridgerescuer.springboot.data.mapper.MapperTest" time="0.002"/>
+  <testcase name="commentListToDTOListMapper()" classname="com.fridgerescuer.springboot.data.mapper.MapperTest" time="0.0"/>
+  <testcase name="MemberWithExpirationListToDTOList()" classname="com.fridgerescuer.springboot.data.mapper.MapperTest" time="0.001"/>
+  <testcase name="expirationMapper()" classname="com.fridgerescuer.springboot.data.mapper.MapperTest" time="0.001"/>
   <system-out><![CDATA[]]></system-out>
   <system-err><![CDATA[]]></system-err>
 </testsuite>

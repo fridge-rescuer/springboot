@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+<meta http-equiv="x-ua-compatible" content="IE=edge"/>
+<title>Test results - IngredientDaoTest</title>
+<link href="../css/base-style.css" rel="stylesheet" type="text/css"/>
+<link href="../css/style.css" rel="stylesheet" type="text/css"/>
+<script src="../js/report.js" type="text/javascript"></script>
+</head>
+<body>
+<div id="content">
+<h1>IngredientDaoTest</h1>
+<div class="breadcrumbs">
+<a href="../index.html">all</a> &gt; 
+<a href="../packages/com.fridgerescuer.springboot.data.dao.html">com.fridgerescuer.springboot.data.dao</a> &gt; IngredientDaoTest</div>
+<div id="summary">
+<table>
+<tr>
+<td>
+<div class="summaryGroup">
+<table>
+<tr>
+<td>
+<div class="infoBox" id="tests">
+<div class="counter">5</div>
+<p>tests</p>
+</div>
+</td>
+<td>
+<div class="infoBox" id="failures">
+<div class="counter">0</div>
+<p>failures</p>
+</div>
+</td>
+<td>
+<div class="infoBox" id="ignored">
+<div class="counter">0</div>
+<p>ignored</p>
+</div>
+</td>
+<td>
+<div class="infoBox" id="duration">
+<div class="counter">0.103s</div>
+<p>duration</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+</td>
+<td>
+<div class="infoBox success" id="successRate">
+<div class="percent">100%</div>
+<p>successful</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+<div id="tabs">
+<ul class="tabLinks">
+<li>
+<a href="#tab0">Tests</a>
+</li>
+<li>
+<a href="#tab1">Standard output</a>
+</li>
+</ul>
+<div id="tab0" class="tab">
+<h2>Tests</h2>
+<table>
+<thead>
+<tr>
+<th>Test</th>
+<th>Method name</th>
+<th>Duration</th>
+<th>Result</th>
+</tr>
+</thead>
+<tr>
+<td class="success">deleteIngredientWithRecipeReference()</td>
+<td class="success">deleteIngredientWithRecipeReference()</td>
+<td class="success">0.032s</td>
+<td class="success">passed</td>
+</tr>
+<tr>
+<td class="success">findIngredientContainName()</td>
+<td class="success">findIngredientContainName()</td>
+<td class="success">0.023s</td>
+<td class="success">passed</td>
+</tr>
+<tr>
+<td class="success">이름으로 재료 id 찾기</td>
+<td class="success">findIngredientIdByName()</td>
+<td class="success">0.016s</td>
+<td class="success">passed</td>
+</tr>
+<tr>
+<td class="success">없는 재료명으로 인한 런타임 예외 처리 확인, NoSuchIngredientException</td>
+<td class="success">occurExceptionByNoSameName()</td>
+<td class="success">0.013s</td>
+<td class="success">passed</td>
+</tr>
+<tr>
+<td class="success">재료의 id를 통해 재료 update</td>
+<td class="success">updateIngredientById()</td>
+<td class="success">0.019s</td>
+<td class="success">passed</td>
+</tr>
+</table>
+</div>
+<div id="tab1" class="tab">
+<h2>Standard output</h2>
+<span class="code">
+<pre>2022-10-10 23:41:03.784  INFO 2080 --- [    Test worker] t.a.d.m.DataMongoTestContextBootstrapper : Neither @ContextConfiguration nor @ContextHierarchy found for test class [com.fridgerescuer.springboot.data.dao.IngredientDaoTest], using SpringBootContextLoader
+2022-10-10 23:41:03.785  INFO 2080 --- [    Test worker] o.s.t.c.support.AbstractContextLoader    : Could not detect default resource locations for test class [com.fridgerescuer.springboot.data.dao.IngredientDaoTest]: no resource found for suffixes {-context.xml, Context.groovy}.
+2022-10-10 23:41:03.785  INFO 2080 --- [    Test worker] t.c.s.AnnotationConfigContextLoaderUtils : Could not detect default configuration classes for test class [com.fridgerescuer.springboot.data.dao.IngredientDaoTest]: IngredientDaoTest does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
+2022-10-10 23:41:03.789  INFO 2080 --- [    Test worker] .b.t.c.SpringBootTestContextBootstrapper : Found @SpringBootConfiguration com.fridgerescuer.springboot.SpringbootApplication for test class com.fridgerescuer.springboot.data.dao.IngredientDaoTest
+2022-10-10 23:41:03.789  INFO 2080 --- [    Test worker] t.a.d.m.DataMongoTestContextBootstrapper : Loaded default TestExecutionListener class names from location [META-INF/spring.factories]: [org.springframework.security.test.context.support.WithSecurityContextTestExecutionListener, org.springframework.security.test.context.support.ReactorContextTestExecutionListener, org.springframework.boot.test.autoconfigure.restdocs.RestDocsTestExecutionListener, org.springframework.boot.test.autoconfigure.web.client.MockRestServiceServerResetTestExecutionListener, org.springframework.boot.test.autoconfigure.web.servlet.MockMvcPrintOnlyOnFailureTestExecutionListener, org.springframework.boot.test.autoconfigure.web.servlet.WebDriverTestExecutionListener, org.springframework.boot.test.autoconfigure.webservices.client.MockWebServiceServerTestExecutionListener, org.springframework.boot.test.mock.mockito.MockitoTestExecutionListener, org.springframework.boot.test.mock.mockito.ResetMocksTestExecutionListener, org.springframework.test.context.web.ServletTestExecutionListener, org.springframework.test.context.support.DirtiesContextBeforeModesTestExecutionListener, org.springframework.test.context.event.ApplicationEventsTestExecutionListener, org.springframework.test.context.support.DependencyInjectionTestExecutionListener, org.springframework.test.context.support.DirtiesContextTestExecutionListener, org.springframework.test.context.transaction.TransactionalTestExecutionListener, org.springframework.test.context.jdbc.SqlScriptsTestExecutionListener, org.springframework.test.context.event.EventPublishingTestExecutionListener]
+2022-10-10 23:41:03.790  INFO 2080 --- [    Test worker] t.a.d.m.DataMongoTestContextBootstrapper : Using TestExecutionListeners: [org.springframework.test.context.web.ServletTestExecutionListener@52b49891, org.springframework.test.context.support.DirtiesContextBeforeModesTestExecutionListener@75973f7a, org.springframework.test.context.event.ApplicationEventsTestExecutionListener@7940b729, org.springframework.boot.test.mock.mockito.MockitoTestExecutionListener@527d1fe1, org.springframework.boot.test.autoconfigure.SpringBootDependencyInjectionTestExecutionListener@24fb752f, org.springframework.test.context.support.DirtiesContextTestExecutionListener@68dbe225, org.springframework.test.context.transaction.TransactionalTestExecutionListener@145ef9e8, org.springframework.test.context.jdbc.SqlScriptsTestExecutionListener@2e667e95, org.springframework.security.test.context.support.WithSecurityContextTestExecutionListener@514b247b, org.springframework.test.context.event.EventPublishingTestExecutionListener@66b62ebd, org.springframework.security.test.context.support.ReactorContextTestExecutionListener@5440a3a, org.springframework.boot.test.autoconfigure.restdocs.RestDocsTestExecutionListener@18cb4ed1, org.springframework.boot.test.autoconfigure.web.client.MockRestServiceServerResetTestExecutionListener@10abd94f, org.springframework.boot.test.autoconfigure.web.servlet.MockMvcPrintOnlyOnFailureTestExecutionListener@47bfde21, org.springframework.boot.test.autoconfigure.web.servlet.WebDriverTestExecutionListener@628f0936, org.springframework.boot.test.autoconfigure.webservices.client.MockWebServiceServerTestExecutionListener@20706e70, org.springframework.boot.test.mock.mockito.ResetMocksTestExecutionListener@6e5fba90]
+2022-10-10 23:41:03.803  INFO 2080 --- [    Test worker] c.f.s.data.dao.impl.IngredientDaoImpl    : save ingredient =Ingredient(id=63442eff6bd3da2dcf791265, name=마늘, index=0.0, foodGroup=null, foodCode=null, representationName=null, largeCategory=null, mediumCategory=null, smallCategory=null, subCategory=null, generalComponent=null, mineral=null, vitamin=null, aminoAcid=null, fattyAcid=null, recipes=null)
+2022-10-10 23:41:03.817  INFO 2080 --- [    Test worker] c.f.s.data.dao.impl.IngredientDaoImpl    : save ingredient =Ingredient(id=63442eff6bd3da2dcf791266, name=마늘, index=0.0, foodGroup=null, foodCode=null, representationName=null, largeCategory=null, mediumCategory=null, smallCategory=null, subCategory=null, generalComponent=null, mineral=null, vitamin=null, aminoAcid=null, fattyAcid=null, recipes=null)
+2022-10-10 23:41:03.822  INFO 2080 --- [    Test worker] c.f.s.data.dao.impl.IngredientDaoImpl    : update id=63442eff6bd3da2dcf791266 to ingredient =IngredientDTO(id=null, name=삼겹살, recipeDTOs=null)
+updatedResponseDTO = IngredientDTO(id=63442eff6bd3da2dcf791266, name=삼겹살, recipeDTOs=[])
+2022-10-10 23:41:03.837  INFO 2080 --- [    Test worker] c.f.s.data.dao.impl.IngredientDaoImpl    : save ingredient =Ingredient(id=63442eff6bd3da2dcf791267, name=새우, index=0.0, foodGroup=null, foodCode=null, representationName=null, largeCategory=null, mediumCategory=null, smallCategory=null, subCategory=null, generalComponent=null, mineral=null, vitamin=null, aminoAcid=null, fattyAcid=null, recipes=null)
+2022-10-10 23:41:03.839  INFO 2080 --- [    Test worker] c.f.s.data.dao.impl.IngredientDaoImpl    : save ingredient =Ingredient(id=63442eff6bd3da2dcf791268, name=꽃새우, index=0.0, foodGroup=null, foodCode=null, representationName=null, largeCategory=null, mediumCategory=null, smallCategory=null, subCategory=null, generalComponent=null, mineral=null, vitamin=null, aminoAcid=null, fattyAcid=null, recipes=null)
+2022-10-10 23:41:03.841  INFO 2080 --- [    Test worker] c.f.s.data.dao.impl.IngredientDaoImpl    : save ingredient =Ingredient(id=63442eff6bd3da2dcf791269, name=꽃개, index=0.0, foodGroup=null, foodCode=null, representationName=null, largeCategory=null, mediumCategory=null, smallCategory=null, subCategory=null, generalComponent=null, mineral=null, vitamin=null, aminoAcid=null, fattyAcid=null, recipes=null)
+2022-10-10 23:41:03.864  INFO 2080 --- [    Test worker] c.f.s.data.dao.impl.IngredientDaoImpl    : save ingredient =Ingredient(id=63442eff6bd3da2dcf79126a, name=마늘, index=0.0, foodGroup=null, foodCode=null, representationName=null, largeCategory=null, mediumCategory=null, smallCategory=null, subCategory=null, generalComponent=null, mineral=null, vitamin=null, aminoAcid=null, fattyAcid=null, recipes=null)
+2022-10-10 23:41:03.879  INFO 2080 --- [    Test worker] c.f.s.data.dao.impl.IngredientDaoImpl    : save ingredient =Ingredient(id=63442eff6bd3da2dcf79126b, name=마늘, index=0.0, foodGroup=null, foodCode=null, representationName=null, largeCategory=null, mediumCategory=null, smallCategory=null, subCategory=null, generalComponent=null, mineral=null, vitamin=null, aminoAcid=null, fattyAcid=null, recipes=null)
+2022-10-10 23:41:03.884  INFO 2080 --- [    Test worker] c.f.s.data.dao.impl.RecipeDaoImpl        :  setReferenceWithIngredientsByIngredientIds modify 1'document 
+2022-10-10 23:41:03.895  INFO 2080 --- [    Test worker] c.f.s.data.dao.impl.IngredientDaoImpl    : delete ingredient =63442eff6bd3da2dcf79126b
+</pre>
+</span>
+</div>
+</div>
+<div id="footer">
+<p>
+<div>
+<label class="hidden" id="label-for-line-wrapping-toggle" for="line-wrapping-toggle">Wrap lines
+<input id="line-wrapping-toggle" type="checkbox" autocomplete="off"/>
+</label>
+</div>Generated by 
+<a href="http://www.gradle.org">Gradle 7.5.1</a> at 2022. 10. 10. 오후 11:41:05</p>
+</div>
+</div>
+</body>
+</html>

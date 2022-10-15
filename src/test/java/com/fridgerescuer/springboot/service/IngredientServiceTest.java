@@ -23,7 +23,7 @@ import java.time.LocalDate;
 @ComponentScan(basePackages = "com.fridgerescuer.springboot")
 @DataMongoTest
 public class IngredientServiceTest {
-
+/*
     @Autowired
     private IngredientService ingredientService;
     @Autowired
@@ -78,5 +78,5 @@ public class IngredientServiceTest {
     void findIngredientTest() {
         ingredientService.findIngredientByName("김치찌개");
     }
-
+*/
 }

@@ -29,7 +29,7 @@
 
 # Gradle
 .idea/**/gradle.xml
-.idea/**/libraries
+.idea/**/gr
 
 # Gradle and Maven with auto-import
 # When using Gradle or Maven with auto-import, you should exclude module files,
@@ -127,6 +127,7 @@ fabric.properties
 # Mobile Tools for Java (J2ME)
 .mtj.tmp/
 
+#!gradle/wrapper/gradle-wrapper.jar
 # Package Files #
 *.jar
 *.war
@@ -142,5 +143,11 @@ replay_pid*
 
 # Generated Files
 src/main/generated/
+
+#build
+#build/libs
+
+#.gradle
+#.gradle/*
 
 # End of https://www.toptal.com/developers/gitignore/api/intellij,java

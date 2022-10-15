@@ -23,7 +23,7 @@
 <tr>
 <td>
 <div class="infoBox" id="tests">
-<div class="counter">1</div>
+<div class="counter">9</div>
 <p>tests</p>
 </div>
 </td>
@@ -41,7 +41,7 @@
 </td>
 <td>
 <div class="infoBox" id="duration">
-<div class="counter">0.220s</div>
+<div class="counter">0.418s</div>
 <p>duration</p>
 </div>
 </td>
@@ -73,13 +73,63 @@
 <thead>
 <tr>
 <th>Test</th>
+<th>Method name</th>
 <th>Duration</th>
 <th>Result</th>
 </tr>
 </thead>
 <tr>
-<td class="success">addIngredientsAndExpirationDateToMemberByIngredientId()</td>
-<td class="success">0.220s</td>
+<td class="success">addExpirationDataToMember()</td>
+<td class="success">addExpirationDataToMember()</td>
+<td class="success">0.049s</td>
+<td class="success">passed</td>
+</tr>
+<tr>
+<td class="success">addPrivateExpirationDataToMember()</td>
+<td class="success">addPrivateExpirationDataToMember()</td>
+<td class="success">0.031s</td>
+<td class="success">passed</td>
+</tr>
+<tr>
+<td class="success">deleteExpirationDataFromMember()</td>
+<td class="success">deleteExpirationDataFromMember()</td>
+<td class="success">0.058s</td>
+<td class="success">passed</td>
+</tr>
+<tr>
+<td class="success">deleteMember()</td>
+<td class="success">deleteMember()</td>
+<td class="success">0.023s</td>
+<td class="success">passed</td>
+</tr>
+<tr>
+<td class="success">deletePrivateExpirationDataFromMember()</td>
+<td class="success">deletePrivateExpirationDataFromMember()</td>
+<td class="success">0.060s</td>
+<td class="success">passed</td>
+</tr>
+<tr>
+<td class="success">getCommentsOfMember()</td>
+<td class="success">getCommentsOfMember()</td>
+<td class="success">0.066s</td>
+<td class="success">passed</td>
+</tr>
+<tr>
+<td class="success">memberSave()</td>
+<td class="success">memberSave()</td>
+<td class="success">0.024s</td>
+<td class="success">passed</td>
+</tr>
+<tr>
+<td class="success">멤버가 만든 레시피 등록, 레시피에는 만든 멤버를 등록</td>
+<td class="success">saveRecipeByMember()</td>
+<td class="success">0.086s</td>
+<td class="success">passed</td>
+</tr>
+<tr>
+<td class="success">updateMember()</td>
+<td class="success">updateMember()</td>
+<td class="success">0.021s</td>
 <td class="success">passed</td>
 </tr>
 </table>
@@ -87,20 +137,71 @@
 <div id="tab1" class="tab">
 <h2>Standard output</h2>
 <span class="code">
-<pre>2022-09-04 21:44:04.374  INFO 4996 --- [    Test worker] t.a.d.m.DataMongoTestContextBootstrapper : Neither @ContextConfiguration nor @ContextHierarchy found for test class [com.fridgerescuer.springboot.data.dao.MemberDaoTest], using SpringBootContextLoader
-2022-09-04 21:44:04.375  INFO 4996 --- [    Test worker] o.s.t.c.support.AbstractContextLoader    : Could not detect default resource locations for test class [com.fridgerescuer.springboot.data.dao.MemberDaoTest]: no resource found for suffixes {-context.xml, Context.groovy}.
-2022-09-04 21:44:04.376  INFO 4996 --- [    Test worker] t.c.s.AnnotationConfigContextLoaderUtils : Could not detect default configuration classes for test class [com.fridgerescuer.springboot.data.dao.MemberDaoTest]: MemberDaoTest does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
-2022-09-04 21:44:04.383  INFO 4996 --- [    Test worker] .b.t.c.SpringBootTestContextBootstrapper : Found @SpringBootConfiguration com.fridgerescuer.springboot.SpringbootApplication for test class com.fridgerescuer.springboot.data.dao.MemberDaoTest
-2022-09-04 21:44:04.384  INFO 4996 --- [    Test worker] t.a.d.m.DataMongoTestContextBootstrapper : Loaded default TestExecutionListener class names from location [META-INF/spring.factories]: [org.springframework.boot.test.autoconfigure.restdocs.RestDocsTestExecutionListener, org.springframework.boot.test.autoconfigure.web.client.MockRestServiceServerResetTestExecutionListener, org.springframework.boot.test.autoconfigure.web.servlet.MockMvcPrintOnlyOnFailureTestExecutionListener, org.springframework.boot.test.autoconfigure.web.servlet.WebDriverTestExecutionListener, org.springframework.boot.test.autoconfigure.webservices.client.MockWebServiceServerTestExecutionListener, org.springframework.boot.test.mock.mockito.MockitoTestExecutionListener, org.springframework.boot.test.mock.mockito.ResetMocksTestExecutionListener, org.springframework.test.context.web.ServletTestExecutionListener, org.springframework.test.context.support.DirtiesContextBeforeModesTestExecutionListener, org.springframework.test.context.event.ApplicationEventsTestExecutionListener, org.springframework.test.context.support.DependencyInjectionTestExecutionListener, org.springframework.test.context.support.DirtiesContextTestExecutionListener, org.springframework.test.context.transaction.TransactionalTestExecutionListener, org.springframework.test.context.jdbc.SqlScriptsTestExecutionListener, org.springframework.test.context.event.EventPublishingTestExecutionListener]
-2022-09-04 21:44:04.385  INFO 4996 --- [    Test worker] t.a.d.m.DataMongoTestContextBootstrapper : Using TestExecutionListeners: [org.springframework.test.context.web.ServletTestExecutionListener@70df41f9, org.springframework.test.context.support.DirtiesContextBeforeModesTestExecutionListener@64a7ad02, org.springframework.test.context.event.ApplicationEventsTestExecutionListener@46590dd0, org.springframework.boot.test.mock.mockito.MockitoTestExecutionListener@6c737fdb, org.springframework.boot.test.autoconfigure.SpringBootDependencyInjectionTestExecutionListener@66a93b25, org.springframework.test.context.support.DirtiesContextTestExecutionListener@3f3f554f, org.springframework.test.context.transaction.TransactionalTestExecutionListener@3186f8f5, org.springframework.test.context.jdbc.SqlScriptsTestExecutionListener@467cd4b9, org.springframework.test.context.event.EventPublishingTestExecutionListener@69a3bf40, org.springframework.boot.test.autoconfigure.restdocs.RestDocsTestExecutionListener@2c731a16, org.springframework.boot.test.autoconfigure.web.client.MockRestServiceServerResetTestExecutionListener@2a341e3d, org.springframework.boot.test.autoconfigure.web.servlet.MockMvcPrintOnlyOnFailureTestExecutionListener@a4dcede, org.springframework.boot.test.autoconfigure.web.servlet.WebDriverTestExecutionListener@7ee02968, org.springframework.boot.test.autoconfigure.webservices.client.MockWebServiceServerTestExecutionListener@4a773f08, org.springframework.boot.test.mock.mockito.ResetMocksTestExecutionListener@40b8158d]
-2022-09-04 21:44:04.396  INFO 4996 --- [    Test worker] c.f.s.data.dao.impl.IngredientDaoImpl    : save ingredient =Ingredient(id=null, name=마늘, recipes=null)
-2022-09-04 21:44:04.443  INFO 4996 --- [       Thread-4] o.s.b.a.mongo.embedded.EmbeddedMongo     : {&quot;t&quot;:{&quot;$date&quot;:&quot;2022-09-04T21:44:04.443+09:00&quot;},&quot;s&quot;:&quot;I&quot;,  &quot;c&quot;:&quot;STORAGE&quot;,  &quot;id&quot;:20320,   &quot;ctx&quot;:&quot;conn5&quot;,&quot;msg&quot;:&quot;createCollection&quot;,&quot;attr&quot;:{&quot;namespace&quot;:&quot;test.ingredient&quot;,&quot;uuidDisposition&quot;:&quot;generated&quot;,&quot;uuid&quot;:{&quot;uuid&quot;:{&quot;$uuid&quot;:&quot;4d64bb57-6c81-40c9-a48f-cb1f424bb5a5&quot;}},&quot;options&quot;:{}}}
-2022-09-04 21:44:04.481  INFO 4996 --- [       Thread-4] o.s.b.a.mongo.embedded.EmbeddedMongo     : {&quot;t&quot;:{&quot;$date&quot;:&quot;2022-09-04T21:44:04.481+09:00&quot;},&quot;s&quot;:&quot;I&quot;,  &quot;c&quot;:&quot;INDEX&quot;,    &quot;id&quot;:20345,   &quot;ctx&quot;:&quot;conn5&quot;,&quot;msg&quot;:&quot;Index build: done building&quot;,&quot;attr&quot;:{&quot;buildUUID&quot;:null,&quot;namespace&quot;:&quot;test.ingredient&quot;,&quot;index&quot;:&quot;_id_&quot;,&quot;commitTimestamp&quot;:null}}
-2022-09-04 21:44:04.483  INFO 4996 --- [    Test worker] c.f.s.data.dao.impl.IngredientDaoImpl    : save ingredient =Ingredient(id=null, name=사과, recipes=null)
-2022-09-04 21:44:04.486  INFO 4996 --- [    Test worker] c.f.s.data.dao.impl.MemberDaoImpl        : save Member =Member(id=null, password=null, name=야생마, ingredients=null, expirationDataList=null, recipes=null, comments=null)
-2022-09-04 21:44:04.553  INFO 4996 --- [    Test worker] c.f.s.data.dao.impl.MemberDaoImpl        : add ingredient size=2, to member id=63149d9433f5e33dedf29f4c
-2022-09-04 21:44:04.563  INFO 4996 --- [    Test worker] c.f.s.data.dao.impl.MemberDaoImpl        : push Member Ingredient ExpirationData =ExpirationData(ingredientId=63149d9433f5e33dedf29f4a, expirationDate=2022-09-25, isNoExpiration=false), to MemberId =63149d9433f5e33dedf29f4c
-2022-09-04 21:44:04.581  INFO 4996 --- [    Test worker] c.f.s.data.dao.impl.MemberDaoImpl        : push Member Ingredient ExpirationData =ExpirationData(ingredientId=63149d9433f5e33dedf29f4b, expirationDate=2022-09-18, isNoExpiration=false), to MemberId =63149d9433f5e33dedf29f4c
+<pre>2022-10-10 23:41:03.908  INFO 2080 --- [    Test worker] t.a.d.m.DataMongoTestContextBootstrapper : Neither @ContextConfiguration nor @ContextHierarchy found for test class [com.fridgerescuer.springboot.data.dao.MemberDaoTest], using SpringBootContextLoader
+2022-10-10 23:41:03.910  INFO 2080 --- [    Test worker] o.s.t.c.support.AbstractContextLoader    : Could not detect default resource locations for test class [com.fridgerescuer.springboot.data.dao.MemberDaoTest]: no resource found for suffixes {-context.xml, Context.groovy}.
+2022-10-10 23:41:03.910  INFO 2080 --- [    Test worker] t.c.s.AnnotationConfigContextLoaderUtils : Could not detect default configuration classes for test class [com.fridgerescuer.springboot.data.dao.MemberDaoTest]: MemberDaoTest does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
+2022-10-10 23:41:03.915  INFO 2080 --- [    Test worker] .b.t.c.SpringBootTestContextBootstrapper : Found @SpringBootConfiguration com.fridgerescuer.springboot.SpringbootApplication for test class com.fridgerescuer.springboot.data.dao.MemberDaoTest
+2022-10-10 23:41:03.915  INFO 2080 --- [    Test worker] t.a.d.m.DataMongoTestContextBootstrapper : Loaded default TestExecutionListener class names from location [META-INF/spring.factories]: [org.springframework.security.test.context.support.WithSecurityContextTestExecutionListener, org.springframework.security.test.context.support.ReactorContextTestExecutionListener, org.springframework.boot.test.autoconfigure.restdocs.RestDocsTestExecutionListener, org.springframework.boot.test.autoconfigure.web.client.MockRestServiceServerResetTestExecutionListener, org.springframework.boot.test.autoconfigure.web.servlet.MockMvcPrintOnlyOnFailureTestExecutionListener, org.springframework.boot.test.autoconfigure.web.servlet.WebDriverTestExecutionListener, org.springframework.boot.test.autoconfigure.webservices.client.MockWebServiceServerTestExecutionListener, org.springframework.boot.test.mock.mockito.MockitoTestExecutionListener, org.springframework.boot.test.mock.mockito.ResetMocksTestExecutionListener, org.springframework.test.context.web.ServletTestExecutionListener, org.springframework.test.context.support.DirtiesContextBeforeModesTestExecutionListener, org.springframework.test.context.event.ApplicationEventsTestExecutionListener, org.springframework.test.context.support.DependencyInjectionTestExecutionListener, org.springframework.test.context.support.DirtiesContextTestExecutionListener, org.springframework.test.context.transaction.TransactionalTestExecutionListener, org.springframework.test.context.jdbc.SqlScriptsTestExecutionListener, org.springframework.test.context.event.EventPublishingTestExecutionListener]
+2022-10-10 23:41:03.916  INFO 2080 --- [    Test worker] t.a.d.m.DataMongoTestContextBootstrapper : Using TestExecutionListeners: [org.springframework.test.context.web.ServletTestExecutionListener@4c4be9d8, org.springframework.test.context.support.DirtiesContextBeforeModesTestExecutionListener@21dd91da, org.springframework.test.context.event.ApplicationEventsTestExecutionListener@1f251bf1, org.springframework.boot.test.mock.mockito.MockitoTestExecutionListener@502b9399, org.springframework.boot.test.autoconfigure.SpringBootDependencyInjectionTestExecutionListener@433db56d, org.springframework.test.context.support.DirtiesContextTestExecutionListener@e23af91, org.springframework.test.context.transaction.TransactionalTestExecutionListener@396ec737, org.springframework.test.context.jdbc.SqlScriptsTestExecutionListener@35d53cd8, org.springframework.security.test.context.support.WithSecurityContextTestExecutionListener@1bed61d2, org.springframework.test.context.event.EventPublishingTestExecutionListener@8a11a19, org.springframework.security.test.context.support.ReactorContextTestExecutionListener@47393345, org.springframework.boot.test.autoconfigure.restdocs.RestDocsTestExecutionListener@5b16e486, org.springframework.boot.test.autoconfigure.web.client.MockRestServiceServerResetTestExecutionListener@2b85edc7, org.springframework.boot.test.autoconfigure.web.servlet.MockMvcPrintOnlyOnFailureTestExecutionListener@2bf45b7c, org.springframework.boot.test.autoconfigure.web.servlet.WebDriverTestExecutionListener@2559f65c, org.springframework.boot.test.autoconfigure.webservices.client.MockWebServiceServerTestExecutionListener@490704a5, org.springframework.boot.test.mock.mockito.ResetMocksTestExecutionListener@4d682397]
+2022-10-10 23:41:03.927  INFO 2080 --- [    Test worker] c.f.s.data.dao.impl.MemberDaoImpl        : save Member =Member(id=63442eff6bd3da2dcf79126d, password=null, name=모구모구, imageId=null, expirationDataList=null, privateExpirationDataList=null, recipes=null, comments=null, authorities=null, activated=false)
+2022-10-10 23:41:03.947  INFO 2080 --- [    Test worker] c.f.s.data.dao.impl.MemberDaoImpl        : addCommentToMember memberId=63442eff6bd3da2dcf79126d
+2022-10-10 23:41:03.954  INFO 2080 --- [    Test worker] c.f.s.data.dao.impl.RecipeDaoImpl        : addCommentToMember recipeId=63442eff6bd3da2dcf79126e, ratingTotalSum =1.0, finalRatingAvg =1.0
+2022-10-10 23:41:03.955  INFO 2080 --- [    Test worker] c.f.s.data.dao.impl.CommentDaoImpl       : save Comment =Comment(id=63442eff6bd3da2dcf79126f, rating=1.0, body=null, imageId=null, date=null, recipeId=63442eff6bd3da2dcf79126e)
+2022-10-10 23:41:03.958  INFO 2080 --- [    Test worker] c.f.s.data.dao.impl.MemberDaoImpl        : addCommentToMember memberId=63442eff6bd3da2dcf79126d
+2022-10-10 23:41:03.967  INFO 2080 --- [    Test worker] c.f.s.data.dao.impl.RecipeDaoImpl        : addCommentToMember recipeId=63442eff6bd3da2dcf79126e, ratingTotalSum =3.0, finalRatingAvg =1.5
+2022-10-10 23:41:03.968  INFO 2080 --- [    Test worker] c.f.s.data.dao.impl.CommentDaoImpl       : save Comment =Comment(id=63442eff6bd3da2dcf791270, rating=2.0, body=null, imageId=null, date=null, recipeId=63442eff6bd3da2dcf79126e)
+2022-10-10 23:41:03.991  INFO 2080 --- [    Test worker] c.f.s.data.dao.impl.MemberDaoImpl        : save Member =Member(id=63442eff6bd3da2dcf791271, password=null, name=종원, imageId=null, expirationDataList=null, privateExpirationDataList=null, recipes=null, comments=null, authorities=null, activated=false)
+memberResponseDto = MemberDTO(id=63442eff6bd3da2dcf791271, name=종원, password=null, expirationDataDTOList=null, privateExpirationDataDTOList=null, recipeDTOs=null, commentDTOs=null, authorityDtoSet=null)
+2022-10-10 23:41:04.017  INFO 2080 --- [    Test worker] c.f.s.data.dao.impl.MemberDaoImpl        : save Member =Member(id=63442f006bd3da2dcf791272, password=null, name=호날두, imageId=null, expirationDataList=null, privateExpirationDataList=null, recipes=null, comments=null, authorities=null, activated=false)
+2022-10-10 23:41:04.019  INFO 2080 --- [    Test worker] c.f.s.data.dao.impl.MemberDaoImpl        : updateDataMemberDTO =MemberDTO(id=null, name=메시, password=null, expirationDataDTOList=null, privateExpirationDataDTOList=null, recipeDTOs=null, commentDTOs=null, authorityDtoSet=null)
+2022-10-10 23:41:04.038  INFO 2080 --- [    Test worker] c.f.s.data.dao.impl.MemberDaoImpl        : save Member =Member(id=63442f006bd3da2dcf791273, password=null, name=호날두, imageId=null, expirationDataList=null, privateExpirationDataList=null, recipes=null, comments=null, authorities=null, activated=false)
+2022-10-10 23:41:04.050  INFO 2080 --- [    Test worker] c.f.s.data.dao.impl.MemberDaoImpl        : delete Member id =63442f006bd3da2dcf791273
+2022-10-10 23:41:04.064  INFO 2080 --- [    Test worker] c.f.s.data.dao.impl.IngredientDaoImpl    : save ingredient =Ingredient(id=63442f006bd3da2dcf791274, name=마늘, index=0.0, foodGroup=null, foodCode=null, representationName=null, largeCategory=null, mediumCategory=null, smallCategory=null, subCategory=null, generalComponent=null, mineral=null, vitamin=null, aminoAcid=null, fattyAcid=null, recipes=null)
+2022-10-10 23:41:04.066  INFO 2080 --- [    Test worker] c.f.s.data.dao.impl.IngredientDaoImpl    : save ingredient =Ingredient(id=63442f006bd3da2dcf791275, name=사과, index=0.0, foodGroup=null, foodCode=null, representationName=null, largeCategory=null, mediumCategory=null, smallCategory=null, subCategory=null, generalComponent=null, mineral=null, vitamin=null, aminoAcid=null, fattyAcid=null, recipes=null)
+2022-10-10 23:41:04.068  INFO 2080 --- [    Test worker] c.f.s.data.dao.impl.MemberDaoImpl        : save Member =Member(id=63442f006bd3da2dcf791276, password=null, name=야생마, imageId=null, expirationDataList=null, privateExpirationDataList=null, recipes=null, comments=null, authorities=null, activated=false)
+2022-10-10 23:41:04.079  INFO 2080 --- [    Test worker] c.f.s.d.dao.impl.ExpirationDataDaoImpl   : save ExpirationData =ExpirationData(id=63442f006bd3da2dcf791277, ingredient=Ingredient(id=63442f006bd3da2dcf791274, name=마늘, index=0.0, foodGroup=null, foodCode=null, representationName=null, largeCategory=null, mediumCategory=null, smallCategory=null, subCategory=null, generalComponent=null, mineral=null, vitamin=null, aminoAcid=null, fattyAcid=null, recipes=null), expirationDate=2022-10-31, isNoExpiration=false)
+2022-10-10 23:41:04.082  INFO 2080 --- [    Test worker] c.f.s.data.dao.impl.MemberDaoImpl        : push Member ExpirationData =ExpirationData(id=63442f006bd3da2dcf791277, ingredient=Ingredient(id=63442f006bd3da2dcf791274, name=마늘, index=0.0, foodGroup=null, foodCode=null, representationName=null, largeCategory=null, mediumCategory=null, smallCategory=null, subCategory=null, generalComponent=null, mineral=null, vitamin=null, aminoAcid=null, fattyAcid=null, recipes=null), expirationDate=2022-10-31, isNoExpiration=false), to MemberId =63442f006bd3da2dcf791276
+2022-10-10 23:41:04.084  INFO 2080 --- [    Test worker] c.f.s.d.dao.impl.ExpirationDataDaoImpl   : save ExpirationData =ExpirationData(id=63442f006bd3da2dcf791278, ingredient=Ingredient(id=63442f006bd3da2dcf791275, name=사과, index=0.0, foodGroup=null, foodCode=null, representationName=null, largeCategory=null, mediumCategory=null, smallCategory=null, subCategory=null, generalComponent=null, mineral=null, vitamin=null, aminoAcid=null, fattyAcid=null, recipes=null), expirationDate=2022-10-24, isNoExpiration=false)
+2022-10-10 23:41:04.086  INFO 2080 --- [    Test worker] c.f.s.data.dao.impl.MemberDaoImpl        : push Member ExpirationData =ExpirationData(id=63442f006bd3da2dcf791278, ingredient=Ingredient(id=63442f006bd3da2dcf791275, name=사과, index=0.0, foodGroup=null, foodCode=null, representationName=null, largeCategory=null, mediumCategory=null, smallCategory=null, subCategory=null, generalComponent=null, mineral=null, vitamin=null, aminoAcid=null, fattyAcid=null, recipes=null), expirationDate=2022-10-24, isNoExpiration=false), to MemberId =63442f006bd3da2dcf791276
+size: 2
+2022-10-10 23:41:04.115  INFO 2080 --- [    Test worker] c.f.s.data.dao.impl.IngredientDaoImpl    : save ingredient =Ingredient(id=63442f006bd3da2dcf791279, name=마늘, index=0.0, foodGroup=null, foodCode=null, representationName=null, largeCategory=null, mediumCategory=null, smallCategory=null, subCategory=null, generalComponent=null, mineral=null, vitamin=null, aminoAcid=null, fattyAcid=null, recipes=null)
+2022-10-10 23:41:04.116  INFO 2080 --- [    Test worker] c.f.s.data.dao.impl.IngredientDaoImpl    : save ingredient =Ingredient(id=63442f006bd3da2dcf79127a, name=사과, index=0.0, foodGroup=null, foodCode=null, representationName=null, largeCategory=null, mediumCategory=null, smallCategory=null, subCategory=null, generalComponent=null, mineral=null, vitamin=null, aminoAcid=null, fattyAcid=null, recipes=null)
+2022-10-10 23:41:04.118  INFO 2080 --- [    Test worker] c.f.s.data.dao.impl.MemberDaoImpl        : save Member =Member(id=63442f006bd3da2dcf79127b, password=null, name=야생마, imageId=null, expirationDataList=null, privateExpirationDataList=null, recipes=null, comments=null, authorities=null, activated=false)
+2022-10-10 23:41:04.130  INFO 2080 --- [    Test worker] c.f.s.d.dao.impl.ExpirationDataDaoImpl   : save ExpirationData =PrivateExpirationData(id=63442f006bd3da2dcf79127c, ingredient=Ingredient(id=63442f006bd3da2dcf791279, name=마늘, index=0.0, foodGroup=null, foodCode=null, representationName=null, largeCategory=null, mediumCategory=null, smallCategory=null, subCategory=null, generalComponent=null, mineral=null, vitamin=null, aminoAcid=null, fattyAcid=null, recipes=null), expirationDate=2022-10-31, isNoExpiration=false)
+2022-10-10 23:41:04.132  INFO 2080 --- [    Test worker] c.f.s.data.dao.impl.MemberDaoImpl        : push Member PrivateExpirationData =PrivateExpirationData(id=63442f006bd3da2dcf79127c, ingredient=Ingredient(id=63442f006bd3da2dcf791279, name=마늘, index=0.0, foodGroup=null, foodCode=null, representationName=null, largeCategory=null, mediumCategory=null, smallCategory=null, subCategory=null, generalComponent=null, mineral=null, vitamin=null, aminoAcid=null, fattyAcid=null, recipes=null), expirationDate=2022-10-31, isNoExpiration=false), to MemberId =63442f006bd3da2dcf79127b
+2022-10-10 23:41:04.134  INFO 2080 --- [    Test worker] c.f.s.d.dao.impl.ExpirationDataDaoImpl   : save ExpirationData =PrivateExpirationData(id=63442f006bd3da2dcf79127d, ingredient=Ingredient(id=63442f006bd3da2dcf79127a, name=사과, index=0.0, foodGroup=null, foodCode=null, representationName=null, largeCategory=null, mediumCategory=null, smallCategory=null, subCategory=null, generalComponent=null, mineral=null, vitamin=null, aminoAcid=null, fattyAcid=null, recipes=null), expirationDate=2022-10-24, isNoExpiration=false)
+2022-10-10 23:41:04.136  INFO 2080 --- [    Test worker] c.f.s.data.dao.impl.MemberDaoImpl        : push Member PrivateExpirationData =PrivateExpirationData(id=63442f006bd3da2dcf79127d, ingredient=Ingredient(id=63442f006bd3da2dcf79127a, name=사과, index=0.0, foodGroup=null, foodCode=null, representationName=null, largeCategory=null, mediumCategory=null, smallCategory=null, subCategory=null, generalComponent=null, mineral=null, vitamin=null, aminoAcid=null, fattyAcid=null, recipes=null), expirationDate=2022-10-24, isNoExpiration=false), to MemberId =63442f006bd3da2dcf79127b
+ExpirationDataDTO(id=63442f006bd3da2dcf79127c, ingredientDTO=IngredientDTO(id=63442f006bd3da2dcf791279, name=마늘, recipeDTOs=[]), expirationDate=2022-10-31, isNoExpiration=false)
+ExpirationDataDTO(id=63442f006bd3da2dcf79127d, ingredientDTO=IngredientDTO(id=63442f006bd3da2dcf79127a, name=사과, recipeDTOs=[]), expirationDate=2022-10-24, isNoExpiration=false)
+2022-10-10 23:41:04.154  INFO 2080 --- [    Test worker] c.f.s.d.dao.impl.ExpirationDataDaoImpl   : delete PrivateExpirationData id =63442f006bd3da2dcf79127c
+size: 1
+2022-10-10 23:41:04.173  INFO 2080 --- [    Test worker] c.f.s.data.dao.impl.IngredientDaoImpl    : save ingredient =Ingredient(id=63442f006bd3da2dcf79127e, name=마늘, index=0.0, foodGroup=null, foodCode=null, representationName=null, largeCategory=null, mediumCategory=null, smallCategory=null, subCategory=null, generalComponent=null, mineral=null, vitamin=null, aminoAcid=null, fattyAcid=null, recipes=null)
+2022-10-10 23:41:04.176  INFO 2080 --- [    Test worker] c.f.s.data.dao.impl.IngredientDaoImpl    : save ingredient =Ingredient(id=63442f006bd3da2dcf79127f, name=사과, index=0.0, foodGroup=null, foodCode=null, representationName=null, largeCategory=null, mediumCategory=null, smallCategory=null, subCategory=null, generalComponent=null, mineral=null, vitamin=null, aminoAcid=null, fattyAcid=null, recipes=null)
+2022-10-10 23:41:04.178  INFO 2080 --- [    Test worker] c.f.s.data.dao.impl.MemberDaoImpl        : save Member =Member(id=63442f006bd3da2dcf791280, password=null, name=야생마, imageId=null, expirationDataList=null, privateExpirationDataList=null, recipes=null, comments=null, authorities=null, activated=false)
+2022-10-10 23:41:04.187  INFO 2080 --- [    Test worker] c.f.s.d.dao.impl.ExpirationDataDaoImpl   : save ExpirationData =ExpirationData(id=63442f006bd3da2dcf791281, ingredient=Ingredient(id=63442f006bd3da2dcf79127e, name=마늘, index=0.0, foodGroup=null, foodCode=null, representationName=null, largeCategory=null, mediumCategory=null, smallCategory=null, subCategory=null, generalComponent=null, mineral=null, vitamin=null, aminoAcid=null, fattyAcid=null, recipes=null), expirationDate=2022-10-31, isNoExpiration=false)
+2022-10-10 23:41:04.189  INFO 2080 --- [    Test worker] c.f.s.data.dao.impl.MemberDaoImpl        : push Member ExpirationData =ExpirationData(id=63442f006bd3da2dcf791281, ingredient=Ingredient(id=63442f006bd3da2dcf79127e, name=마늘, index=0.0, foodGroup=null, foodCode=null, representationName=null, largeCategory=null, mediumCategory=null, smallCategory=null, subCategory=null, generalComponent=null, mineral=null, vitamin=null, aminoAcid=null, fattyAcid=null, recipes=null), expirationDate=2022-10-31, isNoExpiration=false), to MemberId =63442f006bd3da2dcf791280
+2022-10-10 23:41:04.190  INFO 2080 --- [    Test worker] c.f.s.d.dao.impl.ExpirationDataDaoImpl   : save ExpirationData =ExpirationData(id=63442f006bd3da2dcf791282, ingredient=Ingredient(id=63442f006bd3da2dcf79127f, name=사과, index=0.0, foodGroup=null, foodCode=null, representationName=null, largeCategory=null, mediumCategory=null, smallCategory=null, subCategory=null, generalComponent=null, mineral=null, vitamin=null, aminoAcid=null, fattyAcid=null, recipes=null), expirationDate=2022-10-24, isNoExpiration=false)
+2022-10-10 23:41:04.192  INFO 2080 --- [    Test worker] c.f.s.data.dao.impl.MemberDaoImpl        : push Member ExpirationData =ExpirationData(id=63442f006bd3da2dcf791282, ingredient=Ingredient(id=63442f006bd3da2dcf79127f, name=사과, index=0.0, foodGroup=null, foodCode=null, representationName=null, largeCategory=null, mediumCategory=null, smallCategory=null, subCategory=null, generalComponent=null, mineral=null, vitamin=null, aminoAcid=null, fattyAcid=null, recipes=null), expirationDate=2022-10-24, isNoExpiration=false), to MemberId =63442f006bd3da2dcf791280
+ExpirationDataDTO(id=63442f006bd3da2dcf791281, ingredientDTO=IngredientDTO(id=63442f006bd3da2dcf79127e, name=마늘, recipeDTOs=[]), expirationDate=2022-10-31, isNoExpiration=false)
+ExpirationDataDTO(id=63442f006bd3da2dcf791282, ingredientDTO=IngredientDTO(id=63442f006bd3da2dcf79127f, name=사과, recipeDTOs=[]), expirationDate=2022-10-24, isNoExpiration=false)
+2022-10-10 23:41:04.210  INFO 2080 --- [    Test worker] c.f.s.d.dao.impl.ExpirationDataDaoImpl   : delete ExpirationData id =63442f006bd3da2dcf791281
+size: 1
+2022-10-10 23:41:04.234  INFO 2080 --- [    Test worker] c.f.s.data.dao.impl.MemberDaoImpl        : save Member =Member(id=63442f006bd3da2dcf791283, password=null, name=야생마, imageId=null, expirationDataList=null, privateExpirationDataList=null, recipes=null, comments=null, authorities=null, activated=false)
+2022-10-10 23:41:04.244  INFO 2080 --- [    Test worker] c.f.s.d.dao.impl.ExpirationDataDaoImpl   : save ExpirationData =PrivateExpirationData(id=63442f006bd3da2dcf791284, ingredient=Ingredient(id=null, name=마늘, index=0.0, foodGroup=null, foodCode=null, representationName=null, largeCategory=null, mediumCategory=null, smallCategory=null, subCategory=null, generalComponent=null, mineral=null, vitamin=null, aminoAcid=null, fattyAcid=null, recipes=null), expirationDate=2022-10-31, isNoExpiration=false)
+2022-10-10 23:41:04.246  INFO 2080 --- [    Test worker] c.f.s.data.dao.impl.MemberDaoImpl        : push Member PrivateExpirationData =PrivateExpirationData(id=63442f006bd3da2dcf791284, ingredient=Ingredient(id=null, name=마늘, index=0.0, foodGroup=null, foodCode=null, representationName=null, largeCategory=null, mediumCategory=null, smallCategory=null, subCategory=null, generalComponent=null, mineral=null, vitamin=null, aminoAcid=null, fattyAcid=null, recipes=null), expirationDate=2022-10-31, isNoExpiration=false), to MemberId =63442f006bd3da2dcf791283
+2022-10-10 23:41:04.248  INFO 2080 --- [    Test worker] c.f.s.d.dao.impl.ExpirationDataDaoImpl   : save ExpirationData =PrivateExpirationData(id=63442f006bd3da2dcf791285, ingredient=Ingredient(id=null, name=사과, index=0.0, foodGroup=null, foodCode=null, representationName=null, largeCategory=null, mediumCategory=null, smallCategory=null, subCategory=null, generalComponent=null, mineral=null, vitamin=null, aminoAcid=null, fattyAcid=null, recipes=null), expirationDate=2022-10-24, isNoExpiration=false)
+2022-10-10 23:41:04.249  INFO 2080 --- [    Test worker] c.f.s.data.dao.impl.MemberDaoImpl        : push Member PrivateExpirationData =PrivateExpirationData(id=63442f006bd3da2dcf791285, ingredient=Ingredient(id=null, name=사과, index=0.0, foodGroup=null, foodCode=null, representationName=null, largeCategory=null, mediumCategory=null, smallCategory=null, subCategory=null, generalComponent=null, mineral=null, vitamin=null, aminoAcid=null, fattyAcid=null, recipes=null), expirationDate=2022-10-24, isNoExpiration=false), to MemberId =63442f006bd3da2dcf791283
+size= 2
+ ExpirationDataDTO(id=63442f006bd3da2dcf791284, ingredientDTO=IngredientDTO(id=null, name=마늘, recipeDTOs=[]), expirationDate=2022-10-31, isNoExpiration=false)
+ ExpirationDataDTO(id=63442f006bd3da2dcf791285, ingredientDTO=IngredientDTO(id=null, name=사과, recipeDTOs=[]), expirationDate=2022-10-24, isNoExpiration=false)
+2022-10-10 23:41:04.267  INFO 2080 --- [    Test worker] c.f.s.data.dao.impl.MemberDaoImpl        : save Member =Member(id=63442f006bd3da2dcf791286, password=null, name=우왁굳, imageId=null, expirationDataList=null, privateExpirationDataList=null, recipes=null, comments=null, authorities=null, activated=false)
+2022-10-10 23:41:04.268  INFO 2080 --- [    Test worker] c.f.s.data.dao.impl.IngredientDaoImpl    : save ingredient =Ingredient(id=63442f006bd3da2dcf791287, name=감자, index=0.0, foodGroup=null, foodCode=null, representationName=null, largeCategory=null, mediumCategory=null, smallCategory=null, subCategory=null, generalComponent=null, mineral=null, vitamin=null, aminoAcid=null, fattyAcid=null, recipes=null)
+2022-10-10 23:41:04.281  INFO 2080 --- [    Test worker] c.f.s.data.dao.impl.RecipeDaoImpl        :  setReferenceWithIngredientsByIngredientIds modify 1'document 
+2022-10-10 23:41:04.284  INFO 2080 --- [    Test worker] c.f.s.data.dao.impl.MemberDaoImpl        : converted recipe =Recipe(id=63442f006bd3da2dcf791288, name=감자 튀김, type=튀김, producerMemberId=null, comments=null, ratingAvg=0.0, ratingTotalSum=0.0, ingredientIds=[63442f006bd3da2dcf791287], imageId=null, sequence=null, category=null, cookingType=null, ingredientData=null, carbohydrate_g=null, fat_g=null, kcal=null, na_mg=null, protein_g=null, manuals=null, manualImageIds=null)
+2022-10-10 23:41:04.312  INFO 2080 --- [    Test worker] c.f.s.data.dao.impl.MemberDaoImpl        : add recipe =Recipe(id=63442f006bd3da2dcf791288, name=감자 튀김, type=튀김, producerMemberId=null, comments=null, ratingAvg=0.0, ratingTotalSum=0.0, ingredientIds=[63442f006bd3da2dcf791287], imageId=null, sequence=null, category=null, cookingType=null, ingredientData=null, carbohydrate_g=null, fat_g=null, kcal=null, na_mg=null, protein_g=null, manuals=null, manualImageIds=null), to member id=63442f006bd3da2dcf791286
+2022-10-10 23:41:04.316  INFO 2080 --- [    Test worker] c.f.s.data.dao.impl.RecipeDaoImpl        : saveRecipeByMemberId =RecipeDTO(id=63442f006bd3da2dcf791288, name=감자 튀김, type=튀김, ingredientIds=[63442f006bd3da2dcf791287], producerMemberId=63442f006bd3da2dcf791286, imageId=null, comments=[], ratingAvg=0.0, ratingTotalSum=0.0)
+  - responseMember : RecipeDTO(id=63442f006bd3da2dcf791288, name=감자 튀김, type=튀김, ingredientIds=[63442f006bd3da2dcf791287], producerMemberId=63442f006bd3da2dcf791286, imageId=null, comments=[], ratingAvg=0.0, ratingTotalSum=0.0)
+referenceRecipe = RecipeDTO(id=63442f006bd3da2dcf791288, name=감자 튀김, type=튀김, ingredientIds=[63442f006bd3da2dcf791287], producerMemberId=63442f006bd3da2dcf791286, imageId=null, comments=[], ratingAvg=0.0, ratingTotalSum=0.0)
 </pre>
 </span>
 </div>
@@ -112,7 +213,7 @@
 <input id="line-wrapping-toggle" type="checkbox" autocomplete="off"/>
 </label>
 </div>Generated by 
-<a href="http://www.gradle.org">Gradle 7.5</a> at 2022. 9. 4. 오후 9:44:06</p>
+<a href="http://www.gradle.org">Gradle 7.5.1</a> at 2022. 10. 10. 오후 11:41:05</p>
 </div>
 </div>
 </body>
