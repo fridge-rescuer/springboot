@@ -7,7 +7,7 @@ import com.fridgerescuer.springboot.data.dao.MemberDao;
 import com.fridgerescuer.springboot.data.dao.RecipeDao;
 import com.fridgerescuer.springboot.data.dto.CommentDTO;
 import com.fridgerescuer.springboot.data.dto.RecipeDTO;
-import com.fridgerescuer.springboot.data.dto.SimpleRecipe;
+import com.fridgerescuer.springboot.data.dto.SimpleRecipeDTO;
 import com.fridgerescuer.springboot.data.entity.Comment;
 import com.fridgerescuer.springboot.data.entity.Ingredient;
 import com.fridgerescuer.springboot.data.entity.Recipe;
@@ -115,7 +115,7 @@ public class RecipeDaoImpl implements RecipeDao {
     }
 
     @Override
-    public List<SimpleRecipe> searchSimpleRecipeListByAutoComplete(String keyword) {
+    public List<SimpleRecipeDTO> searchSimpleRecipeListByAutoComplete(String keyword) {
         return autoCompleteUtils.putSimplRecipeListByCache(keyword);
     }
 

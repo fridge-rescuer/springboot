@@ -5,13 +5,13 @@ import lombok.Getter;
 
 @Getter
 @AllArgsConstructor
-public class SimpleRecipe implements Comparable<SimpleRecipe>{
+public class SimpleRecipeDTO implements Comparable<SimpleRecipeDTO>{
     private String name;
     private String id;
     private int cachePriority;
 
     @Override
-    public int compareTo(SimpleRecipe o) {
+    public int compareTo(SimpleRecipeDTO o) {
         if (this.cachePriority > o.getCachePriority())
             return 1;
         else if(this.cachePriority < o.getCachePriority())

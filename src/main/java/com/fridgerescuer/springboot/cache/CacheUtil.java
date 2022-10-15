@@ -1,15 +1,11 @@
 package com.fridgerescuer.springboot.cache;
 
 import com.fridgerescuer.springboot.data.dto.IngredientDTO;
-import com.fridgerescuer.springboot.data.dto.SimpleRecipe;
-import com.fridgerescuer.springboot.data.entity.Recipe;
+import com.fridgerescuer.springboot.data.dto.SimpleRecipeDTO;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.cache.Cache;
 import org.springframework.cache.CacheManager;
-import org.springframework.cache.annotation.CachePut;
-import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
@@ -23,8 +19,8 @@ public class CacheUtil {
     @Autowired
     private final CacheManager cacheManager;
 
-    public List<SimpleRecipe> getAutoCompleteRecipeForSearch(String keyword){
-        List<SimpleRecipe> simpleRecipes = cacheManager
+    public List<SimpleRecipeDTO> getAutoCompleteRecipeForSearch(String keyword){
+        List<SimpleRecipeDTO> simpleRecipes = cacheManager
                 .getCache(CacheType.RECIPE_AUTO_COMPLETE.getCacheName()).get(keyword, List.class);
 
         return simpleRecipes;

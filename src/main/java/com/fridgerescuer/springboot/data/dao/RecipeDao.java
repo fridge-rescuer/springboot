@@ -2,13 +2,8 @@ package com.fridgerescuer.springboot.data.dao;
 
 import com.fridgerescuer.springboot.data.dto.CommentDTO;
 import com.fridgerescuer.springboot.data.dto.RecipeDTO;
-import com.fridgerescuer.springboot.data.dto.SimpleRecipe;
-import com.fridgerescuer.springboot.data.entity.Comment;
-import com.fridgerescuer.springboot.data.entity.Member;
-import com.fridgerescuer.springboot.data.entity.Recipe;
-import org.springframework.web.multipart.MultipartFile;
+import com.fridgerescuer.springboot.data.dto.SimpleRecipeDTO;
 
-import java.io.IOException;
 import java.util.List;
 
 public interface RecipeDao {
@@ -17,7 +12,7 @@ public interface RecipeDao {
     RecipeDTO saveRecipeByMemberId(String memberId, RecipeDTO recipeDTO);
 
     RecipeDTO findById(String id);
-    List<SimpleRecipe> searchSimpleRecipeListByAutoComplete(String keyword);
+    List<SimpleRecipeDTO> searchSimpleRecipeListByAutoComplete(String keyword);
     List<RecipeDTO> findAllByName(String name);         //이름은 중복가능 이므로 단 한개만 찾는 기능은 x
     List<RecipeDTO> findAllByContainName(String name);
     List<CommentDTO> getCommentsByRecipeId(String recipeId);

@@ -3,7 +3,6 @@ package com.fridgerescuer.springboot;
 import com.fridgerescuer.springboot.cache.CacheUtil;
 import com.fridgerescuer.springboot.config.Config;
 import com.fridgerescuer.springboot.data.dao.RecipeDao;
-import com.fridgerescuer.springboot.data.dto.SimpleRecipe;
 import com.fridgerescuer.springboot.cache.AutoCompleteUtils;
 import com.fridgerescuer.springboot.databaseoperation.DBConverter;
 import com.fridgerescuer.springboot.databaseoperation.ReferenceInjector;
@@ -14,8 +13,6 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Import;
-
-import java.util.List;
 
 @Slf4j
 @Import(Config.class)
